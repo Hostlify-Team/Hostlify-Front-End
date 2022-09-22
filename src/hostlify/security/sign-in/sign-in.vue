@@ -15,7 +15,7 @@
           </div>
           <div class="footer">
             <div class="Text">
-              <router-link to="/" class="rw">
+              <router-link to="/forgot-password" class="rw">
                 ¿Olvidaste tu <br> contraseña?
               </router-link>
             </div>
