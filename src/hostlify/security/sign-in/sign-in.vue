@@ -8,8 +8,8 @@
         </template>
         <template #content>
           <div class="form">
-            <label for="user">Usuario</label>
-            <pv-input-text id="user" class="input"></pv-input-text>
+            <label for="email">Correo Electronico</label>
+            <pv-input-text id="email" class="input"></pv-input-text>
             <label for="password">contraseña</label>
             <pv-input-text id="password" type="password" class="input"></pv-input-text>
           </div>
