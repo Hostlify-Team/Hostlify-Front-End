@@ -1,7 +1,6 @@
 <template>
   <pv-toast></pv-toast>
   <pv-button @click="mounted">Click on me</pv-button>
-  KHE
 </template>
 <script>
 export default {
