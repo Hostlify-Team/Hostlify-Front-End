@@ -1,5 +1,5 @@
-<template>
-  <div class="card">
+<template >
+  <div class="card" >
       <pv-card class="SignInCard">
         <template #title >
           <div class="Text">
@@ -10,19 +10,24 @@
           <div class="form">
             <label for="user">Usuario</label>
             <pv-input-text id="user" class="input"></pv-input-text>
-            <label for="password">Contraseña</label>
-            <pv-password id="password" class="input"></pv-password>
+            <label for="password">contraseña</label>
+            <pv-input-text id="password" type="password" class="input"></pv-input-text>
+          </div>
+          <div class="footer">
+            <div class="Text">
+              <router-link to="/" class="rw">
+                ¿Olvidaste tu <br> contraseña?
+              </router-link>
+            </div>
+            <div class="buttons">
+              <pv-button>Crear Cuenta</pv-button>
+              <pv-button>Iniciar sesion</pv-button>
+            </div>
           </div>
         </template>
-        <template #footer>
-          <div class="Text">
-            ¿Olvidaste tu contraseña?
-          </div>
-          <div class="buttons">
-            <pv-button>Crear Cuenta</pv-button>
-            <pv-button>Iniciar sesion</pv-button>
-          </div>
-        </template>
+
+
+
       </pv-card>
   </div>
 </template>
@@ -47,26 +52,32 @@ export default {
 .Text{
   text-align: center;
 }
+.rw{
+  color: white;
+  text-decoration: none;
+}
 .card{
-  left      : 50%;
-  top       : 50%;
-  position  : absolute;
-  transform : translate(-50%, -50%);
   display: flex;
   justify-content: center;
   align-items: center;
-
+  height: 100vh;
 }
 .form{
   margin: 0 0 0 2rem;
 }
 .form .input{
-  width: 100%;
+  margin: 0.3rem 0;
 }
 .buttons{
   display: flex;
-  margin: 2rem 0;
+  margin: 1.3rem 0;
   justify-content: space-around;
   }
+.footer{
+  margin-top: 0.5rem;
+}
+.input{
+  width: 85%;
 
+}
 </style>
