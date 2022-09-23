@@ -13,6 +13,21 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/sign-up-plans',
+      name: 'sign-up-plans',
+      component: () => import('../hostlify/security/sign-up/sign-up-plans.vue')
+    },
+    {
+      path: '/sign-up-register',
+      name: 'sign-up-plans',
+      component: () => import('../hostlify/security/sign-up/sign-up-register.vue')
+    },
+    {
+      path: '/sign-up-payment',
+      name: 'sign-up-plans',
+      component: () => import('../hostlify/security/sign-up/sign-up-payment.vue')
     }
   ]
 })
