@@ -1,5 +1,5 @@
 <template>
-
+<p>Plans</p>
 </template>
 
 <script>
