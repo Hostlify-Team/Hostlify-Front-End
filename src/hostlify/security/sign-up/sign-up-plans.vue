@@ -1,5 +1,5 @@
 <template>
-  <pv-card style="margin: 4vw 8vw 0 8vw; border-radius: 1rem;">
+  <pv-card style="margin: 4vh 8vw 3vh 8vw; border-radius: 1rem;">
       <template #content>
         <div class="steps" >
           <h4 style="margin: 0 0 0 0">Paso 1 de 3</h4>
@@ -19,7 +19,7 @@
                 </template>
                 <template #content>
                   <div class="content">
-                    <h2 style="margin: 0; margin-bottom: 1rem">Standar</h2>
+                    <h2 style="margin-bottom: 1rem">Standar</h2>
                     <p >30 habitaciones</p>
                     <div class="price">
                       <p style="font-weight: bold">150 S/</p>
@@ -35,7 +35,7 @@
                 </template>
                 <template #content>
                   <div class="content">
-                    <h2 style="margin: 0; margin-bottom: 1rem">Pro</h2>
+                    <h2 style="margin-bottom: 1rem">Pro</h2>
                     <p >50 habitaciones</p>
                     <div class="price">
                       <p style="font-weight: bold">250 S/</p>
@@ -51,7 +51,7 @@
                 </template>
                 <template #content>
                   <div class="content">
-                    <h2 style="margin: 0; margin-bottom: 1rem">Premium</h2>
+                    <h2 style="margin-bottom: 1rem">Premium</h2>
                     <p >Ilimitadas habitaciones</p>
                     <div class="price">
                       <p style="font-weight: bold">450 S/</p>
@@ -64,7 +64,36 @@
             </div>
           </div>
           <div v-show="customPlan" class="custom">
-            Custom
+            <div class="cardC" style="margin-bottom: 3rem; display: flex; justify-content: space-evenly">
+              <pv-card style="width: 60vw" class="card" >
+                <template #header>
+                  <div class="solidColor" style="background-color: #D6A049"></div>
+                </template>
+                <template #content>
+                  <div style="display: flex; justify-content: space-evenly">
+                    <div class="content" >
+                      <h2 style="margin-bottom: 1rem">Plan personalizado</h2>
+                      <p >Cuantas habitaciones tienes?</p>
+                      <div class="input" >
+                        <pv-input-text type="text" class="p-inputtext-lg" style="background-color: white; color: black" v-model="price" />
+                      </div>
+                    </div>
+                    <div class="content" style="display: flex; align-items: center; margin-top: 3rem">
+                      <i class="pi pi-arrow-right"></i>
+                    </div>
+                    <div class="content" >
+                      <h2 style="margin-bottom: 1rem">Precios desde S/6.50 por mes</h2>
+                      <p >Planes para satisfacer cada etapa de tu hotel</p>
+                      <div class="price">
+                        <p style="font-weight: bold; font-size: xxx-large">S/{{ price*6.50 }} </p>
+                        <p style="padding-top: 0.25rem; margin-top: 2rem" >mo*</p>
+                      </div>
+                      <pv-button style="margin-top: .5em; background-color: #D6A049; color:white">Elegir</pv-button>
+                    </div>
+                  </div>
+                </template>
+              </pv-card>
+            </div>
           </div>
         </div>
 
@@ -84,6 +113,7 @@ export default {
       options: ['Nuestros Planes', 'Plan personalizado'],
       defaultPlan: true,
       customPlan: false,
+      price:0
     }
   },
   methods:{
@@ -116,12 +146,12 @@ export default {
 }
 p {
   line-height: 1.5;
-  margin: 0;
   margin-bottom: 0.5rem
 }
 .content{
   margin-left: 1rem;
 }
+
 .price{
   display: flex;
 }
