@@ -18,7 +18,7 @@
         </div>
       </template>
     </pv-card>
-    <pv-dialog header="Solicitud enviada" v-model:visible="confirmDialog" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '30vw'}" :modal="true">
+    <pv-dialog header="Solicitud enviada" v-model:visible="confirmDialog"  :style="{width: '30vw'}" :modal="true">
       <p class="m-0">Si existe alguna cuenta registrada con este correo electronico se le enviara un correo</p>
       <template #footer>
         <pv-button label="Entendido" @click="closeDialog" />

@@ -20,7 +20,7 @@
               </router-link>
             </div>
             <div class="buttons">
-              <pv-button>Crear Cuenta</pv-button>
+              <router-link to="/sign-up" class="rw"><pv-button>Crear Cuenta</pv-button></router-link>
               <pv-button>Iniciar sesion</pv-button>
             </div>
           </div>
