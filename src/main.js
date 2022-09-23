@@ -30,6 +30,10 @@ import InputSwitch from 'primevue/inputswitch';
 import Password from 'primevue/password';
 import RadioButton from 'primevue/radiobutton';
 import Dialog from 'primevue/dialog';
+import SelectButton from 'primevue/selectbutton';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
+
 
 
 const app = createApp(App)
@@ -57,6 +61,10 @@ app.component("pv-input-switch",InputSwitch)
 app.component("pv-password",Password)
 app.component("pv-radio-button",RadioButton)
 app.component("pv-dialog",Dialog)
+app.component("pv-select-button",SelectButton)
+app.component("pv-tab-view",TabView)
+app.component("pv-tab-panel",TabPanel)
+
 
 
 
