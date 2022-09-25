@@ -34,7 +34,7 @@
               </div>
               <div class="footer">
                 <div class="buttons" >
-                  <router-link to="/" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="register">Iniciar subscripcion</pv-button ></router-link>
+                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="register">Iniciar subscripcion</pv-button ></router-link>
                 </div>
               </div>
             </div>
@@ -52,7 +52,7 @@ export default {
   data(){
     return{
       user:{
-        type: "manager",
+        type:null,
         name:null,
         email:null,
         password:null,
@@ -63,15 +63,18 @@ export default {
   methods:{
     register(){
       let userInfo =localStorage.getItem("user")
-      this.user.name=userInfo.name
-      this.user.email=userInfo.email
-      this.user.password=userInfo.password
+      if(userInfo!=null){
+        this.user=JSON.parse(userInfo)
+      }
       this.user.plan=localStorage.getItem("selectedPlan")
-
-      new UsersServices.postUsers(this.user.name,this.user.email,this.user.password,this.user.plan,this.user.type).then(response=>{
-        console.log("Register succesfully")
-        this.$router.push("/sign-in")
+      this.user.type="manager"
+      console.log("Usuario:",this.user)
+      new UsersServices().postUsers(this.user.name,this.user.email,this.user.password,this.user.plan,this.user.type).then(response=>{
+        console.log("Usuario registrado Correctamente")
+        localStorage.clear()
+        //!TODO: GUARDAR USUARIO CON PLAN EL NOMBRE NO EL NUMERO Y LIMPIAR EL "user" del data
       })
+
     }
   }
 }
