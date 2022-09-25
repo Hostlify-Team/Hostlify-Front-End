@@ -10,7 +10,7 @@
             <h1>Crea tu cuenta</h1>
           </div>
           <div class="card" style="justify-content: center;">
-            <div class="register" style="width: 40vw">
+            <div class="register" style="width: 30vw">
               <div class="form" >
                 <div class="nombre" style="display: flex; justify-content: center; margin: 1rem 0">
                   <pv-input-text id="name" class="input" placeholder="Nombre" style="border-radius: 1rem"></pv-input-text>
@@ -76,7 +76,7 @@ export default {
   margin-top: 0.5rem;
 }
 .input{
-  width: 85%;
+  width: 100%;
 
 }
 </style>
