@@ -28,7 +28,7 @@
                   <br>de privacidad de Hostlify
                 </div>
                 <div class="buttons" >
-                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem">Crear Cuenta</pv-button ></router-link>
+                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049">Crear Cuenta</pv-button ></router-link>
                 </div>
               </div>
             </div>

@@ -21,20 +21,20 @@
                     <img src="@/assets/DinersClub.jpg" alt="" style="width: 78px">
                   </div>
                 </div>
-                <div class="nombre" style="display: flex; justify-content: center; margin: 1rem 0">
-                  <pv-input-text id="name" class="input" placeholder="Nombre y apellido" style="border-radius: 1rem"></pv-input-text>
+                <div class="fullname" style="display: flex; justify-content: center; margin: 1rem 0">
+                  <pv-input-text id="fullname" class="input" placeholder="Nombre y apellido" style="border-radius: 1rem"></pv-input-text>
                 </div>
-                <div class="email" style="display: flex; justify-content: center; margin: 1rem 0">
-                  <pv-input-text id="email" class="input" placeholder="Numero de tarjeta" style="border-radius: 1rem"></pv-input-text>
+                <div class="paycard" style="display: flex; justify-content: center; margin: 1rem 0">
+                  <pv-input-text id="paycard" class="input" placeholder="Numero de tarjeta" type="number" style="border-radius: 1rem"></pv-input-text>
                 </div>
-                <div class="password" style="display: flex; justify-content: space-between; margin: 1rem 0">
-                  <pv-input-text class="input" placeholder="Fecha de expiracion*" style="border-radius: 1rem;width: 14vw"></pv-input-text>
-                  <pv-input-text class="input" placeholder="Codigo de seguridad*" style="border-radius: 1rem;width: 14vw"></pv-input-text>
+                <div class="Codes" style="display: flex; justify-content: space-between; margin: 1rem 0">
+                  <pv-input-mask id="ExpirationCode" placeholder="Fecha de expiracion" mask="99/99" style="border-radius: 1rem;width: 14vw"></pv-input-mask>
+                  <pv-input-mask id="SecurityCode" placeholder="Codigo de seguridad" mask="999" style="border-radius: 1rem;width: 14vw"></pv-input-mask>
                 </div>
               </div>
               <div class="footer">
                 <div class="buttons" >
-                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem">Iniciar subscripcion</pv-button ></router-link>
+                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049">Iniciar subscripcion</pv-button ></router-link>
                 </div>
               </div>
             </div>

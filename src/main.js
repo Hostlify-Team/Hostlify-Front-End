@@ -33,6 +33,7 @@ import Dialog from 'primevue/dialog';
 import SelectButton from 'primevue/selectbutton';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import InputMask from 'primevue/inputmask';
 
 
 
@@ -64,6 +65,8 @@ app.component("pv-dialog",Dialog)
 app.component("pv-select-button",SelectButton)
 app.component("pv-tab-view",TabView)
 app.component("pv-tab-panel",TabPanel)
+app.component("pv-input-mask",InputMask)
+
 
 
 
