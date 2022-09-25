@@ -10,36 +10,27 @@
     {
       "id": 1,
       "name": "Standard",
-      "type": "default",
       "rooms": 30,
       "price": 180
     },
     {
       "id": 2,
       "name": "Pro",
-      "type": "default",
       "rooms": 50,
       "price": 260
     },
     {
       "id": 3,
       "name": "Premium",
-      "type": "default",
       "rooms": null,
       "price": 400
-    },
-    {
-      "id": 4,
-      "name": "Standard",
-      "type": "Plan personalizado",
-      "rooms": null,
-      "price": null
     }
   ],
   "users": [
     {
       "id": 1,
       "type": "manager",
+      "plan": "Pro",
       "name": "Diego Talledo",
       "email": "diego@gmail.com",
       "password": "diego123"
@@ -47,6 +38,7 @@
     {
       "id": 2,
       "type": "guest",
+      "plan": null,
       "name": "Alonso Sanchez",
       "email": "alonso@gmail.com",
       "password": "alonso123"

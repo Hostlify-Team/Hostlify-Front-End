@@ -2,22 +2,21 @@ import axios from "axios";
 
 export class UsersServices{
     getUsers=()=>{
-        return axios.get("http://localhost:3000/comments")
+        return axios.get("http://localhost:3000/users")
     }
-    postUsers=(body,postId)=>{
-        return axios.post("http://localhost:3000/comments",
-            {
-                "body": body,
-                "postId": postId
-            })
+    postUsers=(name,email,password,plan,type)=>{
+        return axios.post("http://localhost:3000/users", {
+            "type": type,
+            "plan": plan,
+            "name": name,
+            "email": email,
+            "password": password
+        },)
     }
     deleteUsers=(Id)=>{
-        return axios.delete("http://localhost:3000/comments/"+Id);
+        return axios.delete("http://localhost:3000/users/"+Id);
     }
-    updateUsers=(body,postId,Id)=>{
-        return axios.put("http://localhost:3000/comments/"+Id,{
-            "body": body,
-            "postId": postId
-        })
+    updateUsers=(user,Id)=>{
+        return axios.put("http://localhost:3000/users/"+Id,user)
     }
 }

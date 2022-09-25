@@ -34,7 +34,7 @@
               </div>
               <div class="footer">
                 <div class="buttons" >
-                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049">Iniciar subscripcion</pv-button ></router-link>
+                  <router-link to="/" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="register">Iniciar subscripcion</pv-button ></router-link>
                 </div>
               </div>
             </div>
@@ -46,8 +46,34 @@
 </template>
 
 <script>
+import {UsersServices} from "../../../services/users-services";
 export default {
-  name: "sign-up-payment"
+  name: "sign-up-payment",
+  data(){
+    return{
+      user:{
+        type: "manager",
+        name:null,
+        email:null,
+        password:null,
+        plan:null
+      }
+    }
+  },
+  methods:{
+    register(){
+      let userInfo =localStorage.getItem("user")
+      this.user.name=userInfo.name
+      this.user.email=userInfo.email
+      this.user.password=userInfo.password
+      this.user.plan=localStorage.getItem("selectedPlan")
+
+      new UsersServices.postUsers(this.user.name,this.user.email,this.user.password,this.user.plan,this.user.type).then(response=>{
+        console.log("Register succesfully")
+        this.$router.push("/sign-in")
+      })
+    }
+  }
 }
 </script>
 

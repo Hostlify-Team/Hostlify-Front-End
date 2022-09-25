@@ -14,64 +14,38 @@
             </div>
             <div class="plans">
               <div v-show="defaultPlan" class="default">
-                <div class="cards" style="margin-bottom: 3rem; display: flex; justify-content: space-evenly">
-                  <pv-card style="width: 18em" class="card" >
-                    <template #header>
-                      <div class="solidColor" style="background-color: #FFC286"></div>
-                    </template>
-                    <template #content>
-                      <div class="content">
-                        <h2 style="margin-bottom: 0.5rem">Standar</h2>
-                        <p style="margin-top: 6px">Este plan te permite tener hasta</p>
-                        <p style="margin-top: 6px">30 habitaciones</p>
-                        <div class="price">
-                          <p style="font-weight: bold; margin-top: 8px">{{ standardPlanPrice }} S/</p>
-                          <div style="display: table;">
-                            <p style="margin: 0;padding: 0 0 0.45rem 0.1rem ;align-items: end ;display: table-cell;vertical-align: bottom; color: darkgrey" >mo*</p>
+                <div class="cards" style="margin-bottom: 3rem; display: flex; justify-content: space-evenly;">
+                  <div v-for="plan in plans">
+                    <pv-card style="width: 18em;" class="card">
+                      <template #header>
+                        <div class="solidColor" v-if="plan.name==='Standard'" style="background-color: #FFC286"></div>
+                        <div class="solidColor" v-if="plan.name==='Pro'" style="background-color: #EA9D51"></div>
+                        <div class="solidColor" v-if="plan.name==='Premium'" style="background-color: #F1C94E"></div>
+                      </template>
+                      <template #content>
+                        <div class="content">
+                          <h2 style="margin-bottom: 0.5rem">{{plan.name}}</h2>
+                          <template v-if="plan.rooms!==null" >
+                            <p style="margin-top: 6px">Este plan te permite tener hasta</p>
+                            <p style="margin-top: 6px">{{plan.rooms}} habitaciones</p>
+                          </template>
+                          <template v-else >
+                            <p style="margin-top: 6px">Este plan te permite tener </p>
+                            <p style="margin-top: 6px">infinitas habitaciones</p>
+                          </template>
+                          <div class="price">
+                            <p style="font-weight: bold; margin-top: 8px">{{ plan.price }} S/</p>
+                            <div style="display: table;">
+                              <p style="margin: 0;padding: 0 0 0.45rem 0.1rem ;align-items: end ;display: table-cell;vertical-align: bottom; color: darkgrey" >mo*</p>
+                            </div>
                           </div>
+                          <pv-button v-if="plan.name==='Standard'" style="margin-top: .5em; background-color: #FFC286; color:white" @click="planSelected(plan.price)">Elegir</pv-button>
+                          <pv-button v-if="plan.name==='Pro'" style="margin-top: .5em; background-color: #EA9D51; color:white" @click="planSelected(plan.price)">Elegir</pv-button>
+                          <pv-button v-if="plan.name==='Premium'" style="margin-top: .5em; background-color: #F1C94E; color:white" @click="planSelected(plan.price)">Elegir</pv-button>
                         </div>
-                        <pv-button style="margin-top: .5em; background-color: #FFC286; color:white" @click="planSelected(standardPlanPrice)">Elegir</pv-button>
-                      </div>
-                    </template>
-                  </pv-card>
-                  <pv-card style="width: 18em" class="card" >
-                    <template #header>
-                      <div class="solidColor" style="background-color: #EA9D51"></div>
-                    </template>
-                    <template #content>
-                      <div class="content">
-                        <h2 style="margin-bottom: 0.5rem">Pro</h2>
-                        <p style="margin-top: 6px">Este plan te permite tener hasta</p>
-                        <p style="margin-top: 6px">50 habitaciones</p>
-                        <div class="price">
-                          <p style="font-weight: bold; margin-top: 8px">{{ proPlanPrice }} S/</p>
-                          <div style="display: table;">
-                            <p style="margin: 0;padding: 0 0 0.45rem 0.1rem ;align-items: end ;display: table-cell;vertical-align: bottom; color: darkgrey" >mo*</p>
-                          </div>
-                        </div>
-                        <pv-button style="margin-top: .5em; background-color: #EA9D51; color:white" @click="planSelected(proPlanPrice)">Elegir</pv-button>
-                      </div>
-                    </template>
-                  </pv-card>
-                  <pv-card style="width: 18em" class="card" >
-                    <template #header>
-                      <div class="solidColor" style="background-color: #F1C94E"></div>
-                    </template>
-                    <template #content>
-                      <div class="content">
-                        <h2 style="margin-bottom: 0.5rem">Premium</h2>
-                        <p style="margin-top: 6px">Este plan te permite tener </p>
-                        <p style="margin-top: 6px">Ilimitadas habitaciones</p>
-                        <div class="price">
-                          <p style="font-weight: bold; margin-top: 8px">{{ premiumPlanPrice }} S/</p>
-                          <div style="display: table;">
-                            <p style="margin: 0;padding: 0 0 0.45rem 0.1rem ;align-items: end ;display: table-cell;vertical-align: bottom; color: darkgrey" >mo*</p>
-                          </div>
-                        </div>
-                        <pv-button style="margin-top: .5em; background-color: #F1C94E; color:white" @click="planSelected(premiumPlanPrice)">Elegir</pv-button>
-                      </div>
-                    </template>
-                  </pv-card>
+                      </template>
+                    </pv-card >
+                  </div>
                 </div>
               </div>
               <div v-show="customPlan" class="custom">
@@ -116,22 +90,25 @@
 </template>
 
 <script>
+import {PlansServices} from "../../../services/plans-services";
 export default {
   name: "sign-up-plans",
   components: {},
-
   data(){
     return{
       value1: 'Nuestros Planes',
       options: ['Nuestros Planes', 'Plan personalizado'],
       defaultPlan: true,
       customPlan: false,
-      customPlanPrice:0,
-      standardPlanPrice: 180,
-      proPlanPrice: 260,
-      premiumPlanPrice: 400,
+      customPlanPrice:null,
+      plans:null
 
     }
+  },
+  created() {
+    new PlansServices().getPlans().then(response=>{
+      this.plans=response.data
+    })
   },
   methods:{
     changePlan(){
@@ -145,8 +122,12 @@ export default {
       }
     },
     planSelected(price){
-      console.log(price,"plan selected")
+      this.addTemporaryPlan(price)
       this.$router.push("/sign-up-register")
+    },
+    addTemporaryPlan(plan){
+      console.log("PLAN TEMPORALMENTE GUARDADO: ",plan)
+      localStorage.setItem("selectedPlan",JSON.stringify(plan))
     }
   }
 

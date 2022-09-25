@@ -13,13 +13,13 @@
             <div class="register" style="width: 30vw">
               <div class="form" >
                 <div class="nombre" style="display: flex; justify-content: center; margin: 1rem 0">
-                  <pv-input-text id="name" class="input" placeholder="Nombre" style="border-radius: 1rem"></pv-input-text>
+                  <pv-input-text id="name" class="input" placeholder="Nombre" style="border-radius: 1rem" v-model="user.name"></pv-input-text>
                 </div>
                 <div class="email" style="display: flex; justify-content: center; margin: 1rem 0">
-                  <pv-input-text id="email" class="input" placeholder="Correo Electronico" style="border-radius: 1rem"></pv-input-text>
+                  <pv-input-text id="email" class="input" placeholder="Correo Electronico" style="border-radius: 1rem" v-model="user.email"></pv-input-text>
                 </div>
                 <div class="password" style="display: flex; justify-content: center; margin: 1rem 0">
-                  <pv-input-text id="password" type="password" class="input" placeholder="Contraseña" style="border-radius: 1rem"></pv-input-text>
+                  <pv-input-text id="password" type="password" class="input" placeholder="Contraseña" style="border-radius: 1rem" v-model="user.password"></pv-input-text>
                 </div>
               </div>
               <div class="footer">
@@ -28,7 +28,7 @@
                   <br>de privacidad de Hostlify
                 </div>
                 <div class="buttons" >
-                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049">Crear Cuenta</pv-button ></router-link>
+                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="addTemporaryUser">Crear Cuenta</pv-button ></router-link>
                 </div>
               </div>
             </div>
@@ -40,7 +40,24 @@
 </template>
 <script>
 export default {
-  name: "sign-up-register"
+  name: "sign-up-register",
+  data(){
+    return{
+      user:{
+        name:null,
+        email:null,
+        password:null,
+      }
+    }
+  },
+  methods:{
+    addTemporaryUser(){
+      console.log("nombre temporalmente guardado: ",this.user.name)
+      console.log("nombre temporalmente guardado: ",this.user.email)
+      console.log("nombre temporalmente guardado: ",this.user.password)
+      localStorage.setItem("user",JSON.stringify(this.user))
+    }
+  }
 }
 </script>
 
