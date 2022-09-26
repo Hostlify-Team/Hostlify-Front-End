@@ -13,6 +13,16 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/services',
+      name: 'services',
+      component: () => import('../hostlify/services.vue')
+    },
+    {
+      path: '/request',
+      name: 'request',
+      component: () => import('../hostlify/request.vue')
     }
   ]
 })
