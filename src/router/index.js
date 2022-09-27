@@ -7,15 +7,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'MainLayout',
-      component: MainLayout,
-      children: [
-        {
-          path:"",
-          name: "HomePage",
-          component: HomeView,
-        }
-      ]
+      name: 'sign-in',
+      component: () => import('../hostlify/security/sign-in/sign-in.vue')
     },
     {
       path: '/about',

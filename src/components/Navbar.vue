@@ -1,43 +1,45 @@
 
 <template>
-  <Toolbar>
-    <template #start>
-      <avatar
-          shape="circle"
-          image="https://github.com/Hostlify-Team/Hostlify-Landing-Page/blob/main/src/assets/images/Logo.png?raw=true"
-          class="mr-2"
-      />
-      <div v-if="isAdmin === false">
-        <router-link class="mr-3 navbar-item" to="/tu-habitacion">
-          Tu habitacion
+  <div v-show="this.typeUser!==null">
+    <Toolbar>
+      <template #start>
+        <avatar
+            shape="circle"
+            image="https://github.com/Hostlify-Team/Hostlify-Landing-Page/blob/main/src/assets/images/Logo.png?raw=true"
+            class="mr-2"
+        />
+        <div v-if="this.typeUser === 'guest'">
+          <router-link class="mr-3 navbar-item" to="/tu-habitacion">
+            Tu habitacion
+          </router-link>
+          <router-link class="mr-2 navbar-item" to="/informacion">
+            Informacion
+          </router-link>
+          <router-link class="mr-2 navbar-item" to="/ayuda">
+            Ayuda
+          </router-link>
+        </div>
+        <div v-else>
+          <router-link class="mr-3 navbar-item" to="/rooms">
+            Rooms
+          </router-link>
+          <router-link class="mr-2 navbar-item" to="/history">
+            History
+          </router-link>
+        </div>
+      </template>
+      <template #end>
+        <router-link class="mr-2 navbar-item" to="#">
+          Hola {{ this.typeUser }}!
         </router-link>
-        <router-link class="mr-2 navbar-item" to="/informacion">
-          Informacion
-        </router-link>
-        <router-link class="mr-2 navbar-item" to="/ayuda">
-          Ayuda
-        </router-link>
-      </div>
+        <pv-button @click="logOut">
+          Cerrar Sesion
+        </pv-button>
+      </template>
+    </Toolbar>
+    <h1>{{this.typeUser}}</h1>
+  </div>
 
-      <div v-else>
-        <router-link class="mr-3 navbar-item" to="/rooms">
-          Rooms
-        </router-link>
-        <router-link class="mr-2 navbar-item" to="/history">
-          History
-        </router-link>
-      </div>
-    </template>
-
-    <template #end>
-      <router-link class="mr-2 navbar-item" to="#">
-        Hola Diego!
-      </router-link>
-      <router-link class="mr-2 navbar-item" to="#">
-        Cerrar Sesion
-      </router-link>
-    </template>
-  </Toolbar>
 </template>
 
 
@@ -54,9 +56,17 @@ export default {
 
   data(){
     return{
-      isAdmin:false,
+      typeUser:null
 
     }
+  },
+  methods:{
+    logOut(){
+      this.$router.push("/")
+    }
+  },
+  created() {
+    this.typeUser= localStorage.getItem('type')
   }
 
 }
@@ -68,7 +78,6 @@ export default {
     text-decoration: none;
     color:#d6a048;
   }
-
 
   .navbar-item:visited{
     color:#d6a048;
