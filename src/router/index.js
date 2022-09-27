@@ -6,18 +6,13 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
+      name: 'sign-in',
+      component: () => import('../hostlify/security/sign-in/sign-in.vue')
     },
     {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue')
-    },
-    {
-      path: '/sign-in',
-      name: 'sign-in',
-      component: () => import('../hostlify/security/sign-in/sign-in.vue')
     },
     {
       path: '/forgot-password',

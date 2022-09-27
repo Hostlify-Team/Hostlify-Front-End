@@ -20,8 +20,16 @@
               </router-link>
             </div>
             <div class="buttons">
-              <router-link to="/sign-up" class="rw"><pv-button>Crear Cuenta</pv-button></router-link>
+              <router-link to="/sign-up-plans" class="rw"><pv-button>Crear Cuenta</pv-button></router-link>
               <pv-button>Iniciar sesion</pv-button>
+            </div>
+            <div>
+              <p style="text-align: center">Inicio de sesion provisional</p>
+              <div style="display: flex; justify-content: space-evenly">
+                <pv-button @click="fakeSignIn('manager')">Manager</pv-button>
+                <pv-button @click="fakeSignIn('guest')">Guest</pv-button>
+              </div>
+
             </div>
           </div>
         </template>
@@ -36,6 +44,25 @@
 export default {
   name: "sign-in",
   components: {},
+  data(){
+    return{
+
+    }
+  },
+  methods:{
+    fakeSignIn(usertype){
+      localStorage.setItem("type",usertype)
+      if(usertype==='manager'){
+        this.$router.push("/rooms")
+      }
+      else {
+        this.$router.push("/services")
+      }
+    }
+  },
+  created() {
+    localStorage.setItem("type",null)
+  }
 
 }
 </script>
