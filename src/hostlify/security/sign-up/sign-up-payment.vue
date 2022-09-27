@@ -66,13 +66,13 @@ export default {
       if(userInfo!=null){
         this.user=JSON.parse(userInfo)
       }
-      this.user.plan=localStorage.getItem("selectedPlan")
+      this.user.plan=JSON.parse(localStorage.getItem("selectedPlan"))
       this.user.type="manager"
       console.log("Usuario:",this.user)
       new UsersServices().postUsers(this.user.name,this.user.email,this.user.password,this.user.plan,this.user.type).then(response=>{
         console.log("Usuario registrado Correctamente")
         localStorage.clear()
-        //!TODO: GUARDAR USUARIO CON PLAN EL NOMBRE NO EL NUMERO Y LIMPIAR EL "user" del data
+        localStorage.setItem("type","manager")
       })
 
     }

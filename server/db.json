@@ -52,6 +52,62 @@
       "name": "Alonso Sanchez",
       "email": "alonso@gmail.com",
       "password": "alonso123"
+    },
+    {
+      "type": "manager",
+      "plan": "Premium",
+      "name": null,
+      "email": null,
+      "password": null,
+      "id": 3
+    },
+    {
+      "type": "manager",
+      "plan": null,
+      "name": null,
+      "email": null,
+      "password": null,
+      "id": 4
+    },
+    {
+      "type": "manager",
+      "plan": null,
+      "name": null,
+      "email": null,
+      "password": null,
+      "id": 5
+    },
+    {
+      "type": "manager",
+      "plan": null,
+      "name": null,
+      "email": null,
+      "password": null,
+      "id": 6
+    },
+    {
+      "type": "manager",
+      "plan": null,
+      "name": null,
+      "email": null,
+      "password": null,
+      "id": 7
+    },
+    {
+      "type": "manager",
+      "plan": null,
+      "name": null,
+      "email": null,
+      "password": null,
+      "id": 8
+    },
+    {
+      "type": "manager",
+      "plan": null,
+      "name": null,
+      "email": null,
+      "password": null,
+      "id": 9
     }
   ]
 }

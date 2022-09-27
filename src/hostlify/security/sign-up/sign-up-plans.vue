@@ -6,17 +6,17 @@
             <div class="steps" >
               <h4 style="margin: 0 0 0 2rem">Paso 1 de 3</h4>
             </div>
-            <div class="phrase" style="margin-bottom: 1rem; display: flex; justify-content: center">
+            <div class="phrase" style="margin-bottom: 1rem; display: flex; justify-content: center; text-align: center">
               <h1>Elige tu plan en Hostlify</h1>
             </div>
-            <div class="switch" style="margin-bottom: 3rem; display: flex; justify-content: center">
+            <div class="switch" >
               <pv-select-button v-model="value1" :options="options" aria-labelledby="single" @click="changePlan"/>
             </div>
             <div class="plans">
               <div v-show="defaultPlan" class="default">
-                <div class="cards" style="margin-bottom: 3rem; display: flex; justify-content: space-evenly;">
+                <div class="cards">
                   <div v-for="plan in plans">
-                    <pv-card style="width: 18em;" class="card">
+                    <pv-card class="card">
                       <template #header>
                         <div class="solidColor" v-if="plan.name==='Standard'" style="background-color: #FFC286"></div>
                         <div class="solidColor" v-if="plan.name==='Pro'" style="background-color: #EA9D51"></div>
@@ -24,24 +24,31 @@
                       </template>
                       <template #content>
                         <div class="content">
-                          <h2 style="margin-bottom: 0.5rem">{{plan.name}}</h2>
-                          <template v-if="plan.rooms!==null" >
-                            <p style="margin-top: 6px">Este plan te permite tener hasta</p>
-                            <p style="margin-top: 6px">{{plan.rooms}} habitaciones</p>
-                          </template>
-                          <template v-else >
-                            <p style="margin-top: 6px">Este plan te permite tener </p>
-                            <p style="margin-top: 6px">infinitas habitaciones</p>
-                          </template>
+                          <h2>{{plan.name}}</h2>
+                          <div class="visible">
+                            <template v-if="plan.rooms!==null" >
+                              <div class="usher">
+                                <p style="margin-top: 6px">Este plan te permite tener </p>
+                                <p class="until">hasta</p>
+                              </div>
+                              <p style="margin-top: 6px">{{plan.rooms}} habitaciones</p>
+                            </template>
+                            <template v-else >
+                              <div class="usherVisible">
+                                <p style="margin-top: 15px">Este plan te permite tener </p>
+                              </div>
+                              <p style="margin-top: 14px">infinitas habitaciones</p>
+                            </template>
+                          </div>
                           <div class="price">
                             <p style="font-weight: bold; margin-top: 8px">{{ plan.price }} S/</p>
                             <div style="display: table;">
                               <p style="margin: 0;padding: 0 0 0.45rem 0.1rem ;align-items: end ;display: table-cell;vertical-align: bottom; color: darkgrey" >mo*</p>
                             </div>
                           </div>
-                          <pv-button v-if="plan.name==='Standard'" style="margin-top: .5em; background-color: #FFC286; color:white" @click="planSelected(plan.price)">Elegir</pv-button>
-                          <pv-button v-if="plan.name==='Pro'" style="margin-top: .5em; background-color: #EA9D51; color:white" @click="planSelected(plan.price)">Elegir</pv-button>
-                          <pv-button v-if="plan.name==='Premium'" style="margin-top: .5em; background-color: #F1C94E; color:white" @click="planSelected(plan.price)">Elegir</pv-button>
+                          <pv-button class="planButton" v-if="plan.name==='Standard'" style="background-color: #FFC286; color:white" @click="planSelected('Standard')">Elegir</pv-button>
+                          <pv-button class="planButton" v-if="plan.name==='Pro'" style="background-color: #EA9D51; color:white" @click="planSelected('Pro')">Elegir</pv-button>
+                          <pv-button class="planButton" v-if="plan.name==='Premium'" style="background-color: #F1C94E; color:white" @click="planSelected('Premium')">Elegir</pv-button>
                         </div>
                       </template>
                     </pv-card >
@@ -75,7 +82,7 @@
                               <p style="margin: 0;padding: 0 0 0.5rem 0.5rem ;align-items: end ;display: table-cell;vertical-align: bottom;color: darkgrey" >mo*</p>
                             </div>
                           </div>
-                          <pv-button style="margin-top: .5em; background-color: #D6A049; color:white" @click="planSelected(customPlanPrice*6.50)">Elegir</pv-button>
+                          <pv-button style="margin-top: .5em; background-color: #D6A049; color:white" @click="planSelected('Custom')">Elegir</pv-button>
                         </div>
                       </div>
                     </template>
@@ -121,8 +128,8 @@ export default {
         this.defaultPlan=true
       }
     },
-    planSelected(price){
-      this.addTemporaryPlan(price)
+    planSelected(plan){
+      this.addTemporaryPlan(plan)
       this.$router.push("/sign-up-register")
     },
     addTemporaryPlan(plan){
@@ -145,16 +152,151 @@ export default {
   background-color: white;
   color: black;
   margin-top: 0;
+  width: 18em;
 }
 p {
   line-height: 1.5;
   margin-bottom: 0.5rem
 }
-.content{
-  margin-left: 1rem;
+.content h2{
+  margin-bottom: 0.5rem;
 }
-
 .price{
   display: flex;
+}
+.cards{
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: space-evenly;
+}
+.planButton{
+  margin-top: .5em;
+}
+.until{
+  margin-top: 6px;
+  margin-left: 4px;
+}
+.usher{
+  display: flex;
+}
+.switch{
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+}
+@media (max-width:1280px){
+  .cards{
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .card{
+    border-radius: 1rem;
+    background-color: white;
+    color: black;
+    margin-top: 0;
+    width: 14em;
+    height: 18em;
+  }
+  .content h2{
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+  }
+  .content p{
+    margin-top: 0;
+  }
+  .until{
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    margin: 0;
+  }
+  .planButton{
+    margin-top: 0;
+  }
+}
+@media (max-width:1054px){
+  .cards{
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .card{
+    border-radius: 1rem;
+    background-color: white;
+    color: black;
+    margin-top: 0;
+    width: 10em;
+    height: 14em;
+  }
+  .content h2{
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+  }
+  .content p{
+    margin-top: 0;
+  }
+  .until{
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    margin: 0;
+  }
+  .planButton{
+    margin-top: 0;
+  }
+  .visible{
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    margin: 0;
+  }
+
+}
+@media (max-width:700px){
+  .default{
+    display: flex;
+    justify-content: center;
+  }
+  .cards{
+    margin-bottom: 3rem;
+    display: block;
+    justify-content: center;
+  }
+  .card{
+    border-radius: 1rem;
+    background-color: white;
+    color: black;
+    margin-bottom: 1.5rem;
+    width: 10em;
+    height: 14em;
+  }
+  .content h2{
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+  }
+  .content p{
+    margin-top: 0;
+  }
+  .planButton{
+    margin-top: 0;
+  }
+
+}
+@media (max-width:559px){
+  .default{
+    display: flex;
+    justify-content: center;
+  }
+  .cards{
+    margin-bottom: 3rem;
+    display: block;
+    justify-content: center;
+  }
+  .switch{
+    margin-left: 15vw;
+
+  }
+
 }
 </style>
