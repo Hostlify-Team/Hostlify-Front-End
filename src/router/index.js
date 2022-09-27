@@ -23,6 +23,11 @@ const router = createRouter({
       path: '/SOS',
       name: 'SOS',
       component: () => import('../hostlify/SOS.vue')
+    },
+    {
+      path: '/mail-box',
+      name: 'mail-box',
+      component: () => import('../hostlify/mail-box.vue')
     }
   ]
 })
