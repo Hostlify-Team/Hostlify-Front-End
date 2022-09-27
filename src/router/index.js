@@ -18,6 +18,11 @@ const router = createRouter({
       path: '/map-hotel',
       name: 'map-hotel',
       component: () => import('../hostlify/map-hotel.vue')
+    },
+    {
+      path: '/SOS',
+      name: 'SOS',
+      component: () => import('../hostlify/SOS.vue')
     }
   ]
 })
