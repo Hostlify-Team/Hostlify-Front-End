@@ -9,7 +9,7 @@
 </script>
 
 <template>
-  <Navbar />
+  <Navbar/>
   <RouterView />
 </template>
 

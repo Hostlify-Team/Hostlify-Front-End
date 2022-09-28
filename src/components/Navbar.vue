@@ -1,6 +1,5 @@
-
 <template>
-  <div v-show="this.typeUser!==null">
+  <div v-show="this.typeUser!=='null'">
     <Toolbar>
       <template #start>
         <avatar
@@ -39,7 +38,6 @@
     </Toolbar>
     <h1>{{this.typeUser}}</h1>
   </div>
-
 </template>
 
 
@@ -53,16 +51,18 @@ export default {
     Toolbar,
     Avatar,
   },
-
   data(){
     return{
-      typeUser:null
+      typeUser:null,
 
     }
   },
   methods:{
     logOut(){
+      localStorage.setItem('type',null)
       this.$router.push("/")
+      this.typeUser='null'
+
     }
   },
   created() {
