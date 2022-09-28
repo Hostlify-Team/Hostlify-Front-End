@@ -17,7 +17,7 @@
         <template #content>
           <img src="@/assets/food.png" alt="" style="width: 300px">
           <p>Food service</p>
-          <router-link to="/request">
+          <router-link to="/step-1">
             <pv-button>Solicitar servicio</pv-button>
           </router-link>
         </template>
