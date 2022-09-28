@@ -1,7 +1,7 @@
 <template>
   <div class="containerDataTable">
     <h1>Rooms</h1>
-    <pv-data-table class="dataTable" :value="cars" responsiveLayout="scroll" :scrollable="true" scrollHeight="400px" dataKey="id" v-model:filters="filters" filterDisplay="menu" :loading="loading" :paginator="true" :rows="10">
+    <pv-data-table class="dataTable" :value="cars" responsiveLayout="scroll" :scrollable="true" scrollHeight="600px" dataKey="id" v-model:filters="filters" filterDisplay="menu" :loading="loading" :paginator="true" :rows="10">
       <template #header>
         <div>
           Lista de Habitaciones
@@ -61,6 +61,10 @@ export default {
         { number: "Room2", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
         { number: "Room3", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
         { number: "Room4", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
+        { number: "Room6", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
+        { number: "Room7", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
+        { number: "Room8", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
+        { number: "Room9", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
       ]
     }
   }
@@ -85,6 +89,7 @@ export default {
 }
 
 .dataTable {
-  width: 80%;
+  width: 95%;
 }
+
 </style>
