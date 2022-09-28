@@ -47,6 +47,7 @@
 
 <script>
 import {UsersServices} from "../../../services/users-services";
+import {UserServices} from "../../../services/user-services";
 export default {
   name: "sign-up-payment",
   data(){
@@ -69,12 +70,13 @@ export default {
       this.user.plan=JSON.parse(localStorage.getItem("selectedPlan"))
       this.user.type="manager"
       console.log("Usuario:",this.user)
-      new UsersServices().postUsers(this.user.name,this.user.email,this.user.password,this.user.plan,this.user.type).then(response=>{
-        console.log("Usuario registrado Correctamente")
+      new UserServices().register(this.user.email,this.user.password,this.user.type,this.user.plan,this.user.name).then(response=>{
         localStorage.clear()
-        localStorage.setItem("type","manager")
-      })
+        this.$router.push("/")
 
+      }).catch(error=>{
+        console.log(error.response)
+      })
     }
   }
 }
