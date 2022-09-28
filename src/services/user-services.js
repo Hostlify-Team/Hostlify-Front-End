@@ -1,9 +1,12 @@
 import axios from "axios";
 export class UserServices{
-    register = (email,password) => {
+    register = (email,password,type,plan,name) => {
         return axios.post("http://localhost:3000/register",{
             email,
-            password
+            password,
+            type,
+            plan,
+            name
         })
     }
 
