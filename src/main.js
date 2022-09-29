@@ -3,9 +3,9 @@ import App from './App.vue'
 import router from './router'
 import i18n from "@/locals/i18n";
 import PrimeVue from 'primevue/config';
+import "/node_modules/primeflex/primeflex.css";
 import ToastService from 'primevue/toastservice';
 import InputNumber from 'primevue/inputnumber';
-
 
 //PrimeVue Styles
 import "primevue/resources/themes/vela-orange/theme.css"       //theme
@@ -30,6 +30,7 @@ import Checkbox from 'primevue/checkbox';
 import InputSwitch from 'primevue/inputswitch';
 import Password from 'primevue/password';
 import RadioButton from 'primevue/radiobutton';
+import Dialog from 'primevue/dialog';
 
 
 const app = createApp(App)
@@ -57,6 +58,7 @@ app.component("pv-input-switch",InputSwitch)
 app.component("pv-password",Password)
 app.component("pv-radio-button",RadioButton)
 app.component("pv-input-number",InputNumber)
+app.component("pv-dialog",Dialog)
 
 
 
