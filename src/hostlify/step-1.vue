@@ -20,8 +20,7 @@
         <p>Seleción de platillo</p>
       </div>
     </div>
-
-    <div class="container" style="display: flex; justify-content: space-around; height: 100vh; align-items: center">
+    <div class="container" style="display: flex; justify-content: space-around;margin-top: 3rem" >
       <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:left">
@@ -29,7 +28,7 @@
           </div>
 
           <div style="display: flex; justify-content:center">
-            <h1 style="transform:translateY(-50px) ">H28</h1>
+            <h1 style="text-align: center">H28</h1>
           </div>
 
           <div style="display: flex; justify-content:left">
@@ -74,6 +73,7 @@ export default {
 .punto{
   display:flex;
   flex-direction: column;
+  width: 3rem;
 }
 .punto p{
   text-align: center;
@@ -82,19 +82,22 @@ export default {
 
 
 .line{
+  display: flex;
   width: 88%;
-  height: 5%;
-  margin-top: 1.5%;
+  height: 1%;
+  margin-top: 2.7%;
   left: 6%;
   margin-right: -50%;
   position: absolute;
   background-color: #D6A049;
-
+  align-items: center;
+  border-radius: 1rem;
 }
 
 .dot {
-  height: 100px;
-  width: 100px;
+  margin-top: 48%;
+  height: 50px;
+  width: 50px;
   background-color: #f2f2f2;
   z-index: 100;
   border-radius: 100%;
