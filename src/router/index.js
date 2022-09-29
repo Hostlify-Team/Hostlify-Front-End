@@ -12,6 +12,35 @@ const router = createRouter({
       meta: {hideNavbar: true,}
     },
     {
+      path: '/about',
+      name: 'about',
+      component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/services',
+      name: 'services',
+      component: () => import('../hostlify/services.vue')
+    },
+    {
+      path: '/step-1',
+      name: 'step1',
+      component: () => import('../hostlify/step-1.vue')
+    },
+    {
+      path: '/step-2',
+      name: 'step2',
+      component: () => import('../hostlify/step-2.vue')
+    },
+    {
+      path: '/step-3',
+      name: 'step3',
+      component: () => import('../hostlify/step-3.vue')
+    },
+    {
+      path: '/step-4',
+      name: 'step4',
+      component: () => import('../hostlify/step-4.vue')
+    },{
       path: '/',
       name: 'forgot-password',
       component: () => import('../hostlify/security/forgot-password/forgot-password.vue'),
@@ -55,13 +84,7 @@ const router = createRouter({
       name: 'rooms',
       component: () => import('../hostlify/Rooms_Table.vue'),
       meta: {manager: true}
-    },
-    {
-      path: '/register-guest',
-      name: 'Register-Huesped',
-      component: () => import('../hostlify/Register_Huesped.vue'),
-      meta: {manager: true}
-    },
+    }
   ]
 })
 export default router

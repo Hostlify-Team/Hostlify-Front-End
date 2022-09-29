@@ -5,6 +5,7 @@ import i18n from "@/locals/i18n";
 import PrimeVue from 'primevue/config';
 import "/node_modules/primeflex/primeflex.css";
 import ToastService from 'primevue/toastservice';
+import InputNumber from 'primevue/inputnumber';
 
 //PrimeVue Styles
 import "primevue/resources/themes/vela-orange/theme.css"       //theme
@@ -45,7 +46,7 @@ app.component("pv-column",Column)
 app.component("pv-column-group",ColumnGroup)
 app.component("pv-row",Row)
 app.component("pv-carousel",Carousel)
-app.component("pv--steps",Steps)
+app.component("pv-steps",Steps)
 app.component("pv-file-upload",FileUpload)
 app.component("pv-data-view",DataView)
 app.component("pv-sidebar",Sidebar)
@@ -56,8 +57,8 @@ app.component("pv-checkbox",Checkbox)
 app.component("pv-input-switch",InputSwitch)
 app.component("pv-password",Password)
 app.component("pv-radio-button",RadioButton)
+app.component("pv-input-number",InputNumber)
 app.component("pv-dialog",Dialog)
-
 
 
 
