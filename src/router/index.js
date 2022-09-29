@@ -36,11 +36,21 @@ const router = createRouter({
       meta: {hideNavbar: true,}
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
+      path: '/map-hotel',
+      name: 'map-hotel',
+      component: () => import('../hostlify/map-hotel.vue')
     },
     {
+      path: '/SOS',
+      name: 'SOS',
+      component: () => import('../hostlify/SOS.vue')
+    },
+    {
+      path: '/mail-box',
+      name: 'mail-box',
+      component: () => import('../hostlify/mail-box.vue')
+    },
+      {
       path: '/rooms',
       name: 'rooms',
       component: () => import('../hostlify/Rooms_Table.vue'),
@@ -52,32 +62,6 @@ const router = createRouter({
       component: () => import('../hostlify/Register_Huesped.vue'),
       meta: {manager: true}
     },
-    {
-      path: '/sign-up-plans',
-      name: 'sign-up-plans',
-      component: () => import('../hostlify/security/sign-up/sign-up-plans.vue')
-    },
-    {
-      path: '/sign-up-register',
-      name: 'sign-up-register',
-      component: () => import('../hostlify/security/sign-up/sign-up-register.vue')
-    },
-    {
-      path: '/sign-up-payment',
-      name: 'sign-up-payment',
-        component: () => import('../hostlify/security/sign-up/sign-up-payment.vue')
-    },
-    {
-      path: '/history',
-      name: 'HistoryPage',
-      component: () => import('../hostlify/HistoryView.vue'),
-      meta: {manager: true}
-    },
-    {
-      path: '/services',
-      name: 'services',
-      component: () => import('../hostlify/services.vue')
-    }
   ]
 })
 export default router
