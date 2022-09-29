@@ -17,7 +17,7 @@ const router = createRouter({
     {
       path: '/registerhuesped',
       name: 'rooms',
-      component: () => import('../views/Register_Huesped.vue')
+      component: () => import('../hostlify/Register_Huesped.vue')
     },
   ]
 })
