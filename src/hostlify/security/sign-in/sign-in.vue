@@ -3,7 +3,7 @@
     <pv-card class="SignInCard">
       <template #title >
         <div class="Text">
-          Iniciar sesion
+          Iniciar sesionn
         </div>
       </template>
       <template #content>
