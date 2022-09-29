@@ -32,7 +32,19 @@ const router = createRouter({
     {
       path: '/sign-up-payment',
       name: 'sign-up-payment',
-      component: () => import('../hostlify/security/sign-up/sign-up-payment.vue')
+        component: () => import('../hostlify/security/sign-up/sign-up-payment.vue')
+    },
+    {
+      path: '/history',
+      name: 'HistoryPage',
+      component: () => import('../hostlify/HistoryView.vue'),
+      meta: {manager: true}
+    },
+    {
+      path: '/registerhuesped',
+      name: 'rooms',
+      component: () => import('../hostlify/Register_Huesped.vue'),
+      meta: {manager: true}
     }
   ]
 })
