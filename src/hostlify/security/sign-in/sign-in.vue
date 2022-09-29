@@ -45,11 +45,13 @@ export default {
       new UserServices().login(this.email,this.password).then(response=>{
         console.log("Inicio de sesion exitoso")
         sessionStorage.setItem("jwt",response.data.accessToken)
+        sessionStorage.setItem("name",response.data.user.name)
+        sessionStorage.setItem("email",response.data.user.email)
         sessionStorage.setItem("type",response.data.user.type)
+        sessionStorage.setItem("plan",response.data.user.plan)
         console.log("Ingresaste como: ",response.data.user.type)
         if(response.data.user.type==="manager"){
           this.$router.push("/rooms")
-          console.log("PRINCESITA")
         }else{
           this.$router.push("/services")
         }
