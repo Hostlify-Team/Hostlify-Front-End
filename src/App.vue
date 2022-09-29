@@ -1,5 +1,5 @@
 <script>
- import Rooms_Table from "./views/Rooms_Table.vue";
+ import Rooms_Table from "./History/Rooms_Table.vue";
  export default {
    components: {Rooms_Table}
  }
