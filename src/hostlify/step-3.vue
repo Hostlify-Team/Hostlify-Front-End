@@ -22,18 +22,18 @@
     </div>
 
     <div class="container" style="display: flex; justify-content: space-around; height: 100vh; align-items: center;padding: 0 5rem">
-      <pv-card style="width: 50vw; border-radius: 1rem; height: 60vh">
+      <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:left">
             <h2>Seleccione sus extras</h2>
           </div>
-          <div style="display: flex; justify-content:center">
-            <pv-input-text id="food"/>
+          <div style="display: flex;margin-bottom:30px; justify-content:center">
+            <pv-input-text id="food" style="width:500px"/>
           </div>
           <div style="display: flex; justify-content:center">
             <br>
             <pv-input-number v-model="value2" showButtons buttonLayout="horizontal"
-                             decrementButtonClass="p-button-danger" incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal" />
+                             incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal" />
           </div>
 
           <div style="display: flex; justify-content:left">
@@ -43,11 +43,11 @@
             <pv-input-text id="food"/>
           </div>
 
-          <div style="display: flex; justify-content:center">
-            <router-link to="/step-4"> <pv-button style="border-radius: 0.4rem">Siguiente</pv-button> </router-link>
+          <div style="display: flex; justify-content:center;margin-bottom:10px;margin-top:30px">
+            <router-link style="text-decoration:none" to="/step-4"> <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold">Siguiente</pv-button> </router-link>
           </div>
           <div style="display: flex; justify-content:center">
-            <router-link to="/services"> <h6>Cancelar</h6> </router-link>
+            <router-link style="text-decoration:none; color:#D6A049" to="/services"> <h6>Cancelar</h6> </router-link>
           </div>
 
         </template>

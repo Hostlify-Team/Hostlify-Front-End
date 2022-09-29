@@ -4,6 +4,7 @@ import router from './router'
 import i18n from "@/locals/i18n";
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
+import InputNumber from 'primevue/inputnumber';
 
 
 //PrimeVue Styles
@@ -55,7 +56,7 @@ app.component("pv-checkbox",Checkbox)
 app.component("pv-input-switch",InputSwitch)
 app.component("pv-password",Password)
 app.component("pv-radio-button",RadioButton)
-
+app.component("pv-input-number",InputNumber)
 
 
 
