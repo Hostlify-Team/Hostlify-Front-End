@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import i18n from "@/locals/i18n";
 import PrimeVue from 'primevue/config';
+import "/node_modules/primeflex/primeflex.css";
 import ToastService from 'primevue/toastservice';
 
 
