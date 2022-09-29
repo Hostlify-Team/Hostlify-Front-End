@@ -53,8 +53,23 @@ const router = createRouter({
       meta: {manager: true}
     },
     {
+      path: '/sign-up-plans',
+      name: 'sign-up-plans',
+      component: () => import('../hostlify/security/sign-up/sign-up-plans.vue')
+    },
+    {
+      path: '/sign-up-register',
+      name: 'sign-up-register',
+      component: () => import('../hostlify/security/sign-up/sign-up-register.vue')
+    },
+    {
+      path: '/sign-up-payment',
+      name: 'sign-up-payment',
+        component: () => import('../hostlify/security/sign-up/sign-up-payment.vue')
+    },
+    {
       path: '/history',
-      name: 'HistoryView',
+      name: 'HistoryPage',
       component: () => import('../hostlify/HistoryView.vue'),
       meta: {manager: true}
     },
