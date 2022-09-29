@@ -9,9 +9,9 @@
       <template #content>
         <div class="form">
           <label for="email">Correo Electronico</label>
-          <pv-input-text id="email" class="input"></pv-input-text>
+          <pv-input-text id="email" class="input" v-model="email"></pv-input-text>
           <label for="password">contraseña</label>
-          <pv-input-text id="password" type="password" class="input"></pv-input-text>
+          <pv-input-text id="password" type="password" class="input" v-model="password"></pv-input-text>
         </div>
         <div class="footer">
           <div class="Text">
@@ -21,46 +21,42 @@
           </div>
           <div class="buttons">
             <router-link to="/sign-up-plans" class="rw"><pv-button>Crear Cuenta</pv-button></router-link>
-            <pv-button>Iniciar sesion</pv-button>
-          </div>
-          <div>
-            <p style="text-align: center">Inicio de sesion provisional</p>
-            <div style="display: flex; justify-content: space-evenly">
-              <pv-button @click="fakeSignIn('manager')">Manager</pv-button>
-              <pv-button @click="fakeSignIn('guest')">Guest</pv-button>
-            </div>
-
+            <pv-button @click="signIn">Iniciar sesion</pv-button>
           </div>
         </div>
       </template>
-
-
-
     </pv-card>
     <navbar key="navbarReload"></navbar>
   </div>
 </template>
 
 <script>
+import {UserServices} from "../../../services/user-services";
 export default {
   name: "sign-in",
   data(){
     return{
+      email:"",
+      password:""
     }
   },
   methods:{
-    fakeSignIn(usertype){
-      localStorage.setItem("type",usertype)
-      if(usertype==='manager'){
-        this.$router.push("/about")
-      }
-      else {
-        this.$router.push("/services")
-      }
+    signIn(){
+      new UserServices().login(this.email,this.password).then(response=>{
+        console.log("Inicio de sesion exitoso")
+        sessionStorage.setItem("jwt",response.data.accessToken)
+        sessionStorage.setItem("name",response.data.user.name)
+        sessionStorage.setItem("email",response.data.user.email)
+        sessionStorage.setItem("type",response.data.user.type)
+        sessionStorage.setItem("plan",response.data.user.plan)
+        console.log("Ingresaste como: ",response.data.user.type)
+        if(response.data.user.type==="manager"){
+          this.$router.push("/rooms")
+        }else{
+          this.$router.push("/services")
+        }
+      })
     }
-  },
-  created() {
-    localStorage.setItem("type",null)
   }
 }
 </script>
