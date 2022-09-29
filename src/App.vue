@@ -1,14 +1,11 @@
 <script>
-  import Navbar from "../src/components/Navbar.vue";
+ import Register_Huesped from "./hostlify/Register_Huesped.vue";
  export default {
-   components:{
-       Navbar,
-   }
+   components: {Register_Huesped}
  }
 </script>
 
 <template>
-  <Navbar/>
-  <RouterView />
+  <Register_Huesped />
 </template>
 
