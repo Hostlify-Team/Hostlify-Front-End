@@ -6,6 +6,5 @@
 </script>
 
 <template>
-  <Rooms_Table />
 </template>
 
