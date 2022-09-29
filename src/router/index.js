@@ -41,7 +41,7 @@ const router = createRouter({
       name: 'step4',
       component: () => import('../hostlify/step-4.vue')
     },{
-      path: '/',
+      path: '/forgot-password',
       name: 'forgot-password',
       component: () => import('../hostlify/security/forgot-password/forgot-password.vue'),
       meta: {hideNavbar: true,}
@@ -83,6 +83,12 @@ const router = createRouter({
       path: '/rooms',
       name: 'rooms',
       component: () => import('../hostlify/Rooms_Table.vue'),
+      meta: {manager: true}
+    },
+    {
+      path: '/history',
+      name: 'HistoryView',
+      component: () => import('../hostlify/HistoryView.vue'),
       meta: {manager: true}
     }
   ]

@@ -16,13 +16,13 @@
           </router-link>
         </div>
         <div v-else>
-          <router-link class="mr-3 navbar-item" to="/tu-habitacion">
-            Tu habitacion
+          <router-link class="mr-3 navbar-item" to="/services">
+            Servicios
           </router-link>
-          <router-link class="mr-2 navbar-item" to="/informacion">
+          <router-link class="mr-2 navbar-item" to="/map-hotel">
             Informacion
           </router-link>
-          <router-link class="mr-2 navbar-item" to="/ayuda">
+          <router-link class="mr-2 navbar-item" to="/SOS">
             Ayuda
           </router-link>
         </div>
