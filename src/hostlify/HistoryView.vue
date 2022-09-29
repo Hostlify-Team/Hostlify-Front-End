@@ -51,8 +51,20 @@ export default {
         {
           number: "1",
           guest: "Nombre de ejemplo",
-          date: "23/09/2022",
+          date: "14/09/2022",
           price: "15 PEN",
+        },
+        {
+          number: "2",
+          guest: "Nombre de ejemplo",
+          date: "1/09/2022",
+          price: "50 PEN",
+        },
+        {
+          number: "3",
+          guest: "Nombre de ejemplo",
+          date: "23/09/2022",
+          price: "45 PEN",
         },
       ],
       filters: null,
