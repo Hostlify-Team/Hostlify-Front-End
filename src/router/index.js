@@ -17,7 +17,7 @@ const router = createRouter({
     {
       path: '/history',
       name: 'HistoryPage',
-      component: () => import('../views/HistoryView.vue')
+      component: () => import('../hostlify/HistoryView.vue')
     }
   ]
 })
