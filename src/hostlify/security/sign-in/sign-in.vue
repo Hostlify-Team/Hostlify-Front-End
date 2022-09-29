@@ -57,6 +57,9 @@ export default {
         }
       })
     }
+  },
+  created() {
+    sessionStorage.clear();
   }
 }
 </script>
