@@ -19,6 +19,12 @@ const router = createRouter({
       name: 'HistoryPage',
       component: () => import('../hostlify/HistoryView.vue'),
       meta: {manager: true}
+    },
+    {
+      path: '/registerhuesped',
+      name: 'rooms',
+      component: () => import('../hostlify/Register_Huesped.vue'),
+      meta: {manager: true}
     }
   ]
 })
