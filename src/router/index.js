@@ -16,16 +16,10 @@ const router = createRouter({
     },
     {
       path: '/history',
-      name: 'HistoryPage',
-      component: () => import('../hostlify/HistoryView.vue'),
-      meta: {manager: true}
-    },
-    {
-      path: '/registerhuesped',
-      name: 'rooms',
-      component: () => import('../hostlify/Register_Huesped.vue'),
-      meta: {manager: true}
+      name: 'HistoryView',
+      component: () => import('../hostlify/HistoryView.vue')
     }
+
   ]
 })
 
