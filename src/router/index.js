@@ -8,8 +8,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'sign-in',
-      component: () => import('../hostlify/security/sign-in/sign-in.vue'),
-      meta: {hideNavbar: true,}
+      component: () => import('../hostlify/security/sign-in/sign-in.vue')
+
     },
     {
       path: '/about',
@@ -43,26 +43,22 @@ const router = createRouter({
     },{
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import('../hostlify/security/forgot-password/forgot-password.vue'),
-      meta: {hideNavbar: true,}
+      component: () => import('../hostlify/security/forgot-password/forgot-password.vue')
     },
     {
       path: '/sign-up-plans',
       name: 'sign-up-plans',
-      component: () => import('../hostlify/security/sign-up/sign-up-plans.vue'),
-      meta: {hideNavbar: true,}
+      component: () => import('../hostlify/security/sign-up/sign-up-plans.vue')
     },
     {
       path: '/sign-up-payment',
       name: 'sign-up-payment',
-      component: () => import('../hostlify/security/sign-up/sign-up-payment.vue'),
-      meta: {hideNavbar: true,}
+      component: () => import('../hostlify/security/sign-up/sign-up-payment.vue')
     },
     {
       path: '/sign-up-register',
       name: 'sign-up-register',
-      component: () => import('../hostlify/security/sign-up/sign-up-register.vue'),
-      meta: {hideNavbar: true,}
+      component: () => import('../hostlify/security/sign-up/sign-up-register.vue')
     },
     {
       path: '/map-hotel',
@@ -79,17 +75,15 @@ const router = createRouter({
       name: 'mail-box',
       component: () => import('../hostlify/mail-box.vue')
     },
-      {
+    {
       path: '/rooms',
       name: 'rooms',
-      component: () => import('../hostlify/Rooms_Table.vue'),
-      meta: {manager: true}
+      component: () => import('../hostlify/Rooms_Table.vue')
     },
     {
       path: '/history',
       name: 'HistoryView',
-      component: () => import('../hostlify/HistoryView.vue'),
-      meta: {manager: true}
+      component: () => import('../hostlify/HistoryView.vue')
     }
   ]
 })
