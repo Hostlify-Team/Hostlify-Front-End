@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!$route.meta.hideNavbar">
+  <div v-show="showNavBar">
     <Toolbar>
       <template #start>
         <avatar
@@ -7,7 +7,7 @@
             image="https://github.com/Hostlify-Team/Hostlify-Landing-Page/blob/main/src/assets/images/Logo.png?raw=true"
             class="mr-2"
         />
-        <div v-if="$route.meta.manager">
+        <div v-if="currentUserType==='manager'">
           <router-link class="mr-3 navbar-item" to="/rooms">
             Rooms
           </router-link>
@@ -28,6 +28,7 @@
         </div>
       </template>
       <template #end>
+        <p style="margin-right: 1rem">Hola {{currentUserName}} !</p>
         <pv-button @click="logOut">
           Cerrar Sesion
         </pv-button>
@@ -49,25 +50,38 @@ export default {
   },
   data(){
     return{
+      showNavBar:false,
+      currentUserType:null,
+      currentUserName:null
     }
   },
   methods:{
     logOut(){
       localStorage.setItem('type',null)
+      this.showNavBar=false
       this.$router.push("/")
       sessionStorage.clear()
-    },
-    getCurrentType(){
-      let currentTypeString=sessionStorage.getItem('type');
-      if(currentTypeString==='guest'){
-        return true
-      }else {
-        return false
-      }
     }
   },
   created() {
-    this.getCurrentType()
+    if(sessionStorage.getItem("jwt")===null){
+      this.showNavBar=false
+    }else {
+      this.showNavBar=true
+      this.currentUserName=sessionStorage.getItem("name")
+      this.currentUserType=sessionStorage.getItem("type")
+    }
+
+  },
+  mounted() {
+    console.log(this.showNavBar,"MOUNTED")
+    this.emitter.on("message-from-sign-up",isOpen=>{
+      this.showNavBar=isOpen.logged
+      this.currentUserType=isOpen.type
+      this.currentUserName=isOpen.name
+      console.log(isOpen.logged,isOpen.type)
+    })
+
   }
 
 }

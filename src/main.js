@@ -6,6 +6,8 @@ import PrimeVue from 'primevue/config';
 import "/node_modules/primeflex/primeflex.css";
 import ToastService from 'primevue/toastservice';
 import InputNumber from 'primevue/inputnumber';
+import mitt from 'mitt';
+const emitter = mitt();
 
 //PrimeVue Styles
 import "primevue/resources/themes/vela-orange/theme.css"       //theme
@@ -36,6 +38,7 @@ import SelectButton from 'primevue/selectbutton';
 
 
 const app = createApp(App)
+app.config.globalProperties.emitter = emitter;
 
 app.use(i18n)
 app.use(PrimeVue);
