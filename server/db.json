@@ -5,5 +5,37 @@
   "comments": [
     { "id": 1, "body": "some comment", "postId": 1 }
   ],
-  "profile": { "name": "typicode" }
+  "profile": { "name": "typicode" },
+  "rooms": [
+    {
+      "id": 1,
+      "roomName":"A-001",
+      "guestId": null,
+      "date": "10/01/2022",
+      "status": true,
+      "time": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "some extra description"
+    },
+    {
+      "id": 2,
+      "roomName":"A-002",
+      "guestId": null,
+      "date": "27/02/2022",
+      "status": true,
+      "time": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "some extra description"
+    },
+    {
+      "id": 3,
+      "roomName":"A-003",
+      "guestId": null,
+      "date": "15/01/2022",
+      "status": true,
+      "time": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "some extra description"
+    }
+  ]
 }

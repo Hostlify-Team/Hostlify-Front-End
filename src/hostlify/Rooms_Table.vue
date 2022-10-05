@@ -4,10 +4,10 @@
     <pv-data-table class="dataTable" :value="cars" responsiveLayout="scroll" :scrollable="true" scrollHeight="600px" dataKey="id" v-model:filters="filters" filterDisplay="menu" :loading="loading" :paginator="true" :rows="10">
       <template #header>
         <div>
-          Lista de Habitaciones
+          <h5 class="mb-2 md:m-0 p-as-md-center">Manage Products</h5>
           <span class="p-input-icon-left">
             <i class="pi pi-search" />
-            <pv-input-text type="Buscar" v-model="value1" placeholder="Search" />
+            <pv-input-text  placeholder="Search..." />
           </span>
         </div>
       </template>
