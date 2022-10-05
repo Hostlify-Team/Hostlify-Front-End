@@ -1,0 +1,54 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "plans": [
+    {
+      "id": 1,
+      "name": "Standard",
+      "rooms": 30,
+      "price": 180
+    },
+    {
+      "id": 2,
+      "name": "Pro",
+      "rooms": 50,
+      "price": 260
+    },
+    {
+      "id": 3,
+      "name": "Premium",
+      "rooms": null,
+      "price": 400
+    }
+  ],
+  "users": [
+    {
+      "email": "diego@gmail.com",
+      "password": "$2a$10$KGXb/FIPCr7J6bbqkulC2Og8YevPkjg0X9Di0wLzFODtxhu6SBuNa",
+      "type": "manager",
+      "plan": "Pro",
+      "name": "Diego Talledo",
+      "id": 1
+    },
+    {
+      "email": "alonso@gmail.com",
+      "password": "$2a$10$s5i8QDYoDFE4Np8/U.1McOV2L6PDGXlDfz0Cocu4Jd.gf8EUXS8HW",
+      "type": "guest",
+      "plan": null,
+      "name": "Alonso Sanchez",
+      "id": 2
+    }
+  ]
+}
