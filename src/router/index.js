@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import MainLayout from "../layouts/MainLayout.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,6 +9,7 @@ const router = createRouter({
       path: '/',
       name: 'sign-in',
       component: () => import('../hostlify/security/sign-in/sign-in.vue')
+
     },
     {
       path: '/about',
@@ -25,28 +27,16 @@ const router = createRouter({
       component: () => import('../hostlify/security/sign-up/sign-up-plans.vue')
     },
     {
+      path: '/sign-up-payment',
+      name: 'sign-up-payment',
+      component: () => import('../hostlify/security/sign-up/sign-up-payment.vue')
+    },
+    {
       path: '/sign-up-register',
       name: 'sign-up-register',
       component: () => import('../hostlify/security/sign-up/sign-up-register.vue')
-    },
-    {
-      path: '/sign-up-payment',
-      name: 'sign-up-payment',
-        component: () => import('../hostlify/security/sign-up/sign-up-payment.vue')
-    },
-    {
-      path: '/history',
-      name: 'HistoryPage',
-      component: () => import('../hostlify/HistoryView.vue'),
-      meta: {manager: true}
-    },
-    {
-      path: '/registerhuesped',
-      name: 'rooms',
-      component: () => import('../hostlify/Register_Huesped.vue'),
-      meta: {manager: true}
     }
   ]
 })
-
 export default router
+

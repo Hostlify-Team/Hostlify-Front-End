@@ -13,9 +13,26 @@
       "postId": 1
     }
   ],
-  "profile": {
-    "name": "typicode"
-  },
+  "plans": [
+    {
+      "id": 1,
+      "name": "Standard",
+      "rooms": 30,
+      "price": 180
+    },
+    {
+      "id": 2,
+      "name": "Pro",
+      "rooms": 50,
+      "price": 260
+    },
+    {
+      "id": 3,
+      "name": "Premium",
+      "rooms": null,
+      "price": 400
+    }
+  ],
   "users": [
     {
       "email": "diego@gmail.com",

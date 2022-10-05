@@ -33,7 +33,6 @@
 <script>
 import {UserServices} from "../../../services/user-services";
 export default {
-  name: "sign-in",
   data(){
     return{
       email:"",
@@ -51,15 +50,25 @@ export default {
         sessionStorage.setItem("plan",response.data.user.plan)
         console.log("Ingresaste como: ",response.data.user.type)
         if(response.data.user.type==="manager"){
+          this.sendMessage("manager",response.data.user.name)
           this.$router.push("/rooms")
         }else{
+          this.sendMessage("guest",response.data.user.name)
           this.$router.push("/services")
         }
       })
+    },
+    sendMessage(type,name){
+      let obj={
+        logged:true,
+        type: type,
+        name:name
+      }
+      this.emitter.emit("message-from-sign-up",obj)
     }
   },
   created() {
-    sessionStorage.clear();
+    sessionStorage.clear()
   }
 }
 </script>

@@ -6,13 +6,16 @@
 export default {
   data(){
     return{
-
+      navbarUpdate:true,
+      temp:null,
     }
   },
   methods:{
     mounted() {
       this.$toast.add({severity:'success', summary: 'Success Message', detail:'Im a toast', life: 3000});
     }
+  },
+  created(){
   }
 }
 </script>

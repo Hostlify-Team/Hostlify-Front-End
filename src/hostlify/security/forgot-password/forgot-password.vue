@@ -42,7 +42,7 @@ export default {
     },
     closeDialog(){
       this.confirmDialog=false;
-      this.$router.push("/sign-in")
+      this.$router.push("/")
     }
   }
 
