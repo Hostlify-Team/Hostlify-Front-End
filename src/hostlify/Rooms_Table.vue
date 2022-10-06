@@ -146,6 +146,7 @@
 <script>
 import {RoomServices} from "../services/room-services";
 import {UserServices} from "../services/user-services";
+import {HistoryServices} from "../services/history-services";
 import { FilterMatchMode } from "primevue/api";
 import Register_Huesped from "./Register_Huesped.vue";
 
@@ -297,6 +298,20 @@ export default {
       this.rooms[id].price=response.price
       this.rooms[id].time=response.time
       this.rooms[id].status=false
+
+      let temporaryRoomForHistory={
+        "roomName":this.rooms[id].roomName,
+        "managerId": this.rooms[id].managerId,
+        "guestId": this.rooms[id].guestId,
+        "date": this.rooms[id].date,
+        "time": this.rooms[id].time,
+        "price": this.rooms[id].price,
+        "description": this.rooms[id].description
+      }
+      new HistoryServices().postRoomHistory(this.rooms[id]).then(response=>{
+        console.log("Room added to history",response.data)
+      })
+
       new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
         this.setGuestInfo()
         console.log("Guest added successfully",response.data)

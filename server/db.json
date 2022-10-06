@@ -68,5 +68,18 @@
       "description": "some extra description",
       "id": 3
     }
+  ],
+  "history": [
+    {
+      "id": 1,
+      "roomName":"First Room Example",
+      "managerId": 1,
+      "guestId": 2,
+      "date": "6/10/2022",
+      "time": 10,
+      "price": 100,
+      "description": "some description"
+    }
+
   ]
 }
