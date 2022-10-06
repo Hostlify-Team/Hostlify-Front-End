@@ -17,4 +17,8 @@ export class UserServices{
                 password
             })
     }
+    getUser(id){
+        return axios.get("http://localhost:3000/users/"+id)
+
+    }
 }

@@ -36,7 +36,11 @@
 
         <pv-column selectionMode="multiple" style="width: 3rem" :exportable="false"></pv-column>
         <pv-column field="roomName" header="Habitacion" :sortable="true" style="min-width: 16rem"></pv-column>
-        <pv-column field="guestId" header="Huesped" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="guestId" header="Huesped" :sortable="true" style="min-width: 16rem">
+          <template #body="slotProps">
+            <p v-if="slotProps.data.guestId!==null">{{slotProps.data.guestName}}</p>
+          </template>
+        </pv-column>
         <pv-column field="date" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
         <pv-column field="price" header="Precio" :sortable="true" style="min-width: 16rem">
           <template #body="slotProps">
@@ -141,6 +145,7 @@
 
 <script>
 import {RoomServices} from "../services/room-services";
+import {UserServices} from "../services/user-services";
 import { FilterMatchMode } from "primevue/api";
 import Register_Huesped from "./Register_Huesped.vue";
 
@@ -164,17 +169,33 @@ export default {
         { value: "Ocupada" },
       ],
       filters: {},
-      submitted: false,
+      submitted: false
     };
   },
   created() {
-    new RoomServices().getRooms().then(response=>{
+    sessionStorage.setItem("id",1)
+    new RoomServices().getRoomsForManager(sessionStorage.getItem("id")).then(response=>{
       this.rooms=response.data
-      console.log("created",response.data)
+      this.setGuestInfo()
+      console.log("Rooms",this.rooms)
     })
     this.initFilters();
   },
   methods: {
+    setGuestInfo(){
+      for(let i=0;i<this.rooms.length;i++){
+        if(this.rooms[i].guestId!==null){
+          new UserServices().getUser(this.rooms[i].guestId).then(response=>{
+            console.log(response.data.name)
+            this.rooms[i].guestName=response.data.name
+          })
+        }else {
+          this.rooms[i].guestName=null
+        }
+
+
+      }
+    },
     showAddRoomDialog() {
       this.room = {}
       this.addRoomDialog = true

@@ -90,7 +90,7 @@
     },
     {
       "roomName": "A-005",
-      "managerId": 2,
+      "managerId": 1,
       "guestId": 2,
       "date": "10/6/2022",
       "status": false,

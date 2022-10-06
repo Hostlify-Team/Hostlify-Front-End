@@ -8,6 +8,9 @@ export class RoomServices{
     getRooms(){
         return http.get("rooms")
     }
+    getRoomsForManager(id){
+        return http.get("manager/"+id+"/rooms")
+    }
     postRoom(room){
         return http.post("rooms",{
             "roomName":room.roomName,
