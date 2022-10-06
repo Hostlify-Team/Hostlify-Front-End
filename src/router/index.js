@@ -20,7 +20,7 @@ const router = createRouter({
       component: () => import('../hostlify/HistoryView.vue')
     },
     {
-      path: '/register-huesped',
+      path: '/register-guest',
       name: 'register-huesped',
       component: () => import('../hostlify/Register_Huesped.vue')
     },

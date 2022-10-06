@@ -56,7 +56,7 @@
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
-            <pv-button label="registrar" @click="editTutorial(slotProps.data)"/>
+            <pv-button label="registrar" @click="showRegisterGuestDialog"/>
           </template>
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
@@ -130,6 +130,10 @@
           </template>
         </pv-dialog>
 
+        <pv-dialog v-model:visible="registerGuestDialog" :style="{ width: '60vw'}" header="Registrar un huesped" :modal="true" class="p-fluid">
+          <Register_Huesped></Register_Huesped>
+        </pv-dialog>
+
       </pv-data-table>
     </div>
   </div>
@@ -138,8 +142,12 @@
 <script>
 import {RoomServices} from "../services/room-services";
 import { FilterMatchMode } from "primevue/api";
+import Register_Huesped from "./Register_Huesped.vue";
 
 export default {
+  components:{
+    Register_Huesped
+  },
   data() {
     return {
       rooms:[],
@@ -147,44 +155,21 @@ export default {
       editRoomDialog:false,
       deleteRoomDialog:false,
       deleteRoomsDialog:false,
+      registerGuestDialog:false,
       room:{},
       selectedRooms:null,
       statusesRoom: [
         { value: "Disponible" },
         { value: "Ocupada" },
       ],
-
-      //TUTORIALS
-
-      tutorials: [],
-      tutorialDialog: false,
-      deleteTutorialDialog: false,
-      deleteTutorialsDialog: false,
-      tutorial: {},
-      selectedTutorials: null,
       filters: {},
       submitted: false,
-      statuses: [
-        { label: "Published", value: "published" },
-        { label: "Unpublished", value: "unpublished" },
-      ],
-      tutorialsService: null,
     };
   },
   created() {
     new RoomServices().getRooms().then(response=>{
       this.rooms=response.data
     })
-
-
-    this.tutorialsService = new RoomServices();
-    this.tutorialsService.getRooms().then((response) => {
-      this.tutorials = response.data;
-      this.tutorials.forEach(
-          (tutorial) => this.getDisplayableTutorial(tutorial)
-      );
-      console.log("created");
-    });
     this.initFilters();
   },
   methods: {
@@ -211,6 +196,9 @@ export default {
     },
     showDeleteRoomsDialog() {
       this.deleteRoomsDialog = true
+    },
+    showRegisterGuestDialog() {
+      this.registerGuestDialog = true
     },
     addRoom() {
       this.room.guestId = null
@@ -271,59 +259,7 @@ export default {
       this.filters = {
         global: {value: null, matchMode: FilterMatchMode.CONTAINS},
       }
-    },
-
-    getDisplayableTutorial(tutorial) {
-      tutorial.status = tutorial.published
-          ? this.statuses[0].label
-          : this.statuses[1].label;
-      return tutorial;
-    },
-    getStorableTutorial(displayableTutorial) {
-      return {
-        id: displayableTutorial.id,
-        title: displayableTutorial.title,
-        description: displayableTutorial.description,
-        published: displayableTutorial.status.label === "Published",
-      };
-    },
-
-    editTutorial(tutorial) {
-      console.log(tutorial);
-      this.tutorial = {...tutorial};
-      console.log(this.tutorial);
-      this.tutorialDialog = true;
-    },
-    deleteTutorial() {
-      this.tutorialsService.delete(this.tutorial.id).then((response) => {
-        this.tutorials = this.tutorials.filter(
-            (t) => t.id !== this.tutorial.id
-        );
-        this.deleteTutorialDialog = false;
-        this.tutorial = {};
-        this.$toast.add({
-          severity: "success",
-          summary: "Successful",
-          detail: "Tutorial Deleted",
-          life: 3000,
-        });
-        console.log(response);
-      });
-    },
-    confirmDeleteSelected() {
-      this.deleteTutorialsDialog = true;
-    },
-    deleteSelectedTutorials() {
-      this.selectedTutorials.forEach((tutorial) => {
-        this.tutorialsService.delete(tutorial.id).then((response) => {
-          this.tutorials = this.tutorials.filter(
-              (t) => t.id !== this.tutorial.id
-          );
-          console.log(response);
-        });
-      });
-      this.deleteTutorialsDialog = false;
-    },
+    }
   },
 };
 </script>

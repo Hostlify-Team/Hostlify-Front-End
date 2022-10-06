@@ -31,8 +31,6 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #011530;
-  height: 100vh;
 }
 .registerContainer {
   width: 1000px;
@@ -40,8 +38,6 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #052550;
-  margin: 50px 0 50px 0;
   padding: 50px;
   border-radius: 10px;
 }
@@ -60,7 +56,6 @@ h1 {
   background-color: #D6A049;
   border-radius: 25px;
 }
-
 .inputRegister {
   background-color: white;
   border-radius: 15px;
