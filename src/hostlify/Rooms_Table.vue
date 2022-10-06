@@ -192,8 +192,6 @@ export default {
         }else {
           this.rooms[i].guestName=null
         }
-
-
       }
     },
     showAddRoomDialog() {
@@ -203,6 +201,7 @@ export default {
     showEditRoomDialog(data) {
       this.room.id = data.id
       this.room.roomName = data.roomName
+      this.room.managerId = data.managerId
       this.room.guestId = data.guestId
       this.room.status = data.status
       this.room.time = data.time
@@ -226,6 +225,7 @@ export default {
       console.log("Room id: ",data.id,data.roomName)
     },
     addRoom() {
+      this.room.managerId = sessionStorage.getItem("id")
       this.room.guestId = null
       this.room.status = true
       this.room.time = 0
@@ -298,6 +298,7 @@ export default {
       this.rooms[id].time=response.time
       this.rooms[id].status=false
       new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
+        this.setGuestInfo()
         console.log("Guest added successfully",response.data)
         this.editRoomAuxiliaryId=null
       })

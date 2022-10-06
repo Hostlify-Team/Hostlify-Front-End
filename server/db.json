@@ -29,14 +29,6 @@
       "plan": null,
       "name": "Alonso Sanchez",
       "id": 2
-    },
-    {
-      "email": "guest@gmail.com",
-      "password": "$2a$10$DSdQVVJxgaeLIA08UDUkpuq2uX29ijcKvGQ2g2cAsmVmysFFCNxN.",
-      "type": "guest",
-      "plan": null,
-      "name": "guest",
-      "id": 3
     }
   ],
   "rooms": [
@@ -46,59 +38,35 @@
       "guestId": null,
       "date": null,
       "status": true,
-      "time": 0,
+      "time": null,
       "price": null,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description",
       "id": 1
     },
     {
-      "id": 2,
       "roomName": "A-002",
       "managerId": 1,
       "guestId": null,
-      "status": true,
-      "time": 0,
       "date": null,
+      "status": true,
+      "time": null,
       "price": null,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": "some extra description"
+      "description": "some extra description",
+      "id": 2
     },
     {
-      "id": 3,
       "roomName": "A-003",
       "managerId": 1,
-      "guestId": null,
-      "status": true,
-      "time": 0,
-      "date": null,
-      "price": null,
-      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": "some extra description"
-    },
-    {
-      "roomName": "A-004",
-      "managerId": 1,
-      "guestId": 2,
-      "date": "10/5/2022",
-      "status": false,
-      "time": 10,
-      "price": 45,
-      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": "any description",
-      "id": 4
-    },
-    {
-      "roomName": "A-005",
-      "managerId": 2,
       "guestId": 2,
       "date": "10/6/2022",
       "status": false,
       "time": 10,
       "price": 45,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": "Some description to A-005 room",
-      "id": 5
+      "description": "some extra description",
+      "id": 3
     }
   ]
 }

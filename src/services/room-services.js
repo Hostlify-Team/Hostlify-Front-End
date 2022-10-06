@@ -14,6 +14,7 @@ export class RoomServices{
     postRoom(room){
         return http.post("rooms",{
             "roomName":room.roomName,
+            "managerId": room.managerId,
             "guestId": room.guestId,
             "date": room.date,
             "status": room.status,
@@ -26,6 +27,7 @@ export class RoomServices{
     updateRoom(id,room){
         return http.put("rooms/"+id,{
             "roomName":room.roomName,
+            "managerId": room.managerId,
             "guestId": room.guestId,
             "date": room.date,
             "status": room.status,
