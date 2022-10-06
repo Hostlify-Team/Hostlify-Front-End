@@ -5,6 +5,8 @@ import i18n from "@/locals/i18n";
 import PrimeVue from 'primevue/config';
 import "/node_modules/primeflex/primeflex.css";
 import ToastService from 'primevue/toastservice';
+import mitt from 'mitt';
+const emitter = mitt();
 
 
 //PrimeVue Styles
@@ -38,6 +40,7 @@ import Textarea from 'primevue/textarea';
 
 
 const app = createApp(App)
+app.config.globalProperties.emitter = emitter;
 
 app.use(i18n)
 app.use(PrimeVue);

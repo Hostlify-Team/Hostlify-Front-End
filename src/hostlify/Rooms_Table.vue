@@ -56,7 +56,7 @@
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
-            <pv-button label="registrar" @click="showRegisterGuestDialog"/>
+            <pv-button label="registrar" @click="showRegisterGuestDialog(slotProps.data)"/>
           </template>
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
@@ -156,6 +156,7 @@ export default {
       deleteRoomDialog:false,
       deleteRoomsDialog:false,
       registerGuestDialog:false,
+      editRoomAuxiliaryId:null,
       room:{},
       selectedRooms:null,
       statusesRoom: [
@@ -197,8 +198,9 @@ export default {
     showDeleteRoomsDialog() {
       this.deleteRoomsDialog = true
     },
-    showRegisterGuestDialog() {
+    showRegisterGuestDialog(data) {
       this.registerGuestDialog = true
+      this.editRoomAuxiliaryId=data.id
     },
     addRoom() {
       this.room.guestId = null
@@ -261,6 +263,22 @@ export default {
       }
     }
   },
+  mounted() {
+    this.emitter.on("register-form", response => {
+      this.registerGuestDialog = response;
+    });
+    this.emitter.on("new-guest", response => {
+      let id=this.findIndexById(this.editRoomAuxiliaryId)
+      this.rooms[id].guestId=response.id
+      this.rooms[id].date=response.date
+      this.rooms[id].price=response.price
+      this.rooms[id].time=response.time
+      this.editRoomAuxiliaryId=null
+      new RoomServices().updateRoom(id,this.rooms[id]).then(response=>{
+        console.log("Guest added successfully")
+      })
+    });
+  }
 };
 </script>
 

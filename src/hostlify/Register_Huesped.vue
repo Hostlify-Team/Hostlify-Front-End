@@ -3,21 +3,45 @@
     <div class="registerContainer">
       <h1>Registrar Huesped</h1>
       <div class="inputsContainer">
-        <pv-input-text class="inputRegister" type="text" placeholder="Nombre y apellido*"/>
-        <pv-input-text class="inputRegister" type="text" placeholder="Correo Electronico*" />
+        <pv-input-text class="inputRegister" type="text" placeholder="Nombre y apellido*" v-model="name"/>
+        <pv-input-text class="inputRegister" type="text" placeholder="Correo Electronico*" v-model="email"/>
         <pv-input-text class="inputRegister" type="text" placeholder="DNI*" />
         <pv-input-text class="inputRegister" type="text" placeholder="Edad*" />
         <pv-input-text class="inputRegister" type="text" placeholder="Pais*" />
-        <pv-input-text class="inputRegister" type="text" placeholder="Contraseña*" />
-        <pv-button class="buttonRegister">Registrar</pv-button>
+        <pv-input-text class="inputRegister" type="text" placeholder="Contraseña*" v-model="password"/>
+        <pv-button class="buttonRegister" @click="register">Registrar</pv-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {UserServices} from "../services/user-services";
 export default {
-  name: "Registrar Huesped"
+  name: "Registrar Huesped",
+  data(){
+    return{
+      name:"",
+      email:"",
+      password:""
+    }
+  },
+  methods:{
+    register(){
+      new UserServices().register(this.email,this.password,"guest",null,this.name).then(response=>{
+        console.log("Register Successfully")
+        this.emitter.emit("register-form", false);
+        let today = new Date();
+        let guest={
+          id: response.data.user.id,
+          date: today.toLocaleDateString('en-US'),
+          price: 45,
+          time: 10
+        }
+        this.emitter.emit("new-guest", guest);
+      })
+    }
+  }
 }
 </script>
 
