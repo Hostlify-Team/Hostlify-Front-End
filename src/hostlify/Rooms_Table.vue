@@ -1,95 +1,336 @@
 <template>
-  <div class="containerDataTable">
-    <h1>Rooms</h1>
-    <pv-data-table class="dataTable" :value="cars" responsiveLayout="scroll" :scrollable="true" scrollHeight="600px" dataKey="id" v-model:filters="filters" filterDisplay="menu" :loading="loading" :paginator="true" :rows="10">
-      <template #header>
-        <div>
-          <h5 class="mb-2 md:m-0 p-as-md-center">Manage Products</h5>
-          <span class="p-input-icon-left">
-            <i class="pi pi-search" />
-            <pv-input-text  placeholder="Search..." />
-          </span>
-        </div>
-      </template>
-      <pv-column field="number" header="Number" :sortable="true">
-        <template #filter="{filterModel,filterCallback}">
-          <pv-input-text type="text" v-model="filterModel.value" @keydown.enter="filterCallback()" class="p-column-filter" :placeholder="`Search by name - ${filterModel.matchMode}`"/>
+  <div>
+    <div class="card">
+      <pv-toolbar class="mb-4">
+        <template #start>
+          <pv-button label="Nueva habitacion" icon="pi pi-plus" class="p-button-success mr-2" @click="showAddRoomDialog"/>
+          <pv-button label="Delete" icon="pi pi-trash" class="p-button-danger" @click="showDeleteRoomsDialog"
+                     :disabled="!selectedRooms || !selectedRooms.length"/>
         </template>
-      </pv-column>
-      <pv-column field="guest" header="Guest" :sortable="true">
-        <template #filter="{filterModel,filterCallback}">
-          <InputText type="text" v-model="filterModel.value" @keydown.enter="filterCallback()" class="p-column-filter" :placeholder="`Search by name - ${filterModel.matchMode}`"/>
+        <template #end>
+          <pv-button label="Exportar" icon="pi pi-download" class="p-button-help" @click="exportToCSV($event)"/>
         </template>
-      </pv-column>
-      <pv-column field="date" header="Date" :sortable="true">
-        <template #filter="{filterModel,filterCallback}">
-          <InputText type="text" v-model="filterModel.value" @keydown.enter="filterCallback()" class="p-column-filter" :placeholder="`Search by name - ${filterModel.matchMode}`"/>
+      </pv-toolbar>
+      <pv-data-table
+          ref="dt"
+          :value="rooms"
+          v-model:selection="selectedRooms"
+          datakey="id"
+          :paginator="true"
+          :rows="10"
+          :filters="filters"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          :rowsPerPageOptions="[5, 10, 15]"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} tutorials"
+          responsiveLayout="scroll"
+      >
+        <template #header>
+          <div class="table-header flex flex-column md:flex-row md:justify-content-between">
+            <h5 class="mb-2 md:m-0 p-as-md-center text-xl">Habitaciones</h5>
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"/>
+              <pv-input-text v-model="filters['global'].value" placeholder="Search..."/>
+            </span>
+          </div>
         </template>
-      </pv-column>
-      <pv-column field="price" header="Price" :sortable="true">
-        <template #filter="{filterModel,filterCallback}">
-          <InputText type="text" v-model="filterModel.value" @keydown.enter="filterCallback()" class="p-column-filter" :placeholder="`Search by name - ${filterModel.matchMode}`"/>
-        </template>
-      </pv-column>
-      <pv-column field="status" header="Status" :sortable="true">
-        <template #filter="{filterModel,filterCallback}">
-          <InputText type="text" v-model="filterModel.value" @keydown.enter="filterCallback()" class="p-column-filter" :placeholder="`Search by name - ${filterModel.matchMode}`"/>
-        </template>
-      </pv-column>
-      <pv-column field="time" header="Time" :sortable="true">
-        <template #filter="{filterModel,filterCallback}">
-          <InputText type="text" v-model="filterModel.value" @keydown.enter="filterCallback()" class="p-column-filter" :placeholder="`Search by name - ${filterModel.matchMode}`"/>
-        </template>
-      </pv-column>
-      <pv-column field="registrar" header="Registrar" :sortable="true">
-        <template #filter="{filterModel,filterCallback}">
-          <InputText type="text" v-model="filterModel.value" @keydown.enter="filterCallback()" class="p-column-filter" :placeholder="`Search by name - ${filterModel.matchMode}`"/>
-        </template>
-      </pv-column>
-    </pv-data-table>
+
+        <pv-column selectionMode="multiple" style="width: 3rem" :exportable="false"></pv-column>
+        <pv-column field="roomName" header="Habitacion" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="guestId" header="Huesped" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="date" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="price" header="Precio" :sortable="true" style="min-width: 16rem">
+          <template #body="slotProps">
+            <p v-if="slotProps.data.price!==null">S/. {{slotProps.data.price}}</p>
+          </template>
+        </pv-column>
+        <pv-column field="status" header="Status" :sortable="true" style="min-width: 12rem">
+          <template #body="slotProps">
+            <pv-tag v-if="slotProps.data.status === true" severity="success">Disponible</pv-tag>
+            <pv-tag v-else severity="danger">Ocupada</pv-tag>
+          </template>
+        </pv-column>
+        <pv-column field="time" header="Tiempo" :sortable="true" style="min-width: 16rem">
+          <template #body="slotProps">
+            <pv-progress-bar :value="slotProps.data.time"></pv-progress-bar>
+          </template>
+        </pv-column>
+        <pv-column :exportable="false" style="min-width: 8rem">
+          <template #body="slotProps">
+            <pv-button label="registrar" @click="editTutorial(slotProps.data)"/>
+          </template>
+        </pv-column>
+        <pv-column :exportable="false" style="min-width: 8rem">
+          <template #body="slotProps">
+            <pv-button icon="pi pi-pencil" class="p-button-text p-button-rounded" @click="showEditRoomDialog(slotProps.data)"/>
+            <pv-button icon="pi pi-trash" class="p-button-text p-button-rounded" @click="showDeleteRoomDialog(slotProps.data)"/>
+          </template>
+        </pv-column>
+
+        <pv-dialog v-model:visible="addRoomDialog" :style="{ width: '450px'}" header="Agregue una habitacion" :modal="true" class="p-fluid">
+          <div style="margin: 2rem">
+            <span class="p-float-label">
+              <pv-input-text type="text" id="room" v-model.trim="room.roomName" required="true" autofocus :class="{'p-invalid': submitted && !room.name }"/>
+              <label for="room">Nro de habitacion</label>
+              <small class="p-error" v-if="submitted && !room.name">Se requiere un numero de habitacion</small>
+            </span>
+          </div>
+          <div style="margin: 2rem">
+            <span class="p-float-label">
+              <pv-text-area type="text" id="description" v-model.trim="room.description" required="true" autofocus :class="{'p-invalid': submitted && !room.description }"/>
+              <label for="description">Decripcion</label>
+              <small class="p-error" v-if="submitted && !room.description">Se requiere una descripcion de habitacion</small>
+            </span>
+          </div>
+          <template #footer>
+            <pv-button :label="'Cancelar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
+            <pv-button :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="addRoom" />
+          </template>
+        </pv-dialog>
+
+        <pv-dialog v-model:visible="editRoomDialog" :style="{ width: '450px'}" header="Editar una habitacion" :modal="true" class="p-fluid">
+          <div class="edit-content">
+            <span>Estas editando la habitacion <b>{{ room.roomName }}</b></span>
+          </div>
+          <div style="margin: 2rem">
+            <span class="p-float-label">
+              <pv-input-text type="text" id="room" v-model.trim="room.roomName" required="true" autofocus :class="{'p-invalid': submitted && !room.name }"/>
+              <label for="room">Nro de habitacion</label>
+              <small class="p-error" v-if="submitted && !room.name">Se requiere un numero de habitacion</small>
+            </span>
+          </div>
+          <div style="margin: 2rem">
+            <span class="p-float-label">
+              <pv-text-area type="text" id="description" v-model.trim="room.description" required="true" autofocus :class="{'p-invalid': submitted && !room.description }"/>
+              <label for="description">Decripcion</label>
+              <small class="p-error" v-if="submitted && !room.description">Se requiere una descripcion de habitacion</small>
+            </span>
+          </div>
+          <template #footer>
+            <pv-button :label="'Cancelar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
+            <pv-button :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="editRoom" />
+          </template>
+        </pv-dialog>
+
+        <pv-dialog v-model:visible="deleteRoomDialog" :style="{ width: '450px' }" header="Eliminar una habitacion" :modal="true">
+          <div class="confirmation-content">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 1rem" />
+            <span>Estas seguro que quieres eliminar la habitacion <b>{{ room.roomName }}</b>?</span>
+          </div>
+          <template #footer>
+            <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
+            <pv-button :label="'Si'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRoom" />
+          </template>
+        </pv-dialog>
+
+        <pv-dialog v-model:visible="deleteRoomsDialog" :style="{ width: '450px' }" header="Eliminar las habitaciones" :modal="true">
+            <span>Quieres eliminiar las habitaciones seleccionadas?</span>
+          <template #footer>
+            <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
+            <pv-button :label="'Yes'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRooms" />
+          </template>
+        </pv-dialog>
+
+      </pv-data-table>
+    </div>
   </div>
 </template>
 
 <script>
+import {RoomServices} from "../services/room-services";
+import { FilterMatchMode } from "primevue/api";
 
 export default {
   data() {
     return {
-      value: "",
-      cars: [
-        { number: "Room1", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
-        { number: "Room2", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
-        { number: "Room3", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
-        { number: "Room4", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
-        { number: "Room6", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
-        { number: "Room7", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
-        { number: "Room8", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
-        { number: "Room9", guest: "Alexis Frogoziolo", date: "13/05/21", price: "$40,000", status: "Disponibles", time: "1D", registrar: "Registrar" },
-      ]
-    }
-  }
-}
+      rooms:[],
+      addRoomDialog:false,
+      editRoomDialog:false,
+      deleteRoomDialog:false,
+      deleteRoomsDialog:false,
+      room:{},
+      selectedRooms:null,
+      statusesRoom: [
+        { value: "Disponible" },
+        { value: "Ocupada" },
+      ],
+
+      //TUTORIALS
+
+      tutorials: [],
+      tutorialDialog: false,
+      deleteTutorialDialog: false,
+      deleteTutorialsDialog: false,
+      tutorial: {},
+      selectedTutorials: null,
+      filters: {},
+      submitted: false,
+      statuses: [
+        { label: "Published", value: "published" },
+        { label: "Unpublished", value: "unpublished" },
+      ],
+      tutorialsService: null,
+    };
+  },
+  created() {
+    new RoomServices().getRooms().then(response=>{
+      this.rooms=response.data
+    })
+
+
+    this.tutorialsService = new RoomServices();
+    this.tutorialsService.getRooms().then((response) => {
+      this.tutorials = response.data;
+      this.tutorials.forEach(
+          (tutorial) => this.getDisplayableTutorial(tutorial)
+      );
+      console.log("created");
+    });
+    this.initFilters();
+  },
+  methods: {
+    showAddRoomDialog() {
+      this.room = {}
+      this.addRoomDialog = true
+    },
+    showEditRoomDialog(data) {
+      this.room.id = data.id
+      this.room.roomName = data.roomName
+      this.room.guestId = data.guestId
+      this.room.status = data.status
+      this.room.time = data.time
+      this.room.date = data.date
+      this.room.price = data.price
+      this.room.image = data.image
+      this.room.description = data.description
+      this.editRoomDialog = true
+    },
+    showDeleteRoomDialog(data) {
+      this.room.roomName = data.roomName
+      this.room.id = data.id
+      this.deleteRoomDialog = true
+    },
+    showDeleteRoomsDialog() {
+      this.deleteRoomsDialog = true
+    },
+    addRoom() {
+      this.room.guestId = null
+      this.room.status = true
+      this.room.time = 0
+      this.room.date = null
+      this.room.price = null
+      this.room.image = "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg"
+      new RoomServices().postRoom(this.room).then(response => {
+        this.rooms.push(response.data)
+        console.log("Room added successfully", response.data)
+        this.room = {}
+        this.addRoomDialog = false
+      })
+    },
+    editRoom() {
+      new RoomServices().updateRoom(this.room.id, this.room).then(response => {
+        this.rooms[this.findIndexById(response.data.id)] = this.room
+        this.room = {}
+        this.editRoomDialog = false
+      })
+    },
+    deleteRoom() {
+      new RoomServices().deleteRoom(this.room.id).then(response => {
+        this.rooms = this.rooms.filter(
+            (t) => t.id !== this.room.id
+        );
+        this.room = {}
+        console.log("room deleted successfully")
+        this.deleteRoomDialog = false
+      })
+    },
+    deleteRooms() {
+      this.selectedRooms.forEach((room) => {
+        new RoomServices().deleteRoom(room.id).then((response) => {
+          this.rooms = this.rooms.filter(
+              (t) => t.id !== room.id
+          );
+          console.log(response);
+        });
+      });
+      this.deleteRoomsDialog = false;
+    },
+    hideAnyDialog() {
+      this.addRoomDialog = false
+      this.editRoomDialog = false
+      this.deleteRoomDialog = false
+      this.deleteRoomsDialog = false
+      this.room = {}
+    },
+    findIndexById(id) {
+      return this.rooms.findIndex((room) => room.id === id);
+    },
+    exportToCSV() {
+      this.$refs.dt.exportCSV();
+    },
+    initFilters() {
+      this.filters = {
+        global: {value: null, matchMode: FilterMatchMode.CONTAINS},
+      }
+    },
+
+    getDisplayableTutorial(tutorial) {
+      tutorial.status = tutorial.published
+          ? this.statuses[0].label
+          : this.statuses[1].label;
+      return tutorial;
+    },
+    getStorableTutorial(displayableTutorial) {
+      return {
+        id: displayableTutorial.id,
+        title: displayableTutorial.title,
+        description: displayableTutorial.description,
+        published: displayableTutorial.status.label === "Published",
+      };
+    },
+
+    editTutorial(tutorial) {
+      console.log(tutorial);
+      this.tutorial = {...tutorial};
+      console.log(this.tutorial);
+      this.tutorialDialog = true;
+    },
+    deleteTutorial() {
+      this.tutorialsService.delete(this.tutorial.id).then((response) => {
+        this.tutorials = this.tutorials.filter(
+            (t) => t.id !== this.tutorial.id
+        );
+        this.deleteTutorialDialog = false;
+        this.tutorial = {};
+        this.$toast.add({
+          severity: "success",
+          summary: "Successful",
+          detail: "Tutorial Deleted",
+          life: 3000,
+        });
+        console.log(response);
+      });
+    },
+    confirmDeleteSelected() {
+      this.deleteTutorialsDialog = true;
+    },
+    deleteSelectedTutorials() {
+      this.selectedTutorials.forEach((tutorial) => {
+        this.tutorialsService.delete(tutorial.id).then((response) => {
+          this.tutorials = this.tutorials.filter(
+              (t) => t.id !== this.tutorial.id
+          );
+          console.log(response);
+        });
+      });
+      this.deleteTutorialsDialog = false;
+    },
+  },
+};
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
-
-.containerDataTable {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #011530;
-  height: 100vh;
+.product-image {
+  width: 50px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
 }
-
-.containerDataTable h1 {
-  font-family: 'Roboto', sans-serif;
-  color: #CACACA;
-}
-
-.dataTable {
-  width: 95%;
-}
-
 </style>

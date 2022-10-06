@@ -30,6 +30,11 @@ import Checkbox from 'primevue/checkbox';
 import InputSwitch from 'primevue/inputswitch';
 import Password from 'primevue/password';
 import RadioButton from 'primevue/radiobutton';
+import Toolbar from 'primevue/toolbar';
+import Tag from 'primevue/tag';
+import Dialog from 'primevue/dialog';
+import ProgressBar from 'primevue/progressbar';
+import Textarea from 'primevue/textarea';
 
 
 const app = createApp(App)
@@ -45,7 +50,7 @@ app.component("pv-column",Column)
 app.component("pv-column-group",ColumnGroup)
 app.component("pv-row",Row)
 app.component("pv-carousel",Carousel)
-app.component("pv--steps",Steps)
+app.component("pv-steps",Steps)
 app.component("pv-file-upload",FileUpload)
 app.component("pv-data-view",DataView)
 app.component("pv-sidebar",Sidebar)
@@ -56,6 +61,11 @@ app.component("pv-checkbox",Checkbox)
 app.component("pv-input-switch",InputSwitch)
 app.component("pv-password",Password)
 app.component("pv-radio-button",RadioButton)
+app.component("pv-toolbar",Toolbar)
+app.component("pv-tag",Tag)
+app.component("pv-dialog",Dialog)
+app.component("pv-progress-bar",ProgressBar)
+app.component("pv-text-area",Textarea)
 
 
 

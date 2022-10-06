@@ -1,41 +1,76 @@
 {
   "posts": [
-    { "id": 1, "title": "json-server", "author": "typicode" }
-  ],
-  "comments": [
-    { "id": 1, "body": "some comment", "postId": 1 }
-  ],
-  "profile": { "name": "typicode" },
-  "rooms": [
     {
       "id": 1,
-      "roomName":"A-001",
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "rooms": [
+    {
+      "roomName": "A-001",
       "guestId": null,
-      "date": "10/01/2022",
+      "date": null,
       "status": true,
-      "time": null,
+      "time": 0,
+      "price": null,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": "some extra description"
+      "description": "some extra description",
+      "id": 1
     },
     {
       "id": 2,
-      "roomName":"A-002",
+      "roomName": "A-002",
       "guestId": null,
-      "date": "27/02/2022",
       "status": true,
-      "time": null,
+      "time": 0,
+      "date": null,
+      "price": null,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description"
     },
     {
       "id": 3,
-      "roomName":"A-003",
+      "roomName": "A-003",
       "guestId": null,
-      "date": "15/01/2022",
       "status": true,
-      "time": null,
+      "time": 0,
+      "date": null,
+      "price": null,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description"
+    },
+    {
+      "id": 4,
+      "roomName": "A-004",
+      "guestId": 2,
+      "status": false,
+      "time": 24,
+      "date": "10/05/2022",
+      "price": 105,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "some extra description"
+    },
+    {
+      "roomName": "A-005",
+      "guestId": null,
+      "date": null,
+      "status": true,
+      "time": 0,
+      "price": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "Any description",
+      "id": 5
     }
   ]
 }

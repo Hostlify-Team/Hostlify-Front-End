@@ -15,6 +15,7 @@ export class RoomServices{
             "date": room.date,
             "status": room.status,
             "time": room.time,
+            "price": room.price,
             "image": room.image,
             "description": room.description
         })
@@ -26,6 +27,7 @@ export class RoomServices{
             "date": room.date,
             "status": room.status,
             "time": room.time,
+            "price": room.price,
             "image": room.image,
             "description": room.description
         })
