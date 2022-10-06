@@ -31,9 +31,6 @@
       "id": 2
     }
   ],
-  "profile": {
-    "name": "typicode"
-  },
   "rooms": [
     {
       "roomName": "A-001",
@@ -69,14 +66,14 @@
       "description": "some extra description"
     },
     {
-      "roomName": "A-005",
-      "guestId": 4,
+      "roomName": "A-004",
+      "guestId": 2,
       "date": "10/5/2022",
       "status": false,
       "time": 10,
       "price": 45,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": "Any description",
+      "description": "any description",
       "id": 4
     }
   ]

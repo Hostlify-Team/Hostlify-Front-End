@@ -170,6 +170,7 @@ export default {
   created() {
     new RoomServices().getRooms().then(response=>{
       this.rooms=response.data
+      console.log("created",response.data)
     })
     this.initFilters();
   },
@@ -201,6 +202,7 @@ export default {
     showRegisterGuestDialog(data) {
       this.registerGuestDialog = true
       this.editRoomAuxiliaryId=data.id
+      console.log("Room id: ",data.id,data.roomName)
     },
     addRoom() {
       this.room.guestId = null
@@ -229,7 +231,7 @@ export default {
             (t) => t.id !== this.room.id
         );
         this.room = {}
-        console.log("room deleted successfully")
+        console.log("room deleted successfully",response.data)
         this.deleteRoomDialog = false
       })
     },
@@ -273,9 +275,10 @@ export default {
       this.rooms[id].date=response.date
       this.rooms[id].price=response.price
       this.rooms[id].time=response.time
-      this.editRoomAuxiliaryId=null
-      new RoomServices().updateRoom(id,this.rooms[id]).then(response=>{
-        console.log("Guest added successfully")
+      this.rooms[id].status=false
+      new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
+        console.log("Guest added successfully",response.data)
+        this.editRoomAuxiliaryId=null
       })
     });
   }
