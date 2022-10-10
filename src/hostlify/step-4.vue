@@ -1,27 +1,20 @@
 <template>
   <div class="container">
-    <h1>Servicios</h1>
-    <div class="line"></div>
-    <div class="stepper">
-      <div class="punto">
-        <span class="color dot"></span>
-        <p>Seleción de platillo</p>
-      </div>
-      <div class="punto">
-        <span class="color dot"></span>
-        <p>Seleción de platillo</p>
-      </div>
-      <div class="punto">
-        <span class="color dot"></span>
-        <p>Seleción de platillo</p>
-      </div>
-      <div class="punto">
-        <span class="color dot"></span>
-        <p>Seleción de platillo</p>
+    <h1 style="font-weight: bolder;color: #D6A049">Solicitar servicio</h1>
+    <div class="row" style="">
+      <div class="col-xs-12 col-md-8 offset-md-2 block border">
+        <div class="wrapper-progressBar">
+          <ul class="progressBar">
+            <li class="active">Seleción de platillo</li>
+            <li class="active">Seleción de bebida</li>
+            <li class="active">Extras</li>
+            <li class="active">Confirmacion</li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <div class="container" style="display: flex; justify-content: space-around; height: 100vh; align-items: center;padding: 0 5rem">
+    <div class="container" style="display: flex; justify-content: space-around; margin-top: 3rem">
       <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:center">
@@ -52,44 +45,68 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
-.stepper{
-  display: flex;
-  justify-content: space-around;
+
+.wrapper-progressBar {
+  width: 100vw;
+  height: 10vh;
 }
 
-.punto{
-  display:flex;
-  flex-direction: column;
+.progressBar {
 }
-.punto p{
+
+.progressBar li {
+  list-style-type: none;
+  float: left;
+  width: 22%;
+  position: relative;
   text-align: center;
-  margin-top: 20%;
 }
 
+.progressBar li:before {
+  content: " ";
+  line-height: 30px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px;
+  background-color: white
+}
 
-.line{
-  width: 88%;
-  height: 5%;
-  margin-top: 1.5%;
-  left: 6%;
-  margin-right: -50%;
+.progressBar li:after {
+  content: "";
   position: absolute;
-  background-color: #D6A049;
-
+  width: 100%;
+  height: 4px;
+  background-color: #ddd;
+  top: 15px;
+  left: -50%;
+  z-index: -1;
 }
 
-.dot {
-  height: 100px;
-  width: 100px;
-  background-color: #f2f2f2;
-  z-index: 100;
-  border-radius: 100%;
+.progressBar li:first-child:after {
+  content: none;
 }
-.color {
+
+.progressBar li.active {
+  color: #D6A049;
+}
+
+.progressBar li.active:before {
+  border-color: #D6A049;
   background-color: #D6A049
 }
+
+.progressBar .active:after {
+  background-color: #D6A049;
+}
+
 .container{
   font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  margin: 3rem;
 }
 
 </style>
