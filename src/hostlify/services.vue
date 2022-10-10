@@ -1,62 +1,75 @@
 <template>
-  <div class="title" style="margin: 4rem 4rem 0 4rem">
-    <h1>Servicios</h1>
-  </div>
-  <div class="container" style="display: flex; justify-content: space-around; height: 80vh; align-items: center;padding: 0 2rem">
-    <pv-card style="width: 19vw; border-radius: 1rem; height: 58vh">
-      <template #content>
-        <div>
-          <div style="display: flex; justify-content: center;margin-top: 3rem;">
-            <img src="@/assets/food.png" alt="" style="width: 14vw;border-radius: 1rem">
-          </div>
-          <div style="display: flex; justify-content: center;margin-top: 4.3rem">
-            <h2>Food service</h2>
-          </div>
+  <div class="services">
+    <div class="title" style="margin: 4rem 4rem 0 4rem">
+      <h1>Servicios</h1>
+    </div>
+    <div class="container" >
+      <div class="firstGroup">
+        <div class="cardiv">
+          <pv-card class="card">
+            <template #content>
+              <div>
+                <div style="display: flex; justify-content: center;margin-top: 3rem;">
+                  <img src="@/assets/food.png" alt="" class="img">
+                </div>
+                <div style="display: flex; justify-content: center;margin-top: 4.3rem">
+                  <h2>Food service</h2>
+                </div>
 
+              </div>
+            </template>
+            <template #footer>
+              <div style="display: flex; justify-content: center">
+                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('food')">Solicitar servicio</pv-button>
+              </div>
+            </template>
+          </pv-card>
         </div>
-      </template>
-      <template #footer>
-        <div style="display: flex; justify-content: center">
-          <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('food')">Solicitar servicio</pv-button>
-        </div>
-      </template>
-    </pv-card>
-    <pv-card style="width: 19vw; border-radius: 1rem; height: 58vh">
-      <template #content>
-        <div>
-          <div style="display: flex; justify-content: center;margin-top: 3rem">
-            <img src="@/assets/garden.png" alt="" style="width: 14vw;border-radius: 1rem">
-          </div>
-          <div style="display: flex; justify-content: center">
-            <h2>Areas Recreacionales</h2>
-          </div>
+        <div class="cardiv">
+          <pv-card class="card">
+            <template #content>
+              <div>
+                <div style="display: flex; justify-content: center;margin-top: 3rem">
+                  <img src="@/assets/garden.png" alt="" class="img">
+                </div>
+                <div style="display: flex; justify-content: center">
+                  <h2>Areas Recreacionales</h2>
+                </div>
 
+              </div>
+            </template>
+            <template #footer>
+              <div style="display: flex; justify-content: center">
+                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Recreational')">Solicitar servicio</pv-button>
+              </div>
+            </template>
+          </pv-card>
         </div>
-      </template>
-      <template #footer>
-        <div style="display: flex; justify-content: center">
-          <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Recreational')">Solicitar servicio</pv-button>
-        </div>
-      </template>
-    </pv-card>
-    <pv-card style="width: 19vw; border-radius: 1rem; height: 58vh">
-      <template #content>
-        <di>
-          <div style="display: flex; justify-content: center;margin-top: 3rem">
-            <img src="@/assets/cleaning.png" alt="" style="width: 14vw;border-radius: 1rem">
-          </div>
-          <div style="display: flex; justify-content: center">
-            <h2>Limpieza a la habitacion</h2>
-          </div>
-        </di>
-      </template>
-      <template #footer>
-        <div style="display: flex; justify-content: center">
-          <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Cleaning')">Solicitar servicio</pv-button>
-        </div>
-      </template>
-    </pv-card>
+      </div>
+      <div class="secondGroup">
+        <pv-card class="card">
+          <template #content>
+            <di>
+              <div style="display: flex; justify-content: center;margin-top: 3rem">
+                <img src="@/assets/cleaning.png" alt="" class="img">
+              </div>
+              <div style="display: flex; justify-content: center">
+                <h2>Limpieza a la habitacion</h2>
+              </div>
+            </di>
+          </template>
+          <template #footer>
+            <div style="display: flex; justify-content: center">
+              <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Cleaning')">Solicitar servicio</pv-button>
+            </div>
+          </template>
+        </pv-card>
+      </div>
+
+
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -81,5 +94,79 @@ export default {
 .container{
   display: flex;
   justify-content: space-around;
+  height: 80vh; align-items: center;padding: 0 2rem
 }
+.services{
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}
+.card{
+  width: 22rem;
+  border-radius: 1rem;
+  height: 32rem
+}
+.img{
+  width: 16rem;border-radius: 1rem
+}
+.firstGroup{
+  width: 66.6vw;
+  display: flex;
+  justify-content: space-around;
+}
+.secondGroup{
+  width: 33.3vw;
+  display: flex;
+  justify-content: space-around;
+
+}
+@media (max-width:1193px){
+  .container{
+    display: block;
+    justify-content: space-around;
+    height: 120vh;
+    align-items: center;
+    padding: 0 2rem;
+
+  }
+  .firstGroup{
+    margin: 3rem 0;
+    width: 91vw;
+    display: flex;
+    justify-content: space-around;
+  }
+  .secondGroup{
+    width: 90vw;
+    display: flex;
+    justify-content: space-around;
+
+  }
+}
+
+@media (max-width:800px){
+  .container{
+    display: block;
+    justify-content: center;
+    height: 190vh;
+    align-items: center;
+    padding: 0 2rem;
+
+  }
+  .firstGroup{
+    display: block;
+    width: 90vw ;
+    align-items: center;
+  }
+  .secondGroup{
+    width: 90vw;
+    display: flex;
+    justify-content: space-around;
+
+  }
+  .cardiv{
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+  }
+}
+
 </style>
