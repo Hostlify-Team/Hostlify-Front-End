@@ -41,15 +41,11 @@
             <p v-if="slotProps.data.guestId!==null">{{slotProps.data.guestName}}</p>
           </template>
         </pv-column>
-        <pv-column field="date" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="initialDate" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="endDate" header="Fecha de salida" :sortable="true" style="min-width: 16rem"></pv-column>
         <pv-column field="price" header="Precio" :sortable="true" style="min-width: 16rem">
           <template #body="slotProps">
             <p v-if="slotProps.data.price!==null">S/. {{slotProps.data.price}}</p>
-          </template>
-        </pv-column>
-        <pv-column field="time" header="Tiempo" :sortable="true" style="min-width: 16rem">
-          <template #body="slotProps">
-            <p>{{slotProps.data.time}} horas</p>
           </template>
         </pv-column>
 

@@ -21,4 +21,7 @@ export class UserServices{
         return axios.get("http://localhost:3000/users/"+id)
 
     }
+    deleteUser(id){
+        return axios.delete("http://localhost:3000/users/"+id)
+    }
 }

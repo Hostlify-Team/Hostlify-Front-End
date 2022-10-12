@@ -60,7 +60,8 @@
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
-            <pv-button label="registrar" @click="showRegisterGuestDialog(slotProps.data)"/>
+            <pv-button label="Desalojar" v-if="slotProps.data.guestId!==null" @click="showDeleteGuestDialog(slotProps.data)"/>
+            <pv-button label="Registrar" v-if="slotProps.data.guestId===null" @click="showRegisterGuestDialog(slotProps.data)"/>
           </template>
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
@@ -118,11 +119,12 @@
         <pv-dialog v-model:visible="deleteRoomDialog" :style="{ width: '450px' }" header="Eliminar una habitacion" :modal="true">
           <div class="confirmation-content">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 1rem" />
-            <span>Estas seguro que quieres eliminar la habitacion <b>{{ room.roomName }}</b>?</span>
+            <span>Estas seguro que quieres eliminar la habitacion <br> <b>{{ room.roomName }}</b>?</span>
+            <span v-if="room.guestId!==null"> <br>Tambien se eliminara al huesped <b>{{ room.guestName }}</b></span>
           </div>
-          <template #footer>
+          <template #footer >
             <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
-            <pv-button :label="'Si'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRoom" />
+            <pv-button :label="'Si'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRoom(room.guestId)" />
           </template>
         </pv-dialog>
 
@@ -137,6 +139,18 @@
         <pv-dialog v-model:visible="registerGuestDialog" :style="{ width: '60vw'}" header="Registrar un huesped" :modal="true" class="p-fluid">
           <Register_Huesped></Register_Huesped>
         </pv-dialog>
+
+        <pv-dialog v-model:visible="evictGuestDialog" :style="{ width: '450px' }" header="Desalojar huesped" :modal="true">
+          <div class="confirmation-content">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 1rem" />
+            <span>Desea eliminar al huesped <br> <b>{{ room.guestName }}</b>?</span>
+          </div>
+          <template #footer>
+            <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
+            <pv-button :label="'Yes'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteGuest(room.guestId)" />
+          </template>
+        </pv-dialog>
+
 
       </pv-data-table>
     </div>
@@ -161,6 +175,7 @@ export default {
       editRoomDialog:false,
       deleteRoomDialog:false,
       deleteRoomsDialog:false,
+      evictGuestDialog:false,
       registerGuestDialog:false,
       editRoomAuxiliaryId:null,
       room:{},
@@ -183,17 +198,6 @@ export default {
     this.initFilters();
   },
   methods: {
-    setGuestInfo(){
-      for(let i=0;i<this.rooms.length;i++){
-        if(this.rooms[i].guestId!==null){
-          new UserServices().getUser(this.rooms[i].guestId).then(response=>{
-            this.rooms[i].guestName=response.data.name
-          })
-        }else {
-          this.rooms[i].guestName=null
-        }
-      }
-    },
     showAddRoomDialog() {
       this.room = {}
       this.addRoomDialog = true
@@ -215,6 +219,8 @@ export default {
     showDeleteRoomDialog(data) {
       this.room.roomName = data.roomName
       this.room.id = data.id
+      this.room.guestId = data.guestId
+      this.room.guestName = data.guestName
       this.deleteRoomDialog = true
     },
     showDeleteRoomsDialog() {
@@ -224,6 +230,12 @@ export default {
       this.registerGuestDialog = true
       this.editRoomAuxiliaryId=data.id
       console.log("Room id: ",data.id,data.roomName)
+    },
+    showDeleteGuestDialog(data){
+      this.evictGuestDialog=true
+      this.room.guestId = data.guestId
+      this.room.guestName = data.guestName
+      this.editRoomAuxiliaryId=data.id
     },
     addRoom() {
       this.room.managerId = sessionStorage.getItem("id")
@@ -249,14 +261,52 @@ export default {
         this.editRoomDialog = false
       })
     },
-    deleteRoom() {
+    deleteRoom(guestId) {
+      if(guestId!==null){
+        new UserServices().deleteUser(guestId).then(responseUser=>{
+          console.log("User deleted",responseUser.data)
+        })
+      }
       new RoomServices().deleteRoom(this.room.id).then(response => {
         this.rooms = this.rooms.filter(
             (t) => t.id !== this.room.id
         );
+
         this.room = {}
         console.log("room deleted successfully",response.data)
         this.deleteRoomDialog = false
+      })
+    },
+    setGuestInfo(){
+      for(let i=0;i<this.rooms.length;i++){
+        if(this.rooms[i].guestId!==null){
+          new UserServices().getUser(this.rooms[i].guestId).then(response=>{
+            this.rooms[i].guestName=response.data.name
+          })
+        }else {
+          this.rooms[i].guestName=null
+        }
+      }
+    },
+    deleteGuest(guestId) {
+      this.evictGuestDialog=false
+      new UserServices().deleteUser(guestId).then(response=>{
+          console.log("Guest deleted",response.data)
+
+        let id=this.findIndexById(this.editRoomAuxiliaryId)
+        this.rooms[id].guestId=null
+        this.rooms[id].status=true
+        this.rooms[id].initialDate=null
+        this.rooms[id].endDate=null
+        this.rooms[id].price=null
+        this.rooms[id].progressTime=null
+        new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
+          this.setGuestInfo()
+          console.log("Guest evicted successfully",response.data)
+          this.editRoomAuxiliaryId=null
+          this.$toast.add({severity:'success', summary: 'Huesped desalojado', detail:'Se desalojo el huesped correctamente', life: 3000});
+        })
+
       })
     },
     deleteRooms() {
@@ -275,6 +325,7 @@ export default {
       this.editRoomDialog = false
       this.deleteRoomDialog = false
       this.deleteRoomsDialog = false
+      this.evictGuestDialog=false
       this.room = {}
     },
     findIndexById(id) {
@@ -301,75 +352,37 @@ export default {
 
       let currentDifference= Math.abs(day2-day3);
       let currentDays = currentDifference/(1000 * 3600 * 24)
-      if((day2.getMonth()+1)<(day1.getMonth()+1) && day2.getFullYear()<=day1.getFullYear()){
-        console.log("ERROR ELIGISTE UN FECHA ANTIGUA")
-        return null
-      }
-      if((day2.getMonth()+1)===(day1.getMonth()+1) && day2.getDate()<day1.getDate() && day2.getFullYear()<=day1.getFullYear()){
-        console.log("ERROR ELIGISTE UN FECHA ANTIGUA")
-        return null
-      }
       if(totalDays===0){
         console.log("progreso:",100)
         return 100
       }else{
-        console.log("Dias faltantes actuales:",currentDays)
-        console.log("Dias faltantes totales:",totalDays)
-        console.log((totalDays),"-",currentDays,"/",(totalDays))
-        console.log("progreso:",Math.round(((totalDays-currentDays)/totalDays)*100))
         let progressValue=Math.round(((totalDays-currentDays)/totalDays)*100)
         return progressValue
       }
     },
-    setPrice(firstDayDate,lastDayDate){
-      let day1 = new Date(firstDayDate);
-      let day2 = new Date(lastDayDate);
 
-      let difference= Math.abs(day2-day1);
-      let days = difference/(1000 * 3600 * 24)
-      let totalPrice=days*84
-
-      console.log("Precio: ",totalPrice)
-      return totalPrice
-    }
   },
   mounted() {
     this.emitter.on("register-form", response => {
       this.registerGuestDialog = response;
     });
     this.emitter.on("new-guest", response => {
-      console.log(response.id)
       let id=this.findIndexById(this.editRoomAuxiliaryId)
       this.rooms[id].guestId=response.id
+      this.rooms[id].status=false
       this.rooms[id].initialDate=response.initialDate
       this.rooms[id].endDate=response.endDate
-      this.rooms[id].price=this.setPrice(response.firstDayDate,response.lastDayDate)
-      this.rooms[id].status=false
+      this.rooms[id].price=response.price
       this.rooms[id].progressTime=this.SetProgressTimeBar(response.firstDayDate,response.lastDayDate)
-
-
-      let temporaryRoomForHistory={
-        "roomName":this.rooms[id].roomName,
-        "managerId": this.rooms[id].managerId,
-        "guestId": this.rooms[id].guestId,
-        "initialDate": this.rooms[id].initialDate,
-        "endDate": this.rooms[id].endDate,
-        "price": this.rooms[id].price,
-        "description": this.rooms[id].description
-      }
       new HistoryServices().postRoomHistory(this.rooms[id]).then(response=>{
-        console.log("Room added to history",response.data)
-      })
-
+          console.log("Room added to history",response.data)
+        })
       new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
-        this.setGuestInfo()
-        console.log("Guest added successfully",response.data)
-        this.editRoomAuxiliaryId=null
-      })
-    });
-    this.emitter.on("new-Try", response=>{
-      this.SetProgressTimeBar(response.firstDayDate,response.lastDayDate)
-      this.setPrice(response.firstDayDate,response.lastDayDate)
+          this.setGuestInfo()
+          console.log("Guest added successfully",response.data)
+          this.editRoomAuxiliaryId=null
+        this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
+        })
     });
   }
 };
