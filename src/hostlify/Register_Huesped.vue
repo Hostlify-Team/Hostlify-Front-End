@@ -32,6 +32,7 @@ export default {
       name:"",
       email:"",
       password:"",
+      endDate:null,
       visibleStep:true
     }
   },
@@ -43,9 +44,10 @@ export default {
         let today = new Date();
         let guest={
           id: response.data.user.id,
-          date: today.toLocaleDateString('en-US'),
+          initialDate: today.toLocaleDateString('en-US'),
+          endDate:this.endDate,
           price: 45,
-          time: 10
+          progressTime: 10
         }
         this.emitter.emit("new-guest", guest);
       })

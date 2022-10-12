@@ -41,7 +41,7 @@
             <p v-if="slotProps.data.guestId!==null">{{slotProps.data.guestName}}</p>
           </template>
         </pv-column>
-        <pv-column field="date" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="initialDate" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
         <pv-column field="price" header="Precio" :sortable="true" style="min-width: 16rem">
           <template #body="slotProps">
             <p v-if="slotProps.data.price!==null">S/. {{slotProps.data.price}}</p>
@@ -53,9 +53,9 @@
             <pv-tag v-else severity="danger">Ocupada</pv-tag>
           </template>
         </pv-column>
-        <pv-column field="time" header="Tiempo" :sortable="true" style="min-width: 16rem">
+        <pv-column field="progressTime" header="Tiempo" :sortable="true" style="min-width: 16rem">
           <template #body="slotProps">
-            <pv-progress-bar :value="slotProps.data.time"></pv-progress-bar>
+            <pv-progress-bar :value="slotProps.data.progressTime"></pv-progress-bar>
           </template>
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
@@ -229,8 +229,9 @@ export default {
       this.room.managerId = sessionStorage.getItem("id")
       this.room.guestId = null
       this.room.status = true
-      this.room.time = 0
-      this.room.date = null
+      this.room.progressTime = 0
+      this.room.initialDate = null
+      this.room.endDate = null
       this.room.price = null
       this.room.image = "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg"
       new RoomServices().postRoom(this.room).then(response => {
@@ -294,17 +295,18 @@ export default {
     this.emitter.on("new-guest", response => {
       let id=this.findIndexById(this.editRoomAuxiliaryId)
       this.rooms[id].guestId=response.id
-      this.rooms[id].date=response.date
+      this.rooms[id].initialDate=response.initialDate
+      this.rooms[id].endDate=response.endDate
       this.rooms[id].price=response.price
-      this.rooms[id].time=response.time
+      this.rooms[id].progressTime=response.progressTime
       this.rooms[id].status=false
 
       let temporaryRoomForHistory={
         "roomName":this.rooms[id].roomName,
         "managerId": this.rooms[id].managerId,
         "guestId": this.rooms[id].guestId,
-        "date": this.rooms[id].date,
-        "time": this.rooms[id].time,
+        "initialDate": this.rooms[id].initialDate,
+        "endDate": this.rooms[id].endDate,
         "price": this.rooms[id].price,
         "description": this.rooms[id].description
       }
