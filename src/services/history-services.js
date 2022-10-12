@@ -13,7 +13,6 @@ export class HistoryServices{
             "managerId": room.managerId,
             "guestId": room.guestId,
             "date": room.date,
-            "time": room.time,
             "price": room.price,
             "description": room.description
         })
