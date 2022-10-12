@@ -315,8 +315,9 @@ export default {
         console.log("Dias faltantes actuales:",currentDays)
         console.log("Dias faltantes totales:",totalDays)
         console.log((totalDays),"-",currentDays,"/",(totalDays))
-        console.log("progreso:",(totalDays-currentDays)/totalDays)
-        return ((totalDays-currentDays)/totalDays)
+        console.log("progreso:",Math.round(((totalDays-currentDays)/totalDays)*100))
+        let progressValue=Math.round(((totalDays-currentDays)/totalDays)*100)
+        return progressValue
       }
     },
     setPrice(firstDayDate,lastDayDate){
@@ -336,13 +337,15 @@ export default {
       this.registerGuestDialog = response;
     });
     this.emitter.on("new-guest", response => {
+      console.log(response.id)
       let id=this.findIndexById(this.editRoomAuxiliaryId)
       this.rooms[id].guestId=response.id
       this.rooms[id].initialDate=response.initialDate
       this.rooms[id].endDate=response.endDate
-      this.rooms[id].price=response.price
+      this.rooms[id].price=this.setPrice(response.firstDayDate,response.lastDayDate)
       this.rooms[id].status=false
-      this.rooms[id].progressTime=this.SetProgressTimeBar(response.initialDate,response.lastDay)
+      this.rooms[id].progressTime=this.SetProgressTimeBar(response.firstDayDate,response.lastDayDate)
+
 
       let temporaryRoomForHistory={
         "roomName":this.rooms[id].roomName,
