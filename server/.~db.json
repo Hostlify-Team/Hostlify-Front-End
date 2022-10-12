@@ -29,6 +29,22 @@
       "plan": null,
       "name": "Alonso Sanchez",
       "id": 2
+    },
+    {
+      "email": "jose@gmail.com",
+      "password": "$2a$10$FAvYClvamUDsJQfaujuKCO9kp5QGf9irThYyaG2fufaIubGcxe2Si",
+      "type": "guest",
+      "plan": null,
+      "name": "jose",
+      "id": 3
+    },
+    {
+      "email": "tiago@gmail.com",
+      "password": "$2a$10$Nr8y3ybUDurx1AsRKnkBdepNs8AOztbVPG.WR4iRlP/Z/kMsYd7Nm",
+      "type": "guest",
+      "plan": null,
+      "name": "tiago",
+      "id": 4
     }
   ],
   "rooms": [
@@ -70,6 +86,31 @@
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description",
       "id": 3
+    },
+    {
+      "roomName": "A-004",
+      "managerId": "1",
+      "guestId": 3,
+      "initialDate": "12/10/2022",
+      "endDate": "15/10/2022",
+      "status": false,
+      "progressTime": 1,
+      "price": 45,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "any description",
+      "id": 4
+    },
+    {
+      "roomName": "A-005",
+      "managerId": "1",
+      "guestId": 4,
+      "initialDate": "12/10/2022",
+      "endDate": "15/10/2022",
+      "status": false,
+      "progressTime": 1,
+      "price": 45,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "id": 5
     }
   ],
   "history": [
@@ -82,6 +123,25 @@
       "endDate": "13/6/2022",
       "price": 100,
       "description": "some description"
+    },
+    {
+      "roomName": "A-004",
+      "managerId": "1",
+      "guestId": 3,
+      "initialDate": "12/10/2022",
+      "endDate": "15/10/2022",
+      "price": 45,
+      "description": "any description",
+      "id": 2
+    },
+    {
+      "roomName": "A-005",
+      "managerId": "1",
+      "guestId": 4,
+      "initialDate": "12/10/2022",
+      "endDate": "15/10/2022",
+      "price": 45,
+      "id": 3
     }
   ]
 }

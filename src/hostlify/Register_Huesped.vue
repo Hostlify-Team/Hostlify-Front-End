@@ -15,7 +15,8 @@
         <pv-button class="buttonRegister" style="align-items: end" v-on:click="visibleStep=false">Siguiente</pv-button>
       </div>
       <div class="inputsContainer" v-show="!visibleStep">
-        <p >Datos de la habitacion</p>
+        <p >Estadia del Huesped</p>
+        <pv-calendar v-model="endDate" :inline="true" :showWeek="true" />
         <pv-button class="buttonRegister" style="align-items: end" @click="register">Registrar</pv-button>
       </div>
 
@@ -33,7 +34,7 @@ export default {
       email:"",
       password:"",
       endDate:null,
-      visibleStep:true
+      visibleStep:true,
     }
   },
   methods:{
@@ -41,13 +42,16 @@ export default {
       new UserServices().register(this.email,this.password,"guest",null,this.name).then(response=>{
         console.log("Register Successfully")
         this.emitter.emit("register-form", false);
-        let today = new Date();
+        const fecha = new Date();
+        let actualDay= fecha.getDate()
+        let actualMonth= fecha.getMonth()
         let guest={
           id: response.data.user.id,
-          initialDate: today.toLocaleDateString('en-US'),
-          endDate:this.endDate,
+          initialDate: actualDay+"/"+(actualMonth+1)+"/"+fecha.getFullYear(),
+          endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
           price: 45,
-          progressTime: 10
+          progressTime: 10,
+          lastDay:this.endDate.getDate()
         }
         this.emitter.emit("new-guest", guest);
       })

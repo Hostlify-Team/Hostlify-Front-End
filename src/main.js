@@ -37,6 +37,7 @@ import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
 import ProgressBar from 'primevue/progressbar';
 import Textarea from 'primevue/textarea';
+import Calendar from 'primevue/calendar';
 
 
 const app = createApp(App)
@@ -69,6 +70,7 @@ app.component("pv-tag",Tag)
 app.component("pv-dialog",Dialog)
 app.component("pv-progress-bar",ProgressBar)
 app.component("pv-text-area",Textarea)
+app.component("pv-calendar",Calendar)
 
 
 

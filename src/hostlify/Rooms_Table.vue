@@ -288,6 +288,15 @@ export default {
       this.filters = {
         global: {value: null, matchMode: FilterMatchMode.CONTAINS},
       }
+    },
+    SetProgressTimeBar(initialDays,endDay){
+      let parts=initialDays.split("/");
+      const fecha = new Date();
+      let actualDay= fecha.getDate()
+      console.log("Comienzo",parts[0])
+      console.log("Finalizo",endDay)
+      console.log(endDay-actualDay,"/",endDay-parts[0])
+      return ((((endDay-parts[0])-(endDay-14))/(endDay-parts[0]))*100)
     }
   },
   mounted() {
@@ -300,8 +309,10 @@ export default {
       this.rooms[id].initialDate=response.initialDate
       this.rooms[id].endDate=response.endDate
       this.rooms[id].price=response.price
-      this.rooms[id].progressTime=response.progressTime
       this.rooms[id].status=false
+      //this.rooms[id].progressTime=this.SetProgressTimeBar(response.initialDate,response.lastDay)
+      this.rooms[id].progressTime=1
+      console.log("Progres:",this.SetProgressTimeBar(response.initialDate,response.lastDay))
 
       let temporaryRoomForHistory={
         "roomName":this.rooms[id].roomName,

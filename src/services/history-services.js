@@ -12,7 +12,8 @@ export class HistoryServices{
             "roomName":room.roomName,
             "managerId": room.managerId,
             "guestId": room.guestId,
-            "date": room.date,
+            "initialDate": room.initialDate,
+            "endDate": room.endDate,
             "price": room.price,
             "description": room.description
         })
