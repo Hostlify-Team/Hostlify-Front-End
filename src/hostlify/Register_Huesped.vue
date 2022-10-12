@@ -16,8 +16,14 @@
       </div>
       <div class="inputsContainer" v-show="!visibleStep">
         <p >Estadia del Huesped</p>
-        <pv-calendar v-model="endDate" :inline="true" :showWeek="true" />
+        <div style="display: flex;justify-content: space-evenly">
+          <h3>Precio por dia: </h3>
+          <pv-input-text id="price" v-model="price" type="number" style="width: 3rem"></pv-input-text>
+          <h3> Soles</h3>
+        </div>
+        <pv-calendar v-model="endDate" inputId="basic" autocomplete="off" />
         <pv-button class="buttonRegister" style="align-items: end" @click="register">Registrar</pv-button>
+        <pv-button class="buttonRegister" style="align-items: end" @click="prueba">Probar progress</pv-button>
       </div>
 
     </div>
@@ -28,6 +34,8 @@
 import {UserServices} from "../services/user-services";
 export default {
   name: "Registrar Huesped",
+  components: {},
+
   data(){
     return{
       name:"",
@@ -35,6 +43,7 @@ export default {
       password:"",
       endDate:null,
       visibleStep:true,
+      price:84
     }
   },
   methods:{
@@ -50,11 +59,25 @@ export default {
           initialDate: actualDay+"/"+(actualMonth+1)+"/"+fecha.getFullYear(),
           endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
           price: 45,
-          progressTime: 10,
+          progressTime: null,
           lastDay:this.endDate.getDate()
         }
         this.emitter.emit("new-guest", guest);
       })
+    },
+    prueba(){
+        this.emitter.emit("register-form", false);
+        const fecha = new Date();
+        let actualDay= fecha.getDate()
+        let actualMonth= fecha.getMonth()
+        let Try={
+          initialDate: actualDay+"/"+(actualMonth+1)+"/"+fecha.getFullYear(),
+          endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
+          progressTime: null,
+          firstDayDate: (actualMonth+1)+"/"+actualDay+"/"+fecha.getFullYear(),
+          lastDayDate: (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear(),
+        }
+        this.emitter.emit("new-Try", Try);
     }
   }
 }

@@ -70,6 +70,18 @@
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description",
       "id": 3
+    },
+    {
+      "roomName": "A-TEST",
+      "managerId": "1",
+      "guestId": null,
+      "initialDate": null,
+      "endDate": null,
+      "status": true,
+      "progressTime": 0,
+      "price": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "id": 4
     }
   ],
   "history": [

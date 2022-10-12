@@ -187,7 +187,6 @@ export default {
       for(let i=0;i<this.rooms.length;i++){
         if(this.rooms[i].guestId!==null){
           new UserServices().getUser(this.rooms[i].guestId).then(response=>{
-            console.log(response.data.name)
             this.rooms[i].guestName=response.data.name
           })
         }else {
@@ -244,7 +243,6 @@ export default {
     },
     editRoom() {
       new RoomServices().updateRoom(this.room.id, this.room).then(response => {
-        console.log(response.data)
         this.rooms[this.findIndexById(response.data.id)] = this.room
         this.room = {}
         this.editRoomDialog = false
@@ -289,14 +287,48 @@ export default {
         global: {value: null, matchMode: FilterMatchMode.CONTAINS},
       }
     },
-    SetProgressTimeBar(initialDays,endDay){
-      let parts=initialDays.split("/");
-      const fecha = new Date();
-      let actualDay= fecha.getDate()
-      console.log("Comienzo",parts[0])
-      console.log("Finalizo",endDay)
-      console.log(endDay-actualDay,"/",endDay-parts[0])
-      return ((((endDay-parts[0])-(endDay-14))/(endDay-parts[0]))*100)
+    SetProgressTimeBar(firstDayDate,lastDayDate){
+      //!TODO: HACERLO CON HORAS, para eso necesitamos hacer las operaciones con los objetos sin parametros
+      let actualDayDate= new Date();
+      let day1 = new Date(firstDayDate);
+      let day2 = new Date(lastDayDate);
+      let day3 = new Date((actualDayDate.getMonth()+1)+"/"+actualDayDate.getDate()+"/"+actualDayDate.getFullYear())
+      console.log((actualDayDate.getMonth()+1)+"/"+actualDayDate.getDate()+"/"+actualDayDate.getFullYear())
+
+      let totalDifference= Math.abs(day2-day1);
+      let totalDays = totalDifference/(1000 * 3600 * 24)
+
+      let currentDifference= Math.abs(day2-day3);
+      let currentDays = currentDifference/(1000 * 3600 * 24)
+      if((day2.getMonth()+1)<(day1.getMonth()+1) && day2.getFullYear()<=day1.getFullYear()){
+        console.log("ERROR ELIGISTE UN FECHA ANTIGUA")
+        return null
+      }
+      if((day2.getMonth()+1)===(day1.getMonth()+1) && day2.getDate()<day1.getDate() && day2.getFullYear()<=day1.getFullYear()){
+        console.log("ERROR ELIGISTE UN FECHA ANTIGUA")
+        return null
+      }
+      if(totalDays===0){
+        console.log("progreso:",100)
+        return 100
+      }else{
+        console.log("Dias faltantes actuales:",currentDays)
+        console.log("Dias faltantes totales:",totalDays)
+        console.log((totalDays),"-",currentDays,"/",(totalDays))
+        console.log("progreso:",(totalDays-currentDays)/totalDays)
+        return ((totalDays-currentDays)/totalDays)
+      }
+    },
+    setPrice(firstDayDate,lastDayDate){
+      let day1 = new Date(firstDayDate);
+      let day2 = new Date(lastDayDate);
+
+      let difference= Math.abs(day2-day1);
+      let days = difference/(1000 * 3600 * 24)
+      let totalPrice=days*84
+
+      console.log("Precio: ",totalPrice)
+      return totalPrice
     }
   },
   mounted() {
@@ -310,9 +342,7 @@ export default {
       this.rooms[id].endDate=response.endDate
       this.rooms[id].price=response.price
       this.rooms[id].status=false
-      //this.rooms[id].progressTime=this.SetProgressTimeBar(response.initialDate,response.lastDay)
-      this.rooms[id].progressTime=1
-      console.log("Progres:",this.SetProgressTimeBar(response.initialDate,response.lastDay))
+      this.rooms[id].progressTime=this.SetProgressTimeBar(response.initialDate,response.lastDay)
 
       let temporaryRoomForHistory={
         "roomName":this.rooms[id].roomName,
@@ -332,6 +362,10 @@ export default {
         console.log("Guest added successfully",response.data)
         this.editRoomAuxiliaryId=null
       })
+    });
+    this.emitter.on("new-Try", response=>{
+      this.SetProgressTimeBar(response.firstDayDate,response.lastDayDate)
+      this.setPrice(response.firstDayDate,response.lastDayDate)
     });
   }
 };
