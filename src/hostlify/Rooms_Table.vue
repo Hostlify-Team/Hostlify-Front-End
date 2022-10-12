@@ -243,6 +243,7 @@ export default {
     },
     editRoom() {
       new RoomServices().updateRoom(this.room.id, this.room).then(response => {
+        console.log("function: EditRoom",response.data)
         this.rooms[this.findIndexById(response.data.id)] = this.room
         this.room = {}
         this.editRoomDialog = false

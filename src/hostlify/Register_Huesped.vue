@@ -60,7 +60,9 @@ export default {
           endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
           price: 45,
           progressTime: null,
-          lastDay:this.endDate.getDate()
+          lastDay:this.endDate.getDate(),
+          firstDayDate: (actualMonth+1)+"/"+actualDay+"/"+fecha.getFullYear(),
+          lastDayDate: (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear(),
         }
         this.emitter.emit("new-guest", guest);
       })
