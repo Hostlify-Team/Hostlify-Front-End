@@ -82,15 +82,6 @@
       "endDate": "13/6/2022",
       "price": 100,
       "description": "some description"
-    },
-    {
-      "roomName": "RRRR",
-      "managerId": "1",
-      "guestId": 3,
-      "initialDate": "12/10/2022",
-      "endDate": "15/10/2022",
-      "price": 252,
-      "id": 2
     }
   ]
 }
