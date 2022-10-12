@@ -70,12 +70,25 @@
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description",
       "id": 3
+    },
+    {
+      "roomName": "A-004",
+      "managerId": "1",
+      "guestId": null,
+      "initialDate": null,
+      "endDate": null,
+      "status": true,
+      "progressTime": 0,
+      "price": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "none description yet",
+      "id": 4
     }
   ],
   "history": [
     {
       "id": 1,
-      "roomName":"First Room Example",
+      "roomName": "First Room Example",
       "managerId": 1,
       "guestId": 2,
       "initialDate": "10/6/2022",
@@ -83,6 +96,5 @@
       "price": 100,
       "description": "some description"
     }
-
   ]
 }

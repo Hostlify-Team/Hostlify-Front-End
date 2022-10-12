@@ -205,8 +205,9 @@ export default {
       this.room.managerId = data.managerId
       this.room.guestId = data.guestId
       this.room.status = data.status
-      this.room.time = data.time
-      this.room.date = data.date
+      this.room.progressTime = data.progressTime
+      this.room.initialDate = data.initialDate
+      this.room.endDate = data.endDate
       this.room.price = data.price
       this.room.image = data.image
       this.room.description = data.description
@@ -243,6 +244,7 @@ export default {
     },
     editRoom() {
       new RoomServices().updateRoom(this.room.id, this.room).then(response => {
+        console.log(response.data)
         this.rooms[this.findIndexById(response.data.id)] = this.room
         this.room = {}
         this.editRoomDialog = false
