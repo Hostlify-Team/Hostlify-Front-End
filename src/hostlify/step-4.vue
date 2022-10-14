@@ -18,11 +18,55 @@
       <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:center">
-            <h1>¿Confirmar compra?</h1>
+            <h1>Confirmar pedido</h1>
+          </div>
+          <div style="margin-left: 5rem">
+            <h1 >Resumen del pedido</h1>
+            <div>
+              <h3>Platillo: </h3>
+              <div style="display: flex;justify-content: space-between;margin: 0 10rem 0 1.5rem">
+                <div>
+                  <p>{{order.dish}}</p>
+                </div>
+                <div>
+                  <p>Cant. {{order.dishQuantity}}</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3>Bebida: </h3>
+              <div style="display: flex;justify-content: space-between;margin: 0 10rem 0 1.5rem">
+                <div>
+                  <p>{{order.drink}}</p>
+                </div>
+                <div>
+                  <p>Cant. {{order.drinkQuantity}}</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3>Crema: </h3>
+              <div style="display: flex;justify-content: space-between;margin: 0 10rem 0 1.5rem">
+                <div>
+                  <p>{{order.cream}}</p>
+                </div>
+                <div>
+                  <p>Cant. {{order.creamQuantity}}</p>
+                </div>
+              </div>
+            </div>
+            <div v-if="order.instruction!==null">
+              <h3>Intruccion: </h3>
+              <div style="display: flex;justify-content: space-between;margin: 0 10rem 0 1.5rem">
+                <div>
+                  <p>{{order.instruction}}</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div style="display: flex; justify-content:center;margin-bottom:10px;margin-top:30px">
-            <router-link style="text-decoration:none" to="/services"> <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold">Siguiente</pv-button> </router-link>
+            <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="sendOrder">Confirmar</pv-button>
           </div>
           <div style="display: flex; justify-content:center">
             <router-link style="text-decoration:none; color:#D6A049" to="/services"> <h6>Cancelar</h6> </router-link>
@@ -38,8 +82,48 @@
 
 
 <script>
+import {RoomServices} from "../services/room-services";
+import {FoodServices} from "../services/food-services";
 export default {
   name: "step-4",
+  data(){
+    return{
+      order:[]
+    }
+  },
+  created() {
+    new RoomServices().getRoomForGuest(sessionStorage.getItem("id")).then(response=> {
+      this.order.roomId=response.data[0].id
+      this.order.dish=sessionStorage.getItem("dish")
+      this.order.dishQuantity=sessionStorage.getItem("dishQuantity")
+      this.order.drink=sessionStorage.getItem("drink")
+      this.order.drinkQuantity=sessionStorage.getItem("drinkQuantity")
+      this.order.cream=sessionStorage.getItem("cream")
+      this.order.creamQuantity=sessionStorage.getItem("creamQuantity")
+      if(sessionStorage.getItem("instructions")==="null"){
+        this.order.instruction=null
+      }else {
+        this.order.instruction=sessionStorage.getItem("instructions")
+      }
+
+    })
+  },
+  methods:{
+    sendOrder(){
+      sessionStorage.removeItem("dish")
+      sessionStorage.removeItem("dishQuantity")
+      sessionStorage.removeItem("drink")
+      sessionStorage.removeItem("drinkQuantity")
+      sessionStorage.removeItem("cream")
+      sessionStorage.removeItem("creamQuantity")
+      sessionStorage.removeItem("instructions")
+      new FoodServices().postFoodService(this.order).then(response=>{
+        console.log("Order send successfull",response.data)
+        this.$toast.add({severity:'success', summary: 'Enviado', detail:'Orden enviada', life: 3000});
+        this.$router.push("/services")
+      })
+    }
+  }
 }
 </script>
 

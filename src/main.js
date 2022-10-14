@@ -35,6 +35,7 @@ import RadioButton from 'primevue/radiobutton';
 import Dialog from 'primevue/dialog';
 import InputMask from 'primevue/inputmask';
 import SelectButton from 'primevue/selectbutton';
+import Textarea from 'primevue/textarea';
 
 
 const app = createApp(App)
@@ -66,6 +67,8 @@ app.component("pv-input-number",InputNumber)
 app.component("pv-dialog",Dialog)
 app.component("pv-input-mask",InputMask)
 app.component("pv-select-button",SelectButton)
+app.component("pv-text-area",Textarea)
+
 
 
 

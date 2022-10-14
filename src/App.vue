@@ -8,6 +8,7 @@
 </script>
 
 <template>
+  <pv-toast></pv-toast>
   <Navbar/>
   <RouterView />
 </template>

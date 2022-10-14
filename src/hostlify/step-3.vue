@@ -21,11 +21,11 @@
             <h2>Seleccione sus extras</h2>
           </div>
           <div style="display: flex;margin-bottom:30px; justify-content:center">
-            <pv-input-text id="food" style="width:500px"/>
+            <pv-dropdown v-model="selectedCream" :options="creams"  placeholder="Eliga una crema" style="width:500px"></pv-dropdown>
           </div>
           <div style="display: flex; justify-content:center">
             <br>
-            <pv-input-number v-model="value2" showButtons buttonLayout="horizontal"
+            <pv-input-number v-model="creamQuantity" showButtons buttonLayout="horizontal"
                              incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal" />
           </div>
 
@@ -33,11 +33,11 @@
             <h2>Instrucciones de preparación</h2>
           </div>
           <div style="display: flex; justify-content:center">
-            <pv-input-text id="food"/>
+            <pv-text-area id="food" v-model="instructions" style="width: 28rem;"/>
           </div>
 
           <div style="display: flex; justify-content:center;margin-bottom:10px;margin-top:30px">
-            <router-link style="text-decoration:none" to="/step-4"> <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold">Siguiente</pv-button> </router-link>
+            <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold;margin-top: 1.5rem" @click="next">Siguiente</pv-button>
           </div>
           <div style="display: flex; justify-content:center">
             <router-link style="text-decoration:none; color:#D6A049" to="/services"> <h6>Cancelar</h6> </router-link>
@@ -57,6 +57,22 @@
 <script>
 export default {
   name: "step-3",
+  data(){
+    return{
+      creams:["Mayonesa","Ketchup","Mostaza","Aji","Ocopa"],
+      selectedCream:null,
+      creamQuantity:1,
+      instructions:null
+    }
+  },
+  methods:{
+    next(){
+      sessionStorage.setItem("cream",this.selectedCream)
+      sessionStorage.setItem("creamQuantity",this.creamQuantity)
+      sessionStorage.setItem("instructions",this.instructions)
+      this.$router.push("/step-4")
+    }
+  }
 }
 </script>
 
@@ -64,7 +80,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
 .wrapper-progressBar {
-  width: 100vw;
+  width: 95vw;
   height: 10vh;
 }
 

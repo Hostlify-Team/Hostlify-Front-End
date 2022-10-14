@@ -43,8 +43,8 @@ export default {
   methods:{
     signIn(){
       new UserServices().login(this.email,this.password).then(response=>{
-        console.log("Inicio de sesion exitoso")
         sessionStorage.setItem("jwt",response.data.accessToken)
+        sessionStorage.setItem("id",response.data.user.id)
         sessionStorage.setItem("name",response.data.user.name)
         sessionStorage.setItem("email",response.data.user.email)
         sessionStorage.setItem("type",response.data.user.type)
@@ -55,7 +55,6 @@ export default {
           this.$router.push("/rooms")
         }else{
           this.sendMessage("guest",response.data.user.name)
-          new
           this.$router.push("/services")
         }
       })

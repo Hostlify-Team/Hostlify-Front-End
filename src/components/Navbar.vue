@@ -74,12 +74,10 @@ export default {
 
   },
   mounted() {
-    console.log(this.showNavBar,"MOUNTED")
     this.emitter.on("message-from-sign-up",isOpen=>{
       this.showNavBar=isOpen.logged
       this.currentUserType=isOpen.type
       this.currentUserName=isOpen.name
-      console.log(isOpen.logged,isOpen.type)
     })
 
   }

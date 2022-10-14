@@ -21,15 +21,15 @@
             <h2>Seleccione su bebida</h2>
           </div>
           <div style="display: flex;margin-bottom:30px; justify-content:center">
-            <pv-input-text id="food" style="width:500px"/>
+            <pv-dropdown v-model="selectedDrink" :options="drinks"  placeholder="Eliga una bebida" style="width:500px"></pv-dropdown>
           </div>
           <div style="display: flex; justify-content:center">
             <br>
-            <pv-input-number v-model="value2" showButtons buttonLayout="horizontal"
+            <pv-input-number v-model="drinkQuantity" showButtons buttonLayout="horizontal"
                              incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal" />
           </div>
           <div style="display: flex; justify-content:center;margin-bottom:10px;margin-top:30px">
-            <router-link style="text-decoration:none" to="/step-3"> <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold">Siguiente</pv-button> </router-link>
+            <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold;margin-top: 1.5rem" @click="next">Siguiente</pv-button>
           </div>
           <div style="display: flex; justify-content:center">
             <router-link style="text-decoration:none; color:#D6A049" to="/services"> <h6>Cancelar</h6> </router-link>
@@ -46,6 +46,20 @@
 <script>
 export default {
   name: "step-2",
+  data(){
+    return{
+      drinks:["Chicha Morada","Inca Kola","Pisco Sour","Chicha de Jora","Agua"],
+      selectedDrink:null,
+      drinkQuantity:1,
+    }
+  },
+  methods:{
+    next(){
+      sessionStorage.setItem("drink",this.selectedDrink)
+      sessionStorage.setItem("drinkQuantity",this.drinkQuantity)
+      this.$router.push("/step-3")
+    }
+  }
 }
 </script>
 
@@ -53,7 +67,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
 .wrapper-progressBar {
-  width: 100vw;
+  width: 95vw;
   height: 10vh;
 }
 

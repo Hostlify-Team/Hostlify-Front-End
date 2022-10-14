@@ -11,6 +11,9 @@ export class RoomServices{
     getRoomsForManager(id){
         return http.get("manager/"+id+"/rooms")
     }
+    getRoomForGuest(id){
+        return http.get("guest/"+id+"/rooms")
+    }
     postRoom(room){
         return http.post("rooms",{
             "roomName":room.roomName,
