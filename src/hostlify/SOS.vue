@@ -1,17 +1,25 @@
 <template>
   <div class="SOS">
-    <h2>Boton de Emergencia</h2>
-    <br>
-    <img src="../assets/SOS.png" >
-    <br>
-    <pv-button label="Volver" @click="goBack"> </pv-button>
-    <br><br>
+    <div class="title" style="margin: 4rem 4rem 0 4rem">
+      <h1 style="margin-top: 0">Ayuda</h1>
+    </div>
+    <div class="SOS_alert">
+      <pv-button>
+        SOS
+      </pv-button>
+
+    </div>
+    <div class="SOS_button">
+      <pv-button label="Volver" @click="goBack"> </pv-button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "SOS",
+  components: {},
+
   methods:{
     goBack(){
       this.$router.push("/services")
@@ -21,28 +29,39 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
 .SOS {
-  background-color:#011530;
+  width: 95vw;
+  height: 83vh;
+  font-family: 'Roboto', sans-serif;
 
 }
-.SOS h2{
-  text-align: left;
-  padding-left:5% ;
-  padding-top: 3%;
-  color: #D6A049;
-  margin: auto;
+.SOS_alert{
+  display: flex;
+  justify-content: center;
 }
-.SOS img{
-  padding-left: 20%;
-  height: 50% ;
-  width: 50%;
-
+.SOS_alert button{
+  border-radius: 50rem;
+  background-color: #d6a049;
+  display: flex;
+  justify-content: center;
+  width: 30.5vw;
+  height: 65vh;
 }
-.SOS button {
-  width: 215.69px;
-  height: 40.75px;
-  margin-left: 30%;
-  margin-top:3%;
+.SOS_alert button {
+  font-weight: bold;
+  font-family: Arial;
+  font-size: 10vw;
+  color: white;
+}
+.SOS_button{
+  display: flex;
+  justify-content: end;
+}
+.SOS_button button {
+  border-radius: 3rem;
+  border-style: none;
   background-color: #D6A049;
   color: white;
 
