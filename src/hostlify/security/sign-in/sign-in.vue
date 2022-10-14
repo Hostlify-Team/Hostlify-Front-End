@@ -54,6 +54,7 @@ export default {
           this.$router.push("/rooms")
         }else{
           this.sendMessage("guest",response.data.user.name)
+          new
           this.$router.push("/services")
         }
       })
