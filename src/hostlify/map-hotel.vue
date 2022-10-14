@@ -36,11 +36,12 @@ export default {
   justify-content: center;
 }
 .map_hotel img{
-  width: 40vw;
+  width: 600px;
 }
 .map_button{
   display: flex;
   justify-content: end;
+  margin-top: 3rem;
 }
 .map button {
   border-radius: 3rem;
@@ -49,4 +50,17 @@ export default {
   color: white;
 
 }
+@media (max-width:650px){
+  .map_hotel img{
+    width: 500px;
+  }
+}
+@media (max-width:638px){
+  .map_hotel img{
+    width: 300px;
+  }
+}
+
+
+
 </style>

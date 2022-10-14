@@ -46,13 +46,13 @@ export default {
   background-color: #d6a049;
   display: flex;
   justify-content: center;
-  width: 30.5vw;
-  height: 65vh;
+  width: 450px;
+  height: 450px;
 }
 .SOS_alert button {
   font-weight: bold;
   font-family: Arial;
-  font-size: 10vw;
+  font-size: 140px;
   color: white;
 }
 .SOS_button{
@@ -60,10 +60,27 @@ export default {
   justify-content: end;
 }
 .SOS_button button {
+  margin-top: 3rem;
   border-radius: 3rem;
   border-style: none;
   background-color: #D6A049;
   color: white;
 
+}
+@media (max-width:498px){
+  .SOS_alert button{
+    border-radius: 50rem;
+    background-color: #d6a049;
+    display: flex;
+    justify-content: center;
+    width: 310px;
+    height: 310px;
+  }
+  .SOS_alert button {
+    font-weight: bold;
+    font-family: Arial;
+    font-size: 80px;
+    color: white;
+  }
 }
 </style>
