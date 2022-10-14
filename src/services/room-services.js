@@ -26,7 +26,7 @@ export class RoomServices{
             "price": room.price,
             "image": room.image,
             "description": room.description,
-            "emergency":false
+            "emergency":room.emergency
         })
     }
     updateRoom(id,room){

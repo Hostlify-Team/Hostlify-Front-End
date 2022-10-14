@@ -5,7 +5,6 @@ import i18n from "@/locals/i18n";
 import PrimeVue from 'primevue/config';
 import "/node_modules/primeflex/primeflex.css";
 import ToastService from 'primevue/toastservice';
-import InputNumber from 'primevue/inputnumber';
 import mitt from 'mitt';
 const emitter = mitt();
 
@@ -32,10 +31,15 @@ import Checkbox from 'primevue/checkbox';
 import InputSwitch from 'primevue/inputswitch';
 import Password from 'primevue/password';
 import RadioButton from 'primevue/radiobutton';
+import Toolbar from 'primevue/toolbar';
+import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
 import InputMask from 'primevue/inputmask';
 import SelectButton from 'primevue/selectbutton';
 import Textarea from 'primevue/textarea';
+import InputNumber from 'primevue/inputnumber';
+import ProgressBar from 'primevue/progressbar';
+import Calendar from 'primevue/calendar';
 
 
 const app = createApp(App)
@@ -67,7 +71,12 @@ app.component("pv-input-number",InputNumber)
 app.component("pv-dialog",Dialog)
 app.component("pv-input-mask",InputMask)
 app.component("pv-select-button",SelectButton)
+app.component("pv-toolbar",Toolbar)
+app.component("pv-tag",Tag)
+app.component("pv-progress-bar",ProgressBar)
+app.component("pv-calendar",Calendar)
 app.component("pv-text-area",Textarea)
+
 
 
 

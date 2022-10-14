@@ -1,95 +1,177 @@
 <template>
   <div>
-    <DataTable
-        :value="histories"
-        responsiveLayout="scroll"
-        v-model:filters="filters"
-    >
-      <template #header>
-        <div class="history-table-header">
-          <Button
-              type="button"
-              icon="pi pi-filter-slash"
-              label="Clear"
-              class="p-button-outlined"
-              @click="clearFilter()"
-          />
-          <span class="p-input-icon-left history-table-header-input">
-            <i class="pi pi-search" />
-<InputText
-    v-model="filters['global'].value"
-    placeholder="Keyword Search"
-    color="white"
-/>
-          </span>
-        </div>
-      </template>
-      <Column field="number" header="Number" :sortable="true"></Column>
-      <Column field="guest" header="Guest" :sortable="true"></Column>
-      <Column field="date" header="Date" :sortable="true"></Column>
-      <Column field="price" header="Price" :sortable="true"></Column>
-    </DataTable>
+    <div class="card">
+      <pv-toolbar class="mb-4">
+        <template #start>
+          <pv-button label="Delete" icon="pi pi-trash" class="p-button-danger" @click="showDeleteRoomsDialog"
+                     :disabled="!selectedRooms || !selectedRooms.length"/>
+        </template>
+
+        <template #end>
+          <pv-button label="Exportar" icon="pi pi-download" class="p-button-help" style="margin-left: 1rem" @click="exportToCSV($event)"/>
+        </template>
+      </pv-toolbar>
+      <pv-data-table
+          ref="dt"
+          :value="rooms"
+          v-model:selection="selectedRooms"
+          datakey="id"
+          :paginator="true"
+          :rows="10"
+          :filters="filters"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          :rowsPerPageOptions="[5, 10, 15]"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} tutorials"
+          responsiveLayout="scroll"
+      >
+        <template #header>
+          <div class="table-header flex flex-column md:flex-row md:justify-content-between">
+            <h5 class="mb-2 md:m-0 p-as-md-center text-xl">Habitaciones</h5>
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"/>
+              <pv-input-text v-model="filters['global'].value" placeholder="Search..."/>
+            </span>
+          </div>
+        </template>
+
+        <pv-column selectionMode="multiple" style="width: 3rem" :exportable="false"></pv-column>
+        <pv-column field="roomName" header="Habitacion" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="guestId" header="Huesped" :sortable="true" style="min-width: 16rem">
+          <template #body="slotProps">
+            <p v-if="slotProps.data.guestId!==null">{{slotProps.data.guestName}}</p>
+          </template>
+        </pv-column>
+        <pv-column field="initialDate" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="endDate" header="Fecha de salida" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="price" header="Precio" :sortable="true" style="min-width: 16rem">
+          <template #body="slotProps">
+            <p v-if="slotProps.data.price!==null">S/. {{slotProps.data.price}}</p>
+          </template>
+        </pv-column>
+
+        <pv-dialog v-model:visible="deleteRoomsDialog" :style="{ width: '450px' }" header="Eliminar las habitaciones" :modal="true">
+          <span>Quieres eliminiar las habitaciones seleccionadas?</span>
+          <template #footer>
+            <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
+            <pv-button :label="'Yes'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRooms" />
+          </template>
+        </pv-dialog>
+
+      </pv-data-table>
+    </div>
   </div>
 </template>
 
 <script>
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
-import Button from "primevue/button";
-import InputText from "primevue/inputtext";
+import {HistoryServices} from "../services/history-services";
+import {UserServices} from "../services/user-services";
 import { FilterMatchMode } from "primevue/api";
+
 export default {
-  components: {
-    Column,
-    DataTable,
-    Button,
-    InputText,
-  },
   data() {
     return {
-      histories: [
-        {
-          number: "1",
-          guest: "Nombre de ejemplo",
-          date: "14/09/2022",
-          price: "15 PEN",
-        },
-        {
-          number: "2",
-          guest: "Nombre de ejemplo",
-          date: "1/09/2022",
-          price: "50 PEN",
-        },
-        {
-          number: "3",
-          guest: "Nombre de ejemplo",
-          date: "23/09/2022",
-          price: "45 PEN",
-        },
+      rooms:[],
+      addRoomDialog:false,
+      editRoomDialog:false,
+      deleteRoomDialog:false,
+      deleteRoomsDialog:false,
+      registerGuestDialog:false,
+      editRoomAuxiliaryId:null,
+      room:{},
+      selectedRooms:null,
+      statusesRoom: [
+        { value: "Disponible" },
+        { value: "Ocupada" },
       ],
-      filters: null,
+      filters: {},
+      submitted: false
     };
   },
   created() {
+    sessionStorage.setItem("id",1)
+    new HistoryServices().getHistoryForManager(sessionStorage.getItem("id")).then(response=>{
+      this.rooms=response.data
+      this.setGuestInfo()
+      console.log("Rooms",this.rooms)
+    })
     this.initFilters();
   },
   methods: {
+    setGuestInfo(){
+      for(let i=0;i<this.rooms.length;i++){
+        if(this.rooms[i].guestId!==null){
+          new UserServices().getUser(this.rooms[i].guestId).then(response=>{
+            console.log(response.data.name)
+            this.rooms[i].guestName=response.data.name
+          })
+        }else {
+          this.rooms[i].guestName=null
+        }
+      }
+    },
+    showDeleteRoomsDialog() {
+      this.deleteRoomsDialog = true
+    },
+    deleteRoom() {
+      new HistoryServices().deleteRoomHistory(this.room.id).then(response => {
+        this.rooms = this.rooms.filter(
+            (t) => t.id !== this.room.id
+        );
+        this.room = {}
+        console.log("room deleted successfully",response.data)
+        this.deleteRoomDialog = false
+      })
+    },
+    deleteRooms() {
+      this.selectedRooms.forEach((room) => {
+        new HistoryServices().deleteRoomHistory(room.id).then((response) => {
+          this.rooms = this.rooms.filter(
+              (t) => t.id !== room.id
+          );
+          console.log(response);
+        });
+      });
+      this.deleteRoomsDialog = false;
+    },
+    hideAnyDialog() {
+      this.deleteRoomsDialog = false
+      this.room = {}
+    },
+    findIndexById(id) {
+      return this.rooms.findIndex((room) => room.id === id);
+    },
+    exportToCSV() {
+      this.$refs.dt.exportCSV();
+    },
     initFilters() {
       this.filters = {
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      };
-    },
-    clearFilter() {
-      this.initFilters();
-    },
+        global: {value: null, matchMode: FilterMatchMode.CONTAINS},
+      }
+    }
   },
+  mounted() {
+    this.emitter.on("register-form", response => {
+      this.registerGuestDialog = response;
+    });
+    this.emitter.on("new-guest", response => {
+      let id=this.findIndexById(this.editRoomAuxiliaryId)
+      this.rooms[id].guestId=response.id
+      this.rooms[id].date=response.date
+      this.rooms[id].price=response.price
+      this.rooms[id].time=response.time
+      this.rooms[id].status=false
+      new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
+        this.setGuestInfo()
+        console.log("Guest added successfully",response.data)
+        this.editRoomAuxiliaryId=null
+      })
+    });
+  }
 };
 </script>
 <style scoped>
-.history-table-header {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+.product-image {
+  width: 50px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
 }
-
 </style>
