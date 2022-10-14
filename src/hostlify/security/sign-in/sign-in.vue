@@ -32,6 +32,7 @@
 
 <script>
 import {UserServices} from "../../../services/user-services";
+import {RoomServices} from "../../../services/room-services";
 export default {
   data(){
     return{
