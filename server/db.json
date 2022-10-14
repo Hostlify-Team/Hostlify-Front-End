@@ -49,6 +49,30 @@
       "plan": null,
       "name": "Alonso Sanchez",
       "id": 2
+    },
+    {
+      "email": "marko@gmail.com",
+      "password": "$2a$10$FQHqFMWEkOFP./M8YpF1NeZsSi9ZxfHAJyOskFeK.iQ1DHvtHD0BC",
+      "type": "manager",
+      "plan": "Pro",
+      "name": "Marko Talledo",
+      "id": 3
+    },
+    {
+      "email": "maria@gmail.com",
+      "password": "$2a$10$/dXs0OuAn6Y/ObiVwMLVF.iKd5aJbXHEw52vvk3wAYzW4xqIBYK4e",
+      "type": "guest",
+      "plan": null,
+      "name": "maria",
+      "id": 4
+    },
+    {
+      "email": "mariano@gmail.com",
+      "password": "$2a$10$MWdBs8RrnvGdfVRfLi.lvuHYH1W1/2HmMDoVQDapwX4EMvJnt2rHy",
+      "type": "guest",
+      "plan": null,
+      "name": "mariano",
+      "id": 5
     }
   ],
   "rooms": [
@@ -93,6 +117,34 @@
       "description": "some extra description",
       "emergency": false,
       "id": 3
+    },
+    {
+      "roomName": "B-001",
+      "managerId": "3",
+      "guestId": null,
+      "initialDate": null,
+      "endDate": null,
+      "status": true,
+      "progressTime": 0,
+      "price": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "first Room",
+      "emergency": false,
+      "id": 4
+    },
+    {
+      "roomName": "B-002",
+      "managerId": "3",
+      "guestId": 5,
+      "initialDate": "14/10/2022",
+      "endDate": "26/10/2022",
+      "status": false,
+      "progressTime": 0,
+      "price": 1008,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "second room",
+      "emergency": false,
+      "id": 5
     }
   ],
   "history": [
@@ -105,6 +157,16 @@
       "endDate": "13/6/2022",
       "price": 100,
       "description": "some description"
+    },
+    {
+      "roomName": "B-002",
+      "managerId": "3",
+      "guestId": 5,
+      "initialDate": "14/10/2022",
+      "endDate": "26/10/2022",
+      "price": 1008,
+      "description": "second room",
+      "id": 2
     }
   ],
   "foodServices": [
@@ -151,6 +213,17 @@
       "creamQuantity": "4",
       "instruction": "a",
       "id": 4
+    },
+    {
+      "roomId": 5,
+      "dish": "Ceviche",
+      "dishQuantity": "1",
+      "drink": "Inca Kola",
+      "drinkQuantity": "1",
+      "cream": "Aji",
+      "creamQuantity": "2",
+      "instruction": "example",
+      "id": 5
     }
   ]
 }

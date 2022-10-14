@@ -88,7 +88,6 @@ export default {
     };
   },
   created() {
-    sessionStorage.setItem("id",1)
     new HistoryServices().getHistoryForManager(sessionStorage.getItem("id")).then(response=>{
       this.rooms=response.data
       this.setGuestInfo()

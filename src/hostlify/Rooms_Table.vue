@@ -189,7 +189,6 @@ export default {
     };
   },
   created() {
-    sessionStorage.setItem("id",1)
     new RoomServices().getRoomsForManager(sessionStorage.getItem("id")).then(response=>{
       this.rooms=response.data
       this.setGuestInfo()
