@@ -25,7 +25,8 @@ export class RoomServices{
             "progressTime": room.progressTime,
             "price": room.price,
             "image": room.image,
-            "description": room.description
+            "description": room.description,
+            "emergency":false
         })
     }
     updateRoom(id,room){
@@ -39,7 +40,8 @@ export class RoomServices{
             "progressTime": room.progressTime,
             "price": room.price,
             "image": room.image,
-            "description": room.description
+            "description": room.description,
+            "emergency":room.emergency
         })
 
     }

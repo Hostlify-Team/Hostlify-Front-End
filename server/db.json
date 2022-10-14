@@ -63,6 +63,7 @@
       "price": null,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description",
+      "emergency": false,
       "id": 1
     },
     {
@@ -76,6 +77,7 @@
       "price": null,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description",
+      "emergency": false,
       "id": 2
     },
     {
@@ -89,6 +91,7 @@
       "price": 45,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description",
+      "emergency": false,
       "id": 3
     }
   ],
