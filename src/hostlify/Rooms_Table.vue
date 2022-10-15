@@ -210,6 +210,7 @@ export default {
       this.room.guestId = data.guestId
       this.room.status = data.status
       this.room.progressTime = data.progressTime
+      this.room.guestStayComplete = data.guestStayComplete
       this.room.initialDate = data.initialDate
       this.room.endDate = data.endDate
       this.room.price = data.price
@@ -244,6 +245,7 @@ export default {
       this.room.guestId = null
       this.room.status = true
       this.room.progressTime = 0
+      this.room.guestStayComplete = null
       this.room.initialDate = null
       this.room.endDate = null
       this.room.price = null
@@ -285,6 +287,14 @@ export default {
         if(this.rooms[i].guestId!==null){
           new UserServices().getUser(this.rooms[i].guestId).then(response=>{
             this.rooms[i].guestName=response.data.name
+            let formatGoal=this.rooms[i].endDate.split("/")
+            let goalDate=(formatGoal[1]+"/"+formatGoal[0]+"/"+formatGoal[2])
+            let currentTime=new Date()
+            let actualDay= currentTime.getDate()
+            let actualMonth= currentTime.getMonth()
+            let currentTimeFormat=(actualMonth+1)+"/"+actualDay+"/"+currentTime.getFullYear()
+            this.rooms[i].totalTime=this.setTotalTimeForGuest(currentTimeFormat,goalDate)
+            this.rooms[i].progressTime=this.getProgressTimeForGuest(goalDate,this.rooms[i].totalTime)
           })
         }else {
           this.rooms[i].guestName=null
@@ -304,6 +314,7 @@ export default {
         this.rooms[id].price=null
         this.rooms[id].emergency=false
         this.rooms[id].progressTime=null
+        this.rooms[id].guestStayComplete=null
         new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
           this.setGuestInfo()
           console.log("Guest evicted successfully",response.data)
@@ -364,21 +375,62 @@ export default {
         return progressValue
       }
     },
+    setTotalTimeForGuest(currentDate,goalDate){
+      let _goalDate=new Date(goalDate)
+      let _currentDate=new Date(currentDate)
+      let difference= Math.abs(_goalDate - _currentDate);
+      let total = (difference/ 60000)
+      return total
+    },
+    getProgressTimeForGuest(goalDate,total){
+      let _goalDate=new Date(goalDate)
+      let _currentDate=new Date()
+      let difference= Math.abs((_goalDate) - (_currentDate));
+      let progress = 100-Math.trunc(((difference/ 60000)/total) *100)
+      if(progress<0){
+        return 100
+      }else {
+        return progress
+      }
+    },
+    startProgress() {
+      this.interval = setInterval(() => {
+        this.horaActual=new Date()
+        for(let i=0;i<this.rooms.length;i++){
+          if(this.rooms[i].guestStayComplete===false){
+            this.increaseProgress(i)
+          }
+        }
+      }, 1000);
+    },
+    increaseProgress(i){
+      //
+      let format=this.rooms[i].endDate.split("/")
+      let goalDate=(format[1]+"/"+format[0]+"/"+format[2])
+      this.rooms[i].progressTime=this.getProgressTimeForGuest(goalDate,this.rooms[i].totalTime)
+    },
 
   },
+
   mounted() {
+    this.startProgress()
     this.emitter.on("register-form", response => {
       this.registerGuestDialog = response;
     });
     this.emitter.on("new-guest", response => {
-      let id=this.findIndexById(this.editRoomAuxiliaryId)
+      let id=this.findIndexById(this.editRoomAuxiliaryId)//Todo: Tres problemas, el response.id, el rooms[id] vacio o el id
+      console.log("Id:",id)
+      console.log("rooms[id]:",this.rooms[id].guestId)
+      console.log("Response.id:",response.id)
       this.rooms[id].guestId=response.id
       this.rooms[id].status=false
       this.rooms[id].initialDate=response.initialDate
       this.rooms[id].endDate=response.endDate
       this.rooms[id].price=response.price
       this.rooms[id].emergency=false
-      this.rooms[id].progressTime=this.SetProgressTimeBar(response.firstDayDate,response.lastDayDate)
+      this.rooms[id].guestStayComplete=false
+      this.rooms[id].totalTime=this.setTotalTimeForGuest(response.firstDayDate,response.lastDayDate)
+      this.rooms[id].progressTime=this.getProgressTimeForGuest(response.lastDayDate,this.rooms[id].totalTime)
       new HistoryServices().postRoomHistory(this.rooms[id]).then(response=>{
           console.log("Room added to history",response.data)
         })
@@ -388,6 +440,7 @@ export default {
           this.editRoomAuxiliaryId=null
         this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
         })
+      console.log(this.rooms)
     });
   }
 };

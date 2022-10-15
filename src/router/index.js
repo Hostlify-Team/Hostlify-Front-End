@@ -84,6 +84,11 @@ const router = createRouter({
       path: '/history',
       name: 'HistoryView',
       component: () => import('../hostlify/HistoryView.vue')
+    },
+    {
+      path: '/regresiva',
+      name: 'regresiva',
+      component: () => import('../hostlify/CuentaRegresiva.vue')
     }
   ]
 })
