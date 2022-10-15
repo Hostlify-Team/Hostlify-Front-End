@@ -7,6 +7,7 @@ import "/node_modules/primeflex/primeflex.css";
 import ToastService from 'primevue/toastservice';
 import mitt from 'mitt';
 const emitter = mitt();
+import BadgeDirective from 'primevue/badgedirective';
 
 //PrimeVue Styles
 import "primevue/resources/themes/vela-orange/theme.css"       //theme
@@ -40,6 +41,8 @@ import Textarea from 'primevue/textarea';
 import InputNumber from 'primevue/inputnumber';
 import ProgressBar from 'primevue/progressbar';
 import Calendar from 'primevue/calendar';
+import Badge from 'primevue/badge';
+
 
 
 const app = createApp(App)
@@ -76,6 +79,8 @@ app.component("pv-tag",Tag)
 app.component("pv-progress-bar",ProgressBar)
 app.component("pv-calendar",Calendar)
 app.component("pv-text-area",Textarea)
+app.component("pv-badge",Badge)
+app.directive('badge', BadgeDirective);
 
 
 

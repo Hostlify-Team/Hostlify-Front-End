@@ -60,6 +60,14 @@
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
+            <i class="p-text-secondary" style="font-size: 1.5rem" v-badge="2" v-if="slotProps.data.guestId!==null">
+              <pv-button  icon="pi pi-bell" class="p-button-rounded p-button-secondary" @click="showNotificationsRoomDialog(slotProps.data)">
+              </pv-button>
+            </i>
+          </template>
+        </pv-column>
+        <pv-column :exportable="false" style="min-width: 8rem">
+          <template #body="slotProps">
             <pv-button label="Desalojar" v-if="slotProps.data.guestId!==null" @click="showDeleteGuestDialog(slotProps.data)"/>
             <pv-button label="Registrar" v-if="slotProps.data.guestId===null" @click="showRegisterGuestDialog(slotProps.data)"/>
           </template>
@@ -151,6 +159,30 @@
           </template>
         </pv-dialog>
 
+        <pv-dialog v-model:visible="notificationsRoomsDialog" :style="{ width: '700px' }" header="Actividad del cliente" :modal="true">
+          <div style="display: flex; justify-content:center">
+            <h1>Solicitudes pendientes</h1>
+          </div>
+          <div class="container">
+            <div>
+              <h3>Pendiente: </h3>
+              <div style="display: flex;justify-content: space-between;align-items: center">
+                <div>
+                  <p>Descripcion</p>
+                </div>
+                <div style="display: flex; justify-content:center">
+                  <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="sendOrder">Solucionar</pv-button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <template #footer>
+            <pv-button :label="'Cerrar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
+          </template>
+        </pv-dialog>
+
+
+
 
       </pv-data-table>
     </div>
@@ -175,6 +207,7 @@ export default {
       editRoomDialog:false,
       deleteRoomDialog:false,
       deleteRoomsDialog:false,
+      notificationsRoomsDialog:false,
       evictGuestDialog:false,
       registerGuestDialog:false,
       editRoomAuxiliaryId:null,
@@ -240,6 +273,9 @@ export default {
       this.room.guestId = data.guestId
       this.room.guestName = data.guestName
       this.editRoomAuxiliaryId=data.id
+    },
+    showNotificationsRoomDialog(data){
+      this.notificationsRoomsDialog=true
     },
     addRoom() {
       this.room.managerId = parseInt(sessionStorage.getItem("id"))//Todo: Guardar en int Y actualizar el progress cuando se elimine
@@ -347,6 +383,7 @@ export default {
       this.deleteRoomDialog = false
       this.deleteRoomsDialog = false
       this.evictGuestDialog=false
+      this.notificationsRoomsDialog=false
       this.room = {}
     },
     findIndexById(id) {
