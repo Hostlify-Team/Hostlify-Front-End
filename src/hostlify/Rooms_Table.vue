@@ -395,13 +395,18 @@ export default {
     },
     startProgress() {
       this.interval = setInterval(() => {
-        this.horaActual=new Date()
         for(let i=0;i<this.rooms.length;i++){
           if(this.rooms[i].guestStayComplete===false){
             this.increaseProgress(i)
+            if(this.rooms[i].progressTime===100 && this.rooms[i].guestStayComplete===false){
+              this.room=[]
+              this.rooms[i].guestStayComplete=true
+              this.room=this.rooms[i]
+              this.editRoom()
+            }
           }
         }
-      }, 1000);
+      }, 60000);
     },
     increaseProgress(i){
       //
