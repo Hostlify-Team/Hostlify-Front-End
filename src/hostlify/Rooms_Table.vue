@@ -232,6 +232,7 @@ export default {
     showRegisterGuestDialog(data) {
       this.registerGuestDialog = true
       this.editRoomAuxiliaryId=data.id
+      sessionStorage.setItem("temporaryRoomId",data.id)
       console.log("Room id: ",data.id,data.roomName)
     },
     showDeleteGuestDialog(data){
@@ -241,7 +242,7 @@ export default {
       this.editRoomAuxiliaryId=data.id
     },
     addRoom() {
-      this.room.managerId = sessionStorage.getItem("id")
+      this.room.managerId = parseInt(sessionStorage.getItem("id"))//Todo: Guardar en int Y actualizar el progress cuando se elimine
       this.room.guestId = null
       this.room.status = true
       this.room.progressTime = 0
@@ -305,7 +306,6 @@ export default {
       this.evictGuestDialog=false
       new UserServices().deleteUser(guestId).then(response=>{
           console.log("Guest deleted",response.data)
-
         let id=this.findIndexById(this.editRoomAuxiliaryId)
         this.rooms[id].guestId=null
         this.rooms[id].status=true
@@ -314,9 +314,15 @@ export default {
         this.rooms[id].price=null
         this.rooms[id].emergency=false
         this.rooms[id].progressTime=null
+        this.rooms[id].totalTime=null
         this.rooms[id].guestStayComplete=null
         new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
           this.setGuestInfo()
+          this.rooms[id].progressTime=0
+          this.rooms[id].totalTime=null
+          console.log("ELIMINE",this.rooms[id].totalTime)
+          console.log("prgores",this.rooms[id].progressTime)
+          this.rooms[id].guestStayComplete=null
           console.log("Guest evicted successfully",response.data)
           this.editRoomAuxiliaryId=null
           this.$toast.add({severity:'success', summary: 'Huesped desalojado', detail:'Se desalojo el huesped correctamente', life: 3000});
@@ -423,10 +429,9 @@ export default {
       this.registerGuestDialog = response;
     });
     this.emitter.on("new-guest", response => {
-      let id=this.findIndexById(this.editRoomAuxiliaryId)//Todo: Tres problemas, el response.id, el rooms[id] vacio o el id
-      console.log("Id:",id)
-      console.log("rooms[id]:",this.rooms[id].guestId)
-      console.log("Response.id:",response.id)
+      this.editRoomAuxiliaryId= parseInt(sessionStorage.getItem("temporaryRoomId"))
+      let id=this.findIndexById(this.editRoomAuxiliaryId)
+      console.log(id,this.rooms[id].guestId,response.id)
       this.rooms[id].guestId=response.id
       this.rooms[id].status=false
       this.rooms[id].initialDate=response.initialDate
@@ -436,9 +441,15 @@ export default {
       this.rooms[id].guestStayComplete=false
       this.rooms[id].totalTime=this.setTotalTimeForGuest(response.firstDayDate,response.lastDayDate)
       this.rooms[id].progressTime=this.getProgressTimeForGuest(response.lastDayDate,this.rooms[id].totalTime)
-      new HistoryServices().postRoomHistory(this.rooms[id]).then(response=>{
+
+      new UserServices().getUser(this.rooms[id].guestId).then(response=>{
+        let roomStorable=this.rooms[id]
+        roomStorable.guestName= response.data.name
+        roomStorable.guestEmail= response.data.email
+        new HistoryServices().postRoomHistory(roomStorable).then(response=>{
           console.log("Room added to history",response.data)
         })
+      })
       new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
           this.setGuestInfo()
           console.log("Guest added successfully",response.data)

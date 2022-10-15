@@ -36,7 +36,7 @@
 
         <pv-column selectionMode="multiple" style="width: 3rem" :exportable="false"></pv-column>
         <pv-column field="roomName" header="Habitacion" :sortable="true" style="min-width: 16rem"></pv-column>
-        <pv-column field="guestId" header="Huesped" :sortable="true" style="min-width: 16rem">
+        <pv-column field="guestName" header="Huesped" :sortable="true" style="min-width: 16rem">
           <template #body="slotProps">
             <p v-if="slotProps.data.guestId!==null">{{slotProps.data.guestName}}</p>
           </template>
@@ -71,18 +71,10 @@ export default {
   data() {
     return {
       rooms:[],
-      addRoomDialog:false,
-      editRoomDialog:false,
       deleteRoomDialog:false,
       deleteRoomsDialog:false,
-      registerGuestDialog:false,
-      editRoomAuxiliaryId:null,
       room:{},
       selectedRooms:null,
-      statusesRoom: [
-        { value: "Disponible" },
-        { value: "Ocupada" },
-      ],
       filters: {},
       submitted: false
     };
@@ -90,24 +82,11 @@ export default {
   created() {
     new HistoryServices().getHistoryForManager(sessionStorage.getItem("id")).then(response=>{
       this.rooms=response.data
-      this.setGuestInfo()
       console.log("Rooms",this.rooms)
     })
     this.initFilters();
   },
   methods: {
-    setGuestInfo(){
-      for(let i=0;i<this.rooms.length;i++){
-        if(this.rooms[i].guestId!==null){
-          new UserServices().getUser(this.rooms[i].guestId).then(response=>{
-            console.log(response.data.name)
-            this.rooms[i].guestName=response.data.name
-          })
-        }else {
-          this.rooms[i].guestName=null
-        }
-      }
-    },
     showDeleteRoomsDialog() {
       this.deleteRoomsDialog = true
     },
@@ -147,24 +126,6 @@ export default {
         global: {value: null, matchMode: FilterMatchMode.CONTAINS},
       }
     }
-  },
-  mounted() {
-    this.emitter.on("register-form", response => {
-      this.registerGuestDialog = response;
-    });
-    this.emitter.on("new-guest", response => {
-      let id=this.findIndexById(this.editRoomAuxiliaryId)
-      this.rooms[id].guestId=response.id
-      this.rooms[id].date=response.date
-      this.rooms[id].price=response.price
-      this.rooms[id].time=response.time
-      this.rooms[id].status=false
-      new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
-        this.setGuestInfo()
-        console.log("Guest added successfully",response.data)
-        this.editRoomAuxiliaryId=null
-      })
-    });
   }
 };
 </script>
