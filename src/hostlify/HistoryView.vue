@@ -3,12 +3,12 @@
     <div class="card">
       <pv-toolbar class="mb-4">
         <template #start>
-          <pv-button label="Delete" icon="pi pi-trash" class="p-button-danger" @click="showDeleteRoomsDialog"
-                     :disabled="!selectedRooms || !selectedRooms.length"/>
+          <pv-button label="Delete" class="p-button-danger" @click="showDeleteRoomsDialog"
+                     :disabled="!selectedRooms || !selectedRooms.length"><i class="pi pi-trash"/>{{$t("delete")}}</pv-button>
         </template>
 
         <template #end>
-          <pv-button label="Exportar" icon="pi pi-download" class="p-button-help" style="margin-left: 1rem" @click="exportToCSV($event)"/>
+          <pv-button label="Exportar" class="p-button-help" style="margin-left: 1rem" @click="exportToCSV($event)"><i class="pi pi-download"/>{{$t("export")}}</pv-button>
         </template>
       </pv-toolbar>
       <pv-data-table
