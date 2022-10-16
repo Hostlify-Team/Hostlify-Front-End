@@ -35,6 +35,30 @@
       "plan": null,
       "name": "alonso sanchez",
       "id": 2
+    },
+    {
+      "email": "marko@gmail.com",
+      "password": "$2a$10$Z0z0eMh5cPcFrO3HyhbCSug2ebWcae0.rzO/QH7yCylB95hi09x4.",
+      "type": "guest",
+      "plan": null,
+      "name": "marko",
+      "id": 3
+    },
+    {
+      "email": "marko15@gmail.com",
+      "password": "$2a$10$JcaZQpxKgvFYQmC6zHkEi.rqCmaohBRy1GudzuDjj7hSLDbXolMJO",
+      "type": "guest",
+      "plan": null,
+      "name": "marko",
+      "id": 4
+    },
+    {
+      "email": "marko74@gmail.com",
+      "password": "$2a$10$MJ.MFj7i/.A7Afb/CpoeQOpiPv0FGCpIcP1MgmRLKmYkRQ8z0h7pC",
+      "type": "guest",
+      "plan": null,
+      "name": "marko",
+      "id": 5
     }
   ],
   "rooms": [
@@ -50,6 +74,7 @@
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description",
       "emergency": false,
+      "servicePending": false,
       "id": 1
     },
     {
@@ -62,9 +87,25 @@
       "guestStayComplete": false,
       "price": 84,
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": ".",
+      "description": "some description",
       "emergency": false,
+      "servicePending": true,
       "id": 2
+    },
+    {
+      "roomName": "A-003",
+      "managerId": 1,
+      "guestId": 5,
+      "initialDate": "15/10/2022",
+      "endDate": "16/10/2022",
+      "status": false,
+      "guestStayComplete": false,
+      "price": 84,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "none",
+      "emergency": false,
+      "servicePending": false,
+      "id": 3
     }
   ],
   "history": [
@@ -90,7 +131,31 @@
       "price": 84,
       "description": ".",
       "id": 2
+    },
+    {
+      "roomName": "A-003",
+      "managerId": 1,
+      "guestId": 5,
+      "guestName": "marko",
+      "guestEmail": "marko74@gmail.com",
+      "initialDate": "15/10/2022",
+      "endDate": "16/10/2022",
+      "price": 84,
+      "description": "none",
+      "id": 3
     }
   ],
-  "foodServices": []
+  "foodServices": [
+    {
+      "roomId": 2,
+      "dish": "Arroz con pollo",
+      "dishQuantity": "2",
+      "drink": "Inca Kola",
+      "drinkQuantity": "3",
+      "cream": "Ketchup",
+      "creamQuantity": "1",
+      "instruction": "v",
+      "id": 1
+    }
+  ]
 }

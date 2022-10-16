@@ -21,7 +21,7 @@
           :filters="filters"
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           :rowsPerPageOptions="[5, 10, 15]"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} tutorials"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Habitaciones"
           responsiveLayout="scroll"
       >
         <template #header>
@@ -60,7 +60,7 @@
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
-            <i class="p-text-secondary" style="font-size: 1.5rem" v-badge="2" v-if="slotProps.data.guestId!==null">
+            <i class="p-text-secondary" style="font-size: 1.5rem" v-badge.warning v-if="slotProps.data.servicePending!==false">
               <pv-button  icon="pi pi-bell" class="p-button-rounded p-button-secondary" @click="showNotificationsRoomDialog(slotProps.data)">
               </pv-button>
             </i>
@@ -159,25 +159,78 @@
           </template>
         </pv-dialog>
 
-        <pv-dialog v-model:visible="notificationsRoomsDialog" :style="{ width: '700px' }" header="Actividad del cliente" :modal="true">
+        <pv-dialog v-model:visible="notificationsRoomsDialog" :style="{ width: '500px' }" header="Actividad del cliente" :modal="true">
           <div style="display: flex; justify-content:center">
-            <h1>Solicitudes pendientes</h1>
+            <h1>Solicitudes</h1>
           </div>
           <div class="container">
             <div>
               <h3>Pendiente: </h3>
-              <div style="display: flex;justify-content: space-between;align-items: center">
+              <div style="display: flex;justify-content: space-between;align-items: center" v-for="service in guestServices">
                 <div>
-                  <p>Descripcion</p>
+                  <p>Se solicito {{ service.dish }}</p>
                 </div>
                 <div style="display: flex; justify-content:center">
-                  <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="sendOrder">Solucionar</pv-button>
+                  <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="showGuestServiceInfo(service,guestServices.length)">Administrar</pv-button>
                 </div>
               </div>
             </div>
           </div>
           <template #footer>
             <pv-button :label="'Cerrar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
+          </template>
+        </pv-dialog>
+
+        <pv-dialog v-model:visible="serviceInformation" :style="{ width: '500px' }" header="Informacion del servicio" :modal="true">
+          <div style="display: flex; justify-content:center">
+            <h1>Resumen del servicio</h1>
+          </div>
+          <div >
+            <div>
+              <h3>Platillo: </h3>
+              <div style="display: flex;justify-content: space-between;margin: 0 3rem 0 1.5rem">
+                <div>
+                  <p>{{guestServiceInfo.dish}}</p>
+                </div>
+                <div>
+                  <p>Cant. {{guestServiceInfo.dishQuantity}}</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3>Bebida: </h3>
+              <div style="display: flex;justify-content: space-between;margin: 0 3rem 0 1.5rem">
+                <div>
+                  <p>{{guestServiceInfo.drink}}</p>
+                </div>
+                <div>
+                  <p>Cant. {{guestServiceInfo.drinkQuantity}}</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3>Crema: </h3>
+              <div style="display: flex;justify-content: space-between;margin: 0 3rem 0 1.5rem">
+                <div>
+                  <p>{{guestServiceInfo.cream}}</p>
+                </div>
+                <div>
+                  <p>Cant. {{guestServiceInfo.creamQuantity}}</p>
+                </div>
+              </div>
+            </div>
+            <div v-if="guestServiceInfo.instruction!==null">
+              <h3>Intruccion: </h3>
+              <div style="display: flex;justify-content: space-between;margin: 0 3rem 0 1.5rem">
+                <div>
+                  <p>{{guestServiceInfo.instruction}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <template #footer>
+            <pv-button :label="'Atender'.toUpperCase()" class="p-button-text" @click="deleteService(guestServiceInfo.id,guestServiceInfo.length)" />
+            <pv-button :label="'Volver'.toUpperCase()" class="p-button-text" @click="cancelShowGuestServiceInfo" />
           </template>
         </pv-dialog>
 
@@ -193,6 +246,7 @@
 import {RoomServices} from "../services/room-services";
 import {UserServices} from "../services/user-services";
 import {HistoryServices} from "../services/history-services";
+import {FoodServices} from "../services/food-services";
 import { FilterMatchMode } from "primevue/api";
 import Register_Huesped from "./Register_Huesped.vue";
 
@@ -210,7 +264,11 @@ export default {
       notificationsRoomsDialog:false,
       evictGuestDialog:false,
       registerGuestDialog:false,
+      serviceInformation:false,
       editRoomAuxiliaryId:null,
+      guestServices:[],
+      guestServiceInfo:{},
+      guestServiceInfoQuantity:null,
       room:{},
       selectedRooms:null,
       statusesRoom: [
@@ -226,7 +284,9 @@ export default {
       this.rooms=response.data
       this.setGuestInfo()
       console.log("Rooms",this.rooms)
+      this.setVisibleNotifications()
     })
+
     this.initFilters();
   },
   methods: {
@@ -236,7 +296,7 @@ export default {
       this.addRoomDialog = true
     },
     showEditRoomDialog(data) {
-      console.log(data.id,data.emergency)
+      console.log(data.id,data.emergency,data.guestId,data.servicePending)
       this.room.id = data.id
       this.room.roomName = data.roomName
       this.room.managerId = data.managerId
@@ -250,7 +310,9 @@ export default {
       this.room.image = data.image
       this.room.description = data.description
       this.room.emergency = data.emergency
+      this.room.servicePending = data.servicePending
       this.editRoomDialog = true
+      this.setGuestInfo()
     },
     showDeleteRoomDialog(data) {
       this.room.roomName = data.roomName
@@ -274,8 +336,20 @@ export default {
       this.room.guestName = data.guestName
       this.editRoomAuxiliaryId=data.id
     },
+    setVisibleNotifications(){
+      for(let i=0;i<(this.rooms.length);i++){
+       this.getServicesForRoom(this.rooms[i].id)
+      }
+    },
     showNotificationsRoomDialog(data){
       this.notificationsRoomsDialog=true
+      this.room=data
+      this.getServicesForRoom(data.id)
+    },
+    showGuestServiceInfo(data,len){
+      this.guestServiceInfoQuantity=len
+      this.serviceInformation=true
+      this.guestServiceInfo=data
     },
     addRoom() {
       this.room.managerId = parseInt(sessionStorage.getItem("id"))//Todo: Guardar en int Y actualizar el progress cuando se elimine
@@ -287,6 +361,7 @@ export default {
       this.room.endDate = null
       this.room.price = null
       this.room.emergency = false
+      this.room.servicePending = false
       this.room.image = "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg"
       new RoomServices().postRoom(this.room).then(response => {
         this.rooms.push(response.data)
@@ -352,12 +427,11 @@ export default {
         this.rooms[id].progressTime=null
         this.rooms[id].totalTime=null
         this.rooms[id].guestStayComplete=null
+        this.rooms[id].servicePending=false
         new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
           this.setGuestInfo()
           this.rooms[id].progressTime=0
           this.rooms[id].totalTime=null
-          console.log("ELIMINE",this.rooms[id].totalTime)
-          console.log("prgores",this.rooms[id].progressTime)
           this.rooms[id].guestStayComplete=null
           console.log("Guest evicted successfully",response.data)
           this.editRoomAuxiliaryId=null
@@ -386,6 +460,9 @@ export default {
       this.notificationsRoomsDialog=false
       this.room = {}
     },
+    cancelShowGuestServiceInfo(data){
+      this.serviceInformation=false
+    },
     findIndexById(id) {
       return this.rooms.findIndex((room) => room.id === id);
     },
@@ -396,6 +473,23 @@ export default {
       this.filters = {
         global: {value: null, matchMode: FilterMatchMode.CONTAINS},
       }
+    },
+    deleteService(id){
+      new FoodServices().deleteFoodServiceById(id).then(response=>{
+        console.log(response.data)
+        this.guestServices = this.guestServices.filter(
+            (t) => t.id !== id);
+      })
+      if(this.guestServiceInfoQuantity===1){
+        let temporalRoom=this.room
+        temporalRoom.servicePending=false
+        new RoomServices().updateRoom(this.room.id,temporalRoom).then(response=>{
+          console.log("Rooms.service",response.data.service)
+          this.notificationsRoomsDialog=false
+        })
+      }
+      this.serviceInformation=false
+      this.guestServiceInfo={}
     },
     SetProgressTimeBar(firstDayDate,lastDayDate){
       //!TODO: HACERLO CON HORAS, para eso necesitamos hacer las operaciones con los objetos sin parametros
@@ -436,12 +530,22 @@ export default {
         return progress
       }
     },
+    getServicesForRoom(id){
+      new FoodServices().getFoodServiceByRoomId(id).then(response=>{
+        this.guestServices=[]
+        for(let i=0;i<(response.data.length);i++){
+          this.guestServices.push(response.data[i])
+        }
+
+      })
+    },
     startProgress() {
       this.interval = setInterval(() => {
         for(let i=0;i<this.rooms.length;i++){
           if(this.rooms[i].guestStayComplete===false){
             this.increaseProgress(i)
             if(this.rooms[i].progressTime===100 && this.rooms[i].guestStayComplete===false){
+              console.log("En progreso",this.rooms[i].guestId)
               this.room=[]
               this.rooms[i].guestStayComplete=true
               this.room=this.rooms[i]
@@ -451,22 +555,37 @@ export default {
         }
       }, 60000);
     },
+    watchServices(){
+      this.interval = setInterval(() => {
+        for(let i=0;i<this.rooms.length;i++){
+          if(this.rooms[i].guestStayComplete===false){
+            new RoomServices().getRoomForGuest(this.rooms[i].guestId).then(response=>{
+              if(response.data[0].servicePending!==false){
+                this.rooms[i].servicePending=response.data[0].servicePending
+              }else {
+                this.rooms[i].servicePending=false
+              }
+            })
+          }
+        }
+      }, 10000);
+    },
     increaseProgress(i){
       //
       let format=this.rooms[i].endDate.split("/")
       let goalDate=(format[1]+"/"+format[0]+"/"+format[2])
       this.rooms[i].progressTime=this.getProgressTimeForGuest(goalDate,this.rooms[i].totalTime)
     },
-
   },
-
   mounted() {
     this.startProgress()
+    this.watchServices()
     this.emitter.on("register-form", response => {
       this.registerGuestDialog = response;
     });
     this.emitter.on("new-guest", response => {
       this.editRoomAuxiliaryId= parseInt(sessionStorage.getItem("temporaryRoomId"))
+      console.log(this.editRoomAuxiliaryId)
       let id=this.findIndexById(this.editRoomAuxiliaryId)
       console.log(id,this.rooms[id].guestId,response.id)
       this.rooms[id].guestId=response.id

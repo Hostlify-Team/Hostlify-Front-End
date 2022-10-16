@@ -118,8 +118,13 @@ export default {
       sessionStorage.removeItem("creamQuantity")
       sessionStorage.removeItem("instructions")
       new FoodServices().postFoodService(this.order).then(response=>{
-        console.log("Order send successfull",response.data)
+        let temporaryServiceId=response.data.id
         this.$toast.add({severity:'success', summary: 'Enviado', detail:'Orden enviada', life: 3000});
+        new RoomServices().getRoomForGuest(parseInt(sessionStorage.getItem("id"))).then(response=>{
+          let roomForGuest=response.data
+          roomForGuest[0].servicePending=true
+          new RoomServices().updateRoom(roomForGuest[0].id,roomForGuest[0])
+        })
         this.$router.push("/services")
       })
     }

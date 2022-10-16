@@ -17,4 +17,13 @@ export class FoodServices{
             "instruction": foodOrder.instruction
         })
     }
+    getFoodServiceByRoomId(id){
+        return axios.get("http://localhost:3000/room/"+id+"/foodServices")
+    }
+    deleteFoodServiceByRoomId(id){
+        return axios.delete("http://localhost:3000/room/"+id+"/foodServices")
+    }
+    deleteFoodServiceById(id){
+        return axios.delete("http://localhost:3000/foodServices/"+id)
+    }
 }
