@@ -44,7 +44,6 @@ import Calendar from 'primevue/calendar';
 import Badge from 'primevue/badge';
 
 
-
 const app = createApp(App)
 app.config.globalProperties.emitter = emitter;
 

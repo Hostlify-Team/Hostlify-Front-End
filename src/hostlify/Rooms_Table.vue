@@ -3,12 +3,12 @@
     <div class="card">
       <pv-toolbar class="mb-4">
         <template #start>
-          <pv-button label="Nueva habitacion" icon="pi pi-plus" class="p-button-success mr-2" @click="showAddRoomDialog"/>
-          <pv-button label="Delete" icon="pi pi-trash" class="p-button-danger" @click="showDeleteRoomsDialog"
-                     :disabled="!selectedRooms || !selectedRooms.length"/>
+          <pv-button  class="p-button-success" style="margin-right: 1rem;" @click="showAddRoomDialog"> <i class="pi pi-plus"/>{{$t("new room")}} </pv-button>
+          <pv-button label="Delete" class="p-button-danger" @click="showDeleteRoomsDialog"
+                     :disabled="!selectedRooms || !selectedRooms.length"><i class="pi pi-trash"/>{{$t("delete")}} </pv-button>
         </template>
         <template #end>
-          <pv-button label="Exportar" icon="pi pi-download" class="p-button-help" @click="exportToCSV($event)"/>
+          <pv-button label="Exportar" class="p-button-help" @click="exportToCSV($event)"><i class="pi pi-download"/>{{$t("export")}}</pv-button>
         </template>
       </pv-toolbar>
       <pv-data-table
@@ -21,12 +21,12 @@
           :filters="filters"
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           :rowsPerPageOptions="[5, 10, 15]"
-          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Habitaciones"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} habitaciones"
           responsiveLayout="scroll"
       >
         <template #header>
           <div class="table-header flex flex-column md:flex-row md:justify-content-between">
-            <h5 class="mb-2 md:m-0 p-as-md-center text-xl">Habitaciones</h5>
+            <h5 class="mb-2 md:m-0 p-as-md-center text-xl">{{$t('rooms')}}</h5>
             <span class="p-input-icon-left">
               <i class="pi pi-search"/>
               <pv-input-text v-model="filters['global'].value" placeholder="Search..."/>
@@ -49,8 +49,8 @@
         </pv-column>
         <pv-column field="status" header="Status" :sortable="true" style="min-width: 12rem">
           <template #body="slotProps">
-            <pv-tag v-if="slotProps.data.status === true" severity="success">Disponible</pv-tag>
-            <pv-tag v-else severity="danger">Ocupada</pv-tag>
+            <pv-tag v-if="slotProps.data.status === true" severity="success">{{$t('available')}}</pv-tag>
+            <pv-tag v-else severity="danger">{{$t('occupied')}}</pv-tag>
           </template>
         </pv-column>
         <pv-column field="progressTime" header="Tiempo" :sortable="true" style="min-width: 16rem">
@@ -60,16 +60,18 @@
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
-            <i class="p-text-secondary" style="font-size: 1.5rem" v-badge.warning v-if="slotProps.data.servicePending!==false">
+            <i class="p-text-secondary" style="font-size: 1.5rem;margin-right: 1rem" v-badge="slotProps.data.quantityOfServices" v-if="slotProps.data.servicePending!==false">
               <pv-button  icon="pi pi-bell" class="p-button-rounded p-button-secondary" @click="showNotificationsRoomDialog(slotProps.data)">
               </pv-button>
             </i>
+            <pv-button v-if="slotProps.data.emergency" icon="pi pi-exclamation-circle" class="p-button-rounded p-button-danger">
+            </pv-button>
           </template>
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
-            <pv-button label="Desalojar" v-if="slotProps.data.guestId!==null" @click="showDeleteGuestDialog(slotProps.data)"/>
-            <pv-button label="Registrar" v-if="slotProps.data.guestId===null" @click="showRegisterGuestDialog(slotProps.data)"/>
+            <pv-button  v-if="slotProps.data.guestId!==null" @click="showDeleteGuestDialog(slotProps.data)">{{$t('evict')}}</pv-button>
+            <pv-button  v-if="slotProps.data.guestId===null" @click="showRegisterGuestDialog(slotProps.data)">{{$t('register')}}</pv-button>
           </template>
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
@@ -132,7 +134,7 @@
           </div>
           <template #footer >
             <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
-            <pv-button :label="'Si'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRoom(room.guestId)" />
+            <pv-button :label="'Si'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRoom(room)" />
           </template>
         </pv-dialog>
 
@@ -155,7 +157,7 @@
           </div>
           <template #footer>
             <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
-            <pv-button :label="'Yes'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteGuest(room.guestId)" />
+            <pv-button :label="'Yes'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteGuest(room)" />
           </template>
         </pv-dialog>
 
@@ -319,6 +321,7 @@ export default {
       this.room.id = data.id
       this.room.guestId = data.guestId
       this.room.guestName = data.guestName
+      this.room.servicePending = data.servicePending
       this.deleteRoomDialog = true
     },
     showDeleteRoomsDialog() {
@@ -334,6 +337,8 @@ export default {
       this.evictGuestDialog=true
       this.room.guestId = data.guestId
       this.room.guestName = data.guestName
+      this.room.id = data.id
+      this.room.servicePending = data.servicePending
       this.editRoomAuxiliaryId=data.id
     },
     setVisibleNotifications(){
@@ -378,11 +383,9 @@ export default {
         this.editRoomDialog = false
       })
     },
-    deleteRoom(guestId) {
-      if(guestId!==null){
-        new UserServices().deleteUser(guestId).then(responseUser=>{
-          console.log("User deleted",responseUser.data)
-        })
+    deleteRoom(roomData) {
+      if(roomData.guestId!==null){
+        this.deleteGuest(roomData)
       }
       new RoomServices().deleteRoom(this.room.id).then(response => {
         this.rooms = this.rooms.filter(
@@ -413,11 +416,14 @@ export default {
         }
       }
     },
-    deleteGuest(guestId) {
+    deleteGuest(roomData) {
       this.evictGuestDialog=false
-      new UserServices().deleteUser(guestId).then(response=>{
+      new UserServices().deleteUser(roomData.guestId).then(response=>{
           console.log("Guest deleted",response.data)
-        let id=this.findIndexById(this.editRoomAuxiliaryId)
+        if(this.room.servicePending===true){
+          this.deleteServiceByRoomId(roomData.id)
+        }
+        let id=this.findIndexById(this.room.id)
         this.rooms[id].guestId=null
         this.rooms[id].status=true
         this.rooms[id].initialDate=null
@@ -428,7 +434,7 @@ export default {
         this.rooms[id].totalTime=null
         this.rooms[id].guestStayComplete=null
         this.rooms[id].servicePending=false
-        new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
+        new RoomServices().updateRoom(this.room.id,this.rooms[id]).then(response=>{
           this.setGuestInfo()
           this.rooms[id].progressTime=0
           this.rooms[id].totalTime=null
@@ -436,6 +442,8 @@ export default {
           console.log("Guest evicted successfully",response.data)
           this.editRoomAuxiliaryId=null
           this.$toast.add({severity:'success', summary: 'Huesped desalojado', detail:'Se desalojo el huesped correctamente', life: 3000});
+        }).catch(Result=>{
+          console.log("Handled Error",Result.data)
         })
 
       })
@@ -491,26 +499,15 @@ export default {
       this.serviceInformation=false
       this.guestServiceInfo={}
     },
-    SetProgressTimeBar(firstDayDate,lastDayDate){
-      //!TODO: HACERLO CON HORAS, para eso necesitamos hacer las operaciones con los objetos sin parametros
-      let actualDayDate= new Date();
-      let day1 = new Date(firstDayDate);
-      let day2 = new Date(lastDayDate);
-      let day3 = new Date((actualDayDate.getMonth()+1)+"/"+actualDayDate.getDate()+"/"+actualDayDate.getFullYear())
-      console.log((actualDayDate.getMonth()+1)+"/"+actualDayDate.getDate()+"/"+actualDayDate.getFullYear())
-
-      let totalDifference= Math.abs(day2-day1);
-      let totalDays = totalDifference/(1000 * 3600 * 24)
-
-      let currentDifference= Math.abs(day2-day3);
-      let currentDays = currentDifference/(1000 * 3600 * 24)
-      if(totalDays===0){
-        console.log("progreso:",100)
-        return 100
-      }else{
-        let progressValue=Math.round(((totalDays-currentDays)/totalDays)*100)
-        return progressValue
-      }
+    deleteServiceByRoomId(id){
+      console.log(id,typeof(id))
+      new FoodServices().getFoodServiceByRoomId(id).then(response=>{
+        for (let i=0;i<response.data.length;i++){
+          console.log(response.data[i].id)
+          new FoodServices().deleteFoodServiceById(response.data[i].id)
+        }
+        console.log("Service deleted successfully")
+      })
     },
     setTotalTimeForGuest(currentDate,goalDate){
       let _goalDate=new Date(goalDate)
@@ -531,13 +528,18 @@ export default {
       }
     },
     getServicesForRoom(id){
-      new FoodServices().getFoodServiceByRoomId(id).then(response=>{
+      if(this.notificationsRoomsDialog===false){
         this.guestServices=[]
-        for(let i=0;i<(response.data.length);i++){
-          this.guestServices.push(response.data[i])
-        }
+        new FoodServices().getFoodServiceByRoomId(id).then(response=>{
+          for(let i=0;i<(response.data.length);i++){
+            this.guestServices.push(response.data[i])
+          }
+          let index=this.findIndexById(id)
+          this.rooms[index].quantityOfServices=response.data.length
 
-      })
+        })
+
+      }
     },
     startProgress() {
       this.interval = setInterval(() => {
@@ -560,18 +562,23 @@ export default {
         for(let i=0;i<this.rooms.length;i++){
           if(this.rooms[i].guestStayComplete===false){
             new RoomServices().getRoomForGuest(this.rooms[i].guestId).then(response=>{
+              if(response.data[0].emergency===true){
+                this.rooms[i].emergency=true
+              }if(response.data[0].emergency===false){
+                this.rooms[i].emergency=false
+              }
               if(response.data[0].servicePending!==false){
                 this.rooms[i].servicePending=response.data[0].servicePending
+                this.setVisibleNotifications()
               }else {
                 this.rooms[i].servicePending=false
               }
             })
           }
         }
-      }, 10000);
+      }, 5000);
     },
     increaseProgress(i){
-      //
       let format=this.rooms[i].endDate.split("/")
       let goalDate=(format[1]+"/"+format[0]+"/"+format[2])
       this.rooms[i].progressTime=this.getProgressTimeForGuest(goalDate,this.rooms[i].totalTime)
