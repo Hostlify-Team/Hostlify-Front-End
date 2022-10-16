@@ -1,13 +1,13 @@
 <template>
   <div class="map">
     <div class="title" style="margin: 4rem 4rem 0 4rem">
-      <h1>Mapa del Hotel</h1>
+      <h1>{{$t("hotel map")}}</h1>
     </div>
     <div class="map_hotel">
       <img src="../assets/mapa.png" >
     </div>
     <div class="map_button">
-      <pv-button label="Volver" class="p-button-raised p-button-rounded" @click="goBack()"></pv-button>
+      <pv-button  class="p-button-raised p-button-rounded" @click="goBack()">{{$t("return")}}</pv-button>
     </div>
   </div>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="services">
     <div class="title" style="margin: 4rem 4rem 0 4rem">
-      <h1>Servicios</h1>
+      <h1>{{$t("services")}}</h1>
     </div>
     <div class="container" >
       <div class="firstGroup">
@@ -13,14 +13,14 @@
                   <img src="@/assets/food.png" alt="" class="img">
                 </div>
                 <div style="display: flex; justify-content: center;margin-top: 4.3rem">
-                  <h2>Food service</h2>
+                  <h2>{{$t("food service")}}</h2>
                 </div>
 
               </div>
             </template>
             <template #footer>
               <div style="display: flex; justify-content: center">
-                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('food')">Solicitar servicio</pv-button>
+                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('food')">{{$t("request service")}}</pv-button>
               </div>
             </template>
           </pv-card>
@@ -33,14 +33,14 @@
                   <img src="@/assets/garden.png" alt="" class="img">
                 </div>
                 <div style="display: flex; justify-content: center">
-                  <h2>Areas Recreacionales</h2>
+                  <h2>{{$t("recreational areas")}}</h2>
                 </div>
 
               </div>
             </template>
             <template #footer>
               <div style="display: flex; justify-content: center">
-                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Recreational')">Solicitar servicio</pv-button>
+                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Recreational')">{{$t("request service")}}</pv-button>
               </div>
             </template>
           </pv-card>
@@ -54,13 +54,13 @@
                 <img src="@/assets/cleaning.png" alt="" class="img">
               </div>
               <div style="display: flex; justify-content: center">
-                <h2>Limpieza a la habitacion</h2>
+                <h2>{{$t("room cleaning")}}</h2>
               </div>
             </di>
           </template>
           <template #footer>
             <div style="display: flex; justify-content: center">
-              <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Cleaning')">Solicitar servicio</pv-button>
+              <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Cleaning')">{{$t("request service")}}</pv-button>
             </div>
           </template>
         </pv-card>

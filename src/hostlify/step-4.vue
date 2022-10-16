@@ -1,14 +1,14 @@
 <template>
   <div class="container">
-    <h1 style="font-weight: bolder;color: #D6A049">Solicitar servicio</h1>
+    <h1 style="font-weight: bolder;color: #D6A049">{{$t("request service")}}</h1>
     <div class="row" style="">
       <div class="col-xs-12 col-md-8 offset-md-2 block border">
         <div class="wrapper-progressBar">
           <ul class="progressBar">
-            <li class="active">Seleción de platillo</li>
-            <li class="active">Seleción de bebida</li>
-            <li class="active">Extras</li>
-            <li class="active">Confirmacion</li>
+            <li class="active">{{$t("select your dish")}}</li>
+            <li class="active">{{$t("select your drink")}}</li>
+            <li class="active">{{$t("select your cream")}}</li>
+            <li class="active">{{$t("confirmation")}}</li>
           </ul>
         </div>
       </div>
@@ -18,45 +18,45 @@
       <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:center">
-            <h1>Confirmar pedido</h1>
+            <h1>{{$t("confirm order")}}</h1>
           </div>
           <div style="margin-left: 5rem">
-            <h1 >Resumen del pedido</h1>
+            <h1 >{{$t("resume order")}}</h1>
             <div>
-              <h3>Platillo: </h3>
+              <h3>{{$t("dish")}}: </h3>
               <div style="display: flex;justify-content: space-between;margin: 0 10rem 0 1.5rem">
                 <div>
                   <p>{{order.dish}}</p>
                 </div>
                 <div>
-                  <p>Cant. {{order.dishQuantity}}</p>
+                  <p>{{$t("quantity")}}. {{order.dishQuantity}}</p>
                 </div>
               </div>
             </div>
             <div>
-              <h3>Bebida: </h3>
+              <h3>{{$t("drink")}}: </h3>
               <div style="display: flex;justify-content: space-between;margin: 0 10rem 0 1.5rem">
                 <div>
                   <p>{{order.drink}}</p>
                 </div>
                 <div>
-                  <p>Cant. {{order.drinkQuantity}}</p>
+                  <p>{{$t("quantity")}}. {{order.drinkQuantity}}</p>
                 </div>
               </div>
             </div>
             <div>
-              <h3>Crema: </h3>
+              <h3>{{$t("cream")}}: </h3>
               <div style="display: flex;justify-content: space-between;margin: 0 10rem 0 1.5rem">
                 <div>
                   <p>{{order.cream}}</p>
                 </div>
                 <div>
-                  <p>Cant. {{order.creamQuantity}}</p>
+                  <p>{{$t("quantity")}}. {{order.creamQuantity}}</p>
                 </div>
               </div>
             </div>
             <div v-if="order.instruction!==null">
-              <h3>Intruccion: </h3>
+              <h3>{{$t("instruction")}}: </h3>
               <div style="display: flex;justify-content: space-between;margin: 0 10rem 0 1.5rem">
                 <div>
                   <p>{{order.instruction}}</p>
@@ -66,10 +66,10 @@
           </div>
 
           <div style="display: flex; justify-content:center;margin-bottom:10px;margin-top:30px">
-            <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="sendOrder">Confirmar</pv-button>
+            <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="sendOrder">{{$t("confirm")}}</pv-button>
           </div>
           <div style="display: flex; justify-content:center">
-            <router-link style="text-decoration:none; color:#D6A049" to="/services"> <h6>Cancelar</h6> </router-link>
+            <router-link style="text-decoration:none; color:#D6A049" to="/services"> <h6>{{$t("cancel")}}</h6> </router-link>
           </div>
 
         </template>

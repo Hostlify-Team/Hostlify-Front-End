@@ -1,6 +1,7 @@
 {
-  "hello": "hello",
+  "hello": "Hello",
   "rooms": "Rooms",
+  "room": "Room",
   "history": "History",
   "services": "Services",
   "information": "Information",
@@ -19,7 +20,25 @@
   "register": "Register",
   "evict": "\u200E \u200E \u200E Evict \u200E\u200E \u200E",
   "available": "Available",
-  "occupied": "Occupied"
-
-
+  "occupied": "Occupied",
+  "hotel map": "Hotel map",
+  "food service": "Food Service",
+  "recreational areas": "Recreational Areas",
+  "room cleaning": "Room Cleaning",
+  "request service": "Request service",
+  "return": "Return",
+  "select your dish": "Select your dish",
+  "select your drink": "Select your drink",
+  "select your cream": "Select your cream",
+  "confirmation": "Confirmation",
+  "next": "Next",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "confirm order": "Confirm order",
+  "resume order": "Resume order",
+  "dish": "Dish",
+  "drink": "Drink",
+  "cream": "Cream",
+  "quantity": "Qty",
+  "instruction": "Instruction"
 }

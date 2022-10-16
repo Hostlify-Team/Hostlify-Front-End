@@ -1,7 +1,7 @@
 <template>
   <div class="SOS">
     <div class="title" style="margin: 4rem 4rem 0 4rem">
-      <h1 style="margin-top: 0">Ayuda</h1>
+      <h1 style="margin-top: 0">{{$t("help")}}</h1>
     </div>
     <div class="SOS_alert">
       <pv-button v-show="emergency===false" @click="emergencyOn">
@@ -12,7 +12,7 @@
       </pv-button>
     </div>
     <div class="SOS_button">
-      <pv-button label="Volver" @click="goBack"> </pv-button>
+      <pv-button  @click="goBack">{{$t("return")}} </pv-button>
     </div>
   </div>
 </template>
