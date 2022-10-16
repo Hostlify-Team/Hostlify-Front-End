@@ -40,5 +40,9 @@
   "drink": "Bebida",
   "cream": "Crema",
   "quantity": "Cant",
-  "instruction": "Instruccion"
+  "instruction": "Instruccion",
+  "add": "Agregar",
+  "add a room": "Agregar una habitacion",
+  "yes": "SI",
+  "no": "NO"
 }

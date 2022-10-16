@@ -97,8 +97,8 @@
             </span>
           </div>
           <template #footer>
-            <pv-button :label="'Cancelar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
-            <pv-button :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="addRoom" />
+            <pv-button :label="'Cancelar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("cancel")}}</pv-button>
+            <pv-button :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="addRoom" >{{$t("add")}}</pv-button>
           </template>
         </pv-dialog>
 
@@ -121,8 +121,8 @@
             </span>
           </div>
           <template #footer>
-            <pv-button :label="'Cancelar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
-            <pv-button :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="editRoom" />
+            <pv-button :label="'Cancelar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("cancel")}}</pv-button>
+            <pv-button :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="editRoom" >{{$t("add")}}</pv-button>
           </template>
         </pv-dialog>
 
@@ -133,16 +133,16 @@
             <span v-if="room.guestId!==null"> <br>Tambien se eliminara al huesped <b>{{ room.guestName }}</b></span>
           </div>
           <template #footer >
-            <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
-            <pv-button :label="'Si'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRoom(room)" />
+            <pv-button icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("no")}}</pv-button>
+            <pv-button icon="pi pi-check" class="p-button-text" @click="deleteRoom(room)" >{{$t("yes")}}</pv-button>
           </template>
         </pv-dialog>
 
         <pv-dialog v-model:visible="deleteRoomsDialog" :style="{ width: '450px' }" header="Eliminar las habitaciones" :modal="true">
             <span>Quieres eliminiar las habitaciones seleccionadas?</span>
           <template #footer>
-            <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
-            <pv-button :label="'Yes'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRooms" />
+            <pv-button  icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("no")}}</pv-button>
+            <pv-button  icon="pi pi-check" class="p-button-text" @click="deleteRooms" >{{$t("yes")}}</pv-button>
           </template>
         </pv-dialog>
 
@@ -156,8 +156,8 @@
             <span>Desea eliminar al huesped <b>{{ room.guestName }}</b>?</span>
           </div>
           <template #footer>
-            <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
-            <pv-button :label="'Yes'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteGuest(room)" />
+            <pv-button  icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("no")}}</pv-button>
+            <pv-button icon="pi pi-check" class="p-button-text" @click="deleteGuest(room)" >{{$t("yes")}}</pv-button>
           </template>
         </pv-dialog>
 
@@ -232,7 +232,7 @@
           </div>
           <template #footer>
             <pv-button :label="'Atender'.toUpperCase()" class="p-button-text" @click="deleteService(guestServiceInfo.id,guestServiceInfo.length)" />
-            <pv-button :label="'Volver'.toUpperCase()" class="p-button-text" @click="cancelShowGuestServiceInfo" />
+            <pv-button :label="'Volver'.toUpperCase()" class="p-button-text" @click="cancelShowGuestServiceInfo" >{{$t("return")}}</pv-button>
           </template>
         </pv-dialog>
 

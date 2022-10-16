@@ -40,5 +40,9 @@
   "drink": "Drink",
   "cream": "Cream",
   "quantity": "Qty",
-  "instruction": "Instruction"
+  "instruction": "Instruction",
+  "add": "Add",
+  "add a room": "Add a room",
+  "yes": "YES",
+  "no": "NO"
 }
