@@ -35,22 +35,6 @@
       "plan": null,
       "name": "Alonso Sanchez",
       "id": 2
-    },
-    {
-      "email": "yesenia@gmail.com",
-      "password": "$2a$10$Hy5mQNlbcZLby9dl5e4JMeArf70XExo8Ppun3fCuHiR47A7Eo9XXe",
-      "type": "manager",
-      "plan": "Premium",
-      "name": "Yesenia",
-      "id": 3
-    },
-    {
-      "email": "cristina@gmail.com",
-      "password": "$2a$10$IVK69H95MgpiFKHkh9392u5b6K6Z2dRgHJkJeKMWV/QJ5UDtIgR8y",
-      "type": "guest",
-      "plan": null,
-      "name": "Cristina",
-      "id": 4
     }
   ],
   "rooms": [
@@ -113,36 +97,6 @@
       "emergency": false,
       "servicePending": false,
       "id": 4
-    },
-    {
-      "roomName": "A-69",
-      "managerId": 3,
-      "guestId": null,
-      "initialDate": null,
-      "endDate": null,
-      "status": true,
-      "guestStayComplete": null,
-      "price": null,
-      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": "69",
-      "emergency": false,
-      "servicePending": false,
-      "id": 5
-    },
-    {
-      "roomName": "A-68",
-      "managerId": 3,
-      "guestId": null,
-      "initialDate": null,
-      "endDate": null,
-      "status": true,
-      "guestStayComplete": null,
-      "price": null,
-      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": ".",
-      "emergency": false,
-      "servicePending": false,
-      "id": 6
     }
   ],
   "history": [
@@ -168,31 +122,8 @@
       "price": 84,
       "description": "some description",
       "id": 6
-    },
-    {
-      "roomName": "A-68",
-      "managerId": 3,
-      "guestId": 5,
-      "guestName": "criss",
-      "guestEmail": "criss@gamil.com",
-      "initialDate": "16/10/2022",
-      "endDate": "17/10/2022",
-      "price": 84,
-      "description": ".",
-      "id": 7
     }
   ],
   "foodServices": [
-    {
-      "roomId": 2,
-      "dish": "Aji de gallina",
-      "dishQuantity": "1",
-      "drink": "Inca Kola",
-      "drinkQuantity": "1",
-      "cream": "Aji",
-      "creamQuantity": "1",
-      "instruction": null,
-      "id": 1
-    }
   ]
 }

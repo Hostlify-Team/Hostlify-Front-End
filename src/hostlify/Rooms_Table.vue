@@ -576,7 +576,7 @@ export default {
             })
           }
         }
-      }, 10);
+      }, 5000);
     },
     increaseProgress(i){
       let format=this.rooms[i].endDate.split("/")
