@@ -576,7 +576,7 @@ export default {
             })
           }
         }
-      }, 5000);
+      }, 10);
     },
     increaseProgress(i){
       let format=this.rooms[i].endDate.split("/")
@@ -622,6 +622,7 @@ export default {
       console.log(this.rooms)
     });
   }
+  //!Todo: Para la proxima revision arreglar el registro de usuario inclompleto y observador de notificaciones
 };
 </script>
 
