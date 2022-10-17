@@ -377,10 +377,15 @@ export default {
     },
     editRoom() {
       new RoomServices().updateRoom(this.room.id, this.room).then(response => {
-        console.log("function: EditRoom",response.data)
-        this.rooms[this.findIndexById(response.data.id)] = this.room
+        let temporaryIndex=this.findIndexById(response.data.id)
+        this.rooms[temporaryIndex] = this.room
         this.room = {}
         this.editRoomDialog = false
+        console.log(this.rooms[temporaryIndex].progressTime)
+        new UserServices().getUser(this.rooms[temporaryIndex].guestId).then(response=>{
+          this.rooms[temporaryIndex].guestName=response.data.name
+
+        })
       })
     },
     deleteRoom(roomData) {
