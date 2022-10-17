@@ -27,14 +27,6 @@
       "plan": "Pro",
       "name": "Diego Talledo",
       "id": 1
-    },
-    {
-      "email": "alonso@gmail.com",
-      "password": "$2a$10$A7MDphu83aFw/1opoMkBUe/EQxz/6PIIsawLp7lbh99MZTIhWRjIC",
-      "type": "guest",
-      "plan": null,
-      "name": "Alonso Sanchez",
-      "id": 2
     }
   ],
   "rooms": [
@@ -52,51 +44,6 @@
       "emergency": false,
       "servicePending": false,
       "id": 1
-    },
-    {
-      "roomName": "A-002",
-      "managerId": 1,
-      "guestId": 2,
-      "initialDate": "16/10/2022",
-      "endDate": "17/10/2022",
-      "status": false,
-      "guestStayComplete": false,
-      "price": 84,
-      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": "some description",
-      "emergency": false,
-      "servicePending": true,
-      "id": 2
-    },
-    {
-      "roomName": "A-003",
-      "managerId": 1,
-      "guestId": null,
-      "initialDate": null,
-      "endDate": null,
-      "status": true,
-      "guestStayComplete": null,
-      "price": null,
-      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": "none",
-      "emergency": false,
-      "servicePending": false,
-      "id": 3
-    },
-    {
-      "roomName": "A-004",
-      "managerId": 1,
-      "guestId": null,
-      "initialDate": null,
-      "endDate": null,
-      "status": true,
-      "guestStayComplete": null,
-      "price": null,
-      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
-      "description": ".",
-      "emergency": false,
-      "servicePending": false,
-      "id": 4
     }
   ],
   "history": [
@@ -110,20 +57,7 @@
       "endDate": "13/6/2022",
       "price": 100,
       "description": "some description"
-    },
-    {
-      "roomName": "A-002",
-      "managerId": 1,
-      "guestId": 2,
-      "guestName": "Alonso Sanchez",
-      "guestEmail": "alonso@gmail.com",
-      "initialDate": "16/10/2022",
-      "endDate": "17/10/2022",
-      "price": 84,
-      "description": "some description",
-      "id": 6
     }
   ],
-  "foodServices": [
-  ]
+  "foodServices": []
 }

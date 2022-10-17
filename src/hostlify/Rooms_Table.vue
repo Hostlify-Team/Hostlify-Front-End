@@ -591,10 +591,12 @@ export default {
       this.registerGuestDialog = response;
     });
     this.emitter.on("new-guest", response => {
-      this.editRoomAuxiliaryId= parseInt(sessionStorage.getItem("temporaryRoomId"))
-      console.log(this.editRoomAuxiliaryId)
-      let id=this.findIndexById(this.editRoomAuxiliaryId)
-      console.log(id,this.rooms[id].guestId,response.id)
+      let auxiliaryRoomId= parseInt(sessionStorage.getItem("temporaryRoomId"))
+      console.log("Json",auxiliaryRoomId)
+      let id=this.findIndexById(auxiliaryRoomId)
+      console.log("Index",id)
+      console.log(this.rooms[id].guestId,this.rooms)
+      console.log("Response",response.id)
       this.rooms[id].guestId=response.id
       this.rooms[id].status=false
       this.rooms[id].initialDate=response.initialDate
