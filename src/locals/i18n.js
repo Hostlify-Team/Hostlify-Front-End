@@ -4,8 +4,8 @@ import es from "./es.json"
 
 const i18n=createI18n({
     legacy: false,
-    locale:"en",
-    fallbackLocale: 'en',
+    locale:"es",
+    fallbackLocale: 'es',
     globalInjection: true,
     messages:{
        en,es
