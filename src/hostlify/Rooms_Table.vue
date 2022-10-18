@@ -477,6 +477,9 @@ export default {
       this.serviceInformation=false
     },
     findIndexById(id) {
+      console.log("findIndexByIdid:",id)
+      console.log("findIndexByIdtypeid:",typeof (id))
+      console.log("resultado",this.rooms.findIndex((room) => room.id === id))
       return this.rooms.findIndex((room) => room.id === id);
     },
     exportToCSV() {
