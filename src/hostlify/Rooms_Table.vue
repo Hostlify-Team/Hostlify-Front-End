@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="background">
     <div class="card">
       <pv-toolbar class="mb-4">
         <template #start>

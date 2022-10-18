@@ -1,5 +1,5 @@
 <template>
-  <div v-show="showNavBar">
+  <div v-show="showNavBar" class="navbar">
     <Toolbar>
       <template #start>
         <avatar
