@@ -1,39 +1,66 @@
 <template>
-  <div class="mapa">
-    <h1>Mapa del hotel </h1>
-    <img src="../assets/mapa.png" >
-    <br><br> <br>
-    <pv-button label="Volver" class="p-button-raised p-button-rounded" ></pv-button>
+  <div class="map">
+    <div class="title" style="margin: 4rem 4rem 0 4rem">
+      <h1>{{$t("hotel map")}}</h1>
+    </div>
+    <div class="map_hotel">
+      <img src="../assets/mapa.png" >
+    </div>
+    <div class="map_button">
+      <pv-button  class="p-button-raised p-button-rounded" @click="goBack()">{{$t("return")}}</pv-button>
+    </div>
   </div>
 
 </template>
 
 <script>
 export default {
-  name: "map-hotel"
+  name: "map-hotel",
+  methods:{
+    goBack(){
+      this.$router.push("/services")
+    }
+  }
 }
 </script>
 
 <style scoped>
-.mapa {
-  background-color:#011530;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
+.map {
+  font-family: 'Roboto', sans-serif;
 
 }
-.mapa h1{
-  text-align: left;
-  padding-left:10% ;
-  padding-top: 3%;
-  color: #D6A049;
-  margin: auto;
+.map_hotel{
+  display: flex;
+  justify-content: center;
 }
-.mapa img{
-  padding-left: 30% ;
-  width: 80%;
+.map_hotel img{
+  width: 600px;
 }
-.mapa button {
-  margin-left: 50%;
+.map_button{
+  display: flex;
+  justify-content: end;
+  margin-top: 3rem;
+}
+.map button {
+  border-radius: 3rem;
+  border-style: none;
   background-color: #D6A049;
   color: white;
 
 }
+@media (max-width:650px){
+  .map_hotel img{
+    width: 500px;
+  }
+}
+@media (max-width:638px){
+  .map_hotel img{
+    width: 300px;
+  }
+}
+
+
+
 </style>

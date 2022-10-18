@@ -1,34 +1,36 @@
 <template>
-  <div v-show="showNavBar">
+  <div v-show="showNavBar" class="navbar">
     <Toolbar>
       <template #start>
         <avatar
-            shape="circle"
             image="https://github.com/Hostlify-Team/Hostlify-Landing-Page/blob/main/src/assets/images/Logo.png?raw=true"
             class="mr-2"
         />
         <div v-if="currentUserType==='manager'">
           <router-link class="mr-3 navbar-item" to="/rooms">
-            Rooms
+            {{$t("rooms")}}
           </router-link>
           <router-link class="mr-2 navbar-item" to="/history">
-            History
+            {{$t("history")}}
           </router-link>
         </div>
         <div v-else>
           <router-link class="mr-3 navbar-item" to="/services">
-            Servicios
+            {{$t("services")}}
           </router-link>
           <router-link class="mr-2 navbar-item" to="/map-hotel">
-            Informacion
+            {{$t("information")}}
           </router-link>
           <router-link class="mr-2 navbar-item" to="/SOS">
-            Ayuda
+            {{$t("help")}}
           </router-link>
         </div>
       </template>
       <template #end>
-        <p style="margin-right: 1rem">Hola {{currentUserName}} !</p>
+        <pv-select-button v-model="$i18n.locale" :options="languages" aria-labelledby="single" style="margin-right: 2rem">
+
+        </pv-select-button>
+        <p style="margin-right: 1rem">{{$t("hello")}} {{currentUserName}} !</p>
         <pv-button @click="logOut">
           Cerrar Sesion
         </pv-button>
@@ -52,7 +54,8 @@ export default {
     return{
       showNavBar:false,
       currentUserType:null,
-      currentUserName:null
+      currentUserName:null,
+      languages: ['es', 'en']
     }
   },
   methods:{
@@ -74,12 +77,10 @@ export default {
 
   },
   mounted() {
-    console.log(this.showNavBar,"MOUNTED")
     this.emitter.on("message-from-sign-up",isOpen=>{
       this.showNavBar=isOpen.logged
       this.currentUserType=isOpen.type
       this.currentUserName=isOpen.name
-      console.log(isOpen.logged,isOpen.type)
     })
 
   }

@@ -1,50 +1,115 @@
 <template>
   <div class="SOS">
-    <h2>Boton de Emergencia</h2>
-    <br>
-    <img src="../assets/SOS.png" >
-    <br>
-    <pv-button label="Volver" @click="goBack"> </pv-button>
-    <br><br>
+    <div class="title" style="margin: 4rem 4rem 0 4rem">
+      <h1 style="margin-top: 0">{{$t("help")}}</h1>
+    </div>
+    <div class="SOS_alert">
+      <pv-button v-show="emergency===false" @click="emergencyOn">
+        SOS
+      </pv-button>
+      <pv-button v-show="emergency===true" style="font-size: 70px;" @click="emergencyOff">
+        APAGAR
+      </pv-button>
+    </div>
+    <div class="SOS_button">
+      <pv-button  @click="goBack">{{$t("return")}} </pv-button>
+    </div>
   </div>
 </template>
 
 <script>
+import {RoomServices} from "../services/room-services";
+import {ref} from "vue";
 export default {
   name: "SOS",
+  components: {},
+  data(){
+    return{
+      emergency:false,
+    }
+  },
   methods:{
     goBack(){
       this.$router.push("/services")
+    },
+    emergencyOn(){
+      this.emergency=true
+      this.emergencyRoom(true)
+    },
+    emergencyOff(){
+      this.emergency=false
+      this.emergencyRoom(false)
+    },
+    emergencyRoom(emergencyStatus){
+      new RoomServices().getRoomForGuest(sessionStorage.getItem("id")).then(response=>{
+        let room =response.data[0]
+        room.emergency=emergencyStatus
+        new RoomServices().updateRoom(response.data[0].id,room).then(response=>{
+          console.log("Emegency: ",emergencyStatus)
+        })
+      })
     }
+  },
+  created() {
+    new RoomServices().getRoomForGuest(sessionStorage.getItem("id")).then(response=>{
+      this.emergency=response.data[0].emergency
+    })
   }
 }
 </script>
-
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
 .SOS {
-  background-color:#011530;
+  width: 95vw;
+  height: 83vh;
+  font-family: 'Roboto', sans-serif;
 
 }
-.SOS h2{
-  text-align: left;
-  padding-left:5% ;
-  padding-top: 3%;
-  color: #D6A049;
-  margin: auto;
+.SOS_alert{
+  display: flex;
+  justify-content: center;
 }
-.SOS img{
-  padding-left: 20%;
-  height: 50% ;
-  width: 50%;
-
+.SOS_alert button{
+  border-radius: 50rem;
+  background-color: #d6a049;
+  display: flex;
+  justify-content: center;
+  width: 450px;
+  height: 450px;
 }
-.SOS button {
-  width: 215.69px;
-  height: 40.75px;
-  margin-left: 30%;
-  margin-top:3%;
+.SOS_alert button {
+  font-weight: bold;
+  font-family: Arial;
+  font-size: 140px;
+  color: white;
+}
+.SOS_button{
+  display: flex;
+  justify-content: end;
+}
+.SOS_button button {
+  margin-top: 3rem;
+  border-radius: 3rem;
+  border-style: none;
   background-color: #D6A049;
   color: white;
 
+}
+@media (max-width:498px){
+  .SOS_alert button{
+    border-radius: 50rem;
+    background-color: #d6a049;
+    display: flex;
+    justify-content: center;
+    width: 310px;
+    height: 310px;
+  }
+  .SOS_alert button {
+    font-weight: bold;
+    font-family: Arial;
+    font-size: 80px;
+    color: white;
+  }
 }
 </style>
