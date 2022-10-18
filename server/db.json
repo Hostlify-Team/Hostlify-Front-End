@@ -50,7 +50,7 @@
       "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
       "description": "some extra description",
       "emergency": false,
-      "servicePending": false,
+      "servicePending": true,
       "id": 1
     },
     {
@@ -94,5 +94,17 @@
       "id": 2
     }
   ],
-  "foodServices": []
+  "foodServices": [
+    {
+      "roomId": 1,
+      "dish": "Ceviche",
+      "dishQuantity": "2",
+      "drink": "Inca Kola",
+      "drinkQuantity": "2",
+      "cream": "Aji",
+      "creamQuantity": "1",
+      "instruction": "some instruction ",
+      "id": 1
+    }
+  ]
 }
