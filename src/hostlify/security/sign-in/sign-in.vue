@@ -32,8 +32,8 @@
 
 <script>
 import {UserServices} from "../../../services/user-services";
+import {RoomServices} from "../../../services/room-services";
 export default {
-  name: "sign-in",
   data(){
     return{
       email:"",
@@ -43,23 +43,33 @@ export default {
   methods:{
     signIn(){
       new UserServices().login(this.email,this.password).then(response=>{
-        console.log("Inicio de sesion exitoso")
         sessionStorage.setItem("jwt",response.data.accessToken)
+        sessionStorage.setItem("id",response.data.user.id)
         sessionStorage.setItem("name",response.data.user.name)
         sessionStorage.setItem("email",response.data.user.email)
         sessionStorage.setItem("type",response.data.user.type)
         sessionStorage.setItem("plan",response.data.user.plan)
         console.log("Ingresaste como: ",response.data.user.type)
         if(response.data.user.type==="manager"){
+          this.sendMessage("manager",response.data.user.name)
           this.$router.push("/rooms")
         }else{
+          this.sendMessage("guest",response.data.user.name)
           this.$router.push("/services")
         }
       })
+    },
+    sendMessage(type,name){
+      let obj={
+        logged:true,
+        type: type,
+        name:name
+      }
+      this.emitter.emit("message-from-sign-up",obj)
     }
   },
   created() {
-    sessionStorage.clear();
+    sessionStorage.clear()
   }
 }
 </script>

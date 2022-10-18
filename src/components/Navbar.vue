@@ -1,33 +1,36 @@
 <template>
-  <div v-show="!$route.meta.hideNavbar">
+  <div v-show="showNavBar" class="navbar">
     <Toolbar>
       <template #start>
         <avatar
-            shape="circle"
             image="https://github.com/Hostlify-Team/Hostlify-Landing-Page/blob/main/src/assets/images/Logo.png?raw=true"
             class="mr-2"
         />
-        <div v-if="$route.meta.manager">
+        <div v-if="currentUserType==='manager'">
           <router-link class="mr-3 navbar-item" to="/rooms">
-            Rooms
+            {{$t("rooms")}}
           </router-link>
           <router-link class="mr-2 navbar-item" to="/history">
-            History
+            {{$t("history")}}
           </router-link>
         </div>
         <div v-else>
           <router-link class="mr-3 navbar-item" to="/services">
-            Servicios
+            {{$t("services")}}
           </router-link>
           <router-link class="mr-2 navbar-item" to="/map-hotel">
-            Informacion
+            {{$t("information")}}
           </router-link>
           <router-link class="mr-2 navbar-item" to="/SOS">
-            Ayuda
+            {{$t("help")}}
           </router-link>
         </div>
       </template>
       <template #end>
+        <pv-select-button v-model="$i18n.locale" :options="languages" aria-labelledby="single" style="margin-right: 2rem">
+
+        </pv-select-button>
+        <p style="margin-right: 1rem">{{$t("hello")}} {{currentUserName}} !</p>
         <pv-button @click="logOut">
           Cerrar Sesion
         </pv-button>
@@ -49,25 +52,37 @@ export default {
   },
   data(){
     return{
+      showNavBar:false,
+      currentUserType:null,
+      currentUserName:null,
+      languages: ['es', 'en']
     }
   },
   methods:{
     logOut(){
       localStorage.setItem('type',null)
+      this.showNavBar=false
       this.$router.push("/")
       sessionStorage.clear()
-    },
-    getCurrentType(){
-      let currentTypeString=sessionStorage.getItem('type');
-      if(currentTypeString==='guest'){
-        return true
-      }else {
-        return false
-      }
     }
   },
   created() {
-    this.getCurrentType()
+    if(sessionStorage.getItem("jwt")===null){
+      this.showNavBar=false
+    }else {
+      this.showNavBar=true
+      this.currentUserName=sessionStorage.getItem("name")
+      this.currentUserType=sessionStorage.getItem("type")
+    }
+
+  },
+  mounted() {
+    this.emitter.on("message-from-sign-up",isOpen=>{
+      this.showNavBar=isOpen.logged
+      this.currentUserType=isOpen.type
+      this.currentUserName=isOpen.name
+    })
+
   }
 
 }

@@ -5,7 +5,9 @@ import i18n from "@/locals/i18n";
 import PrimeVue from 'primevue/config';
 import "/node_modules/primeflex/primeflex.css";
 import ToastService from 'primevue/toastservice';
-import InputNumber from 'primevue/inputnumber';
+import mitt from 'mitt';
+const emitter = mitt();
+import BadgeDirective from 'primevue/badgedirective';
 
 //PrimeVue Styles
 import "primevue/resources/themes/vela-orange/theme.css"       //theme
@@ -30,12 +32,20 @@ import Checkbox from 'primevue/checkbox';
 import InputSwitch from 'primevue/inputswitch';
 import Password from 'primevue/password';
 import RadioButton from 'primevue/radiobutton';
+import Toolbar from 'primevue/toolbar';
+import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
 import InputMask from 'primevue/inputmask';
 import SelectButton from 'primevue/selectbutton';
+import Textarea from 'primevue/textarea';
+import InputNumber from 'primevue/inputnumber';
+import ProgressBar from 'primevue/progressbar';
+import Calendar from 'primevue/calendar';
+import Badge from 'primevue/badge';
 
 
 const app = createApp(App)
+app.config.globalProperties.emitter = emitter;
 
 app.use(i18n)
 app.use(PrimeVue);
@@ -63,6 +73,15 @@ app.component("pv-input-number",InputNumber)
 app.component("pv-dialog",Dialog)
 app.component("pv-input-mask",InputMask)
 app.component("pv-select-button",SelectButton)
+app.component("pv-toolbar",Toolbar)
+app.component("pv-tag",Tag)
+app.component("pv-progress-bar",ProgressBar)
+app.component("pv-calendar",Calendar)
+app.component("pv-text-area",Textarea)
+app.component("pv-badge",Badge)
+app.directive('badge', BadgeDirective);
+
+
 
 
 
