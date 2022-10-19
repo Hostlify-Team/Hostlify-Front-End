@@ -67,6 +67,36 @@
       "emergency": false,
       "servicePending": false,
       "id": 2
+    },
+    {
+      "roomName": "A-003",
+      "managerId": 1,
+      "guestId": null,
+      "initialDate": null,
+      "endDate": null,
+      "status": true,
+      "guestStayComplete": null,
+      "price": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "empty description",
+      "emergency": false,
+      "servicePending": false,
+      "id": 3
+    },
+    {
+      "roomName": "A-004",
+      "managerId": 1,
+      "guestId": null,
+      "initialDate": null,
+      "endDate": null,
+      "status": true,
+      "guestStayComplete": null,
+      "price": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "little room",
+      "emergency": false,
+      "servicePending": false,
+      "id": 4
     }
   ],
   "history": [

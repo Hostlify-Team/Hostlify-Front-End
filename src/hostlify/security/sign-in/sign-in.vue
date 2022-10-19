@@ -1,6 +1,6 @@
 <template >
   <div class="card" >
-    <pv-card class="SignInCard">
+    <!--pv-card class="SignInCard">
       <template #title >
         <div class="Text">
           Iniciar sesion
@@ -25,8 +25,36 @@
           </div>
         </div>
       </template>
+    </pv-card-->
+    <pv-card class="SignInCard">
+      <template #title >
+        <div class="Text">
+          Iniciar sesion
+        </div>
+      </template>
+      <template #content>
+        <div class="form_" style="display: block;justify-content: space-around;">
+          <div style="display: flex;justify-content: center; margin-bottom: 1rem">
+            <pv-button @click="signInProvitional('manager')">Iniciar sesion como Manager</pv-button>
+          </div>
+          <div style="display: flex;justify-content: center">
+            <pv-button @click="signInProvitional('guest')">Iniciar sesion como Guest</pv-button>
+          </div>
+
+        </div>
+        <div class="footer">
+          <div class="Text">
+            <router-link to="/forgot-password" class="rw">
+              ¿Olvidaste tu <br> contraseña?
+            </router-link>
+          </div>
+          <div class="buttons">
+            <router-link to="/sign-up-plans" class="rw"><pv-button>Crear Cuenta</pv-button></router-link>
+
+          </div>
+        </div>
+      </template>
     </pv-card>
-    <navbar key="navbarReload"></navbar>
   </div>
 </template>
 
@@ -58,6 +86,26 @@ export default {
           this.$router.push("/services")
         }
       })
+    },
+    signInProvitional(usertype){
+      if(usertype==="manager"){
+        this.sendMessage(usertype,"Diego Talledo")
+        sessionStorage.setItem("id","1")
+        sessionStorage.setItem("name","Diego Talledo")
+        sessionStorage.setItem("email","diego@gmail.com")
+        sessionStorage.setItem("type",usertype)
+        sessionStorage.setItem("plan","Premium")
+        this.$router.push("/rooms")
+      }else{
+        this.sendMessage(usertype,"Alonso Sanchez")
+        sessionStorage.setItem("id","2")
+        sessionStorage.setItem("name","diego@gmail.com")
+        sessionStorage.setItem("email","alonso@gmail.com")
+        sessionStorage.setItem("type",usertype)
+        sessionStorage.setItem("plan",null)
+        this.$router.push("/services")
+      }
+      console.log("Ingresaste como: ",usertype)
     },
     sendMessage(type,name){
       let obj={
