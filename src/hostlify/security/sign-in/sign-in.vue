@@ -101,7 +101,7 @@ export default {
         this.sendMessage(usertype,"Alonso Sanchez")
         sessionStorage.setItem("jwt","147852")
         sessionStorage.setItem("id","2")
-        sessionStorage.setItem("name","diego@gmail.com")
+        sessionStorage.setItem("name","Alonso Sanchez")
         sessionStorage.setItem("email","alonso@gmail.com")
         sessionStorage.setItem("type",usertype)
         sessionStorage.setItem("plan",null)
