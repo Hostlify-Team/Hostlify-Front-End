@@ -90,6 +90,7 @@ export default {
     signInProvitional(usertype){
       if(usertype==="manager"){
         this.sendMessage(usertype,"Diego Talledo")
+        sessionStorage.setItem("jwt","123456")
         sessionStorage.setItem("id","1")
         sessionStorage.setItem("name","Diego Talledo")
         sessionStorage.setItem("email","diego@gmail.com")
@@ -98,6 +99,7 @@ export default {
         this.$router.push("/rooms")
       }else{
         this.sendMessage(usertype,"Alonso Sanchez")
+        sessionStorage.setItem("jwt","147852")
         sessionStorage.setItem("id","2")
         sessionStorage.setItem("name","diego@gmail.com")
         sessionStorage.setItem("email","alonso@gmail.com")
