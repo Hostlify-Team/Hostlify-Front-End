@@ -18,7 +18,7 @@
       <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:left">
-            <h2>Seleccione su bebida</h2>
+            <h2>{{$t("select your drink")}}</h2>
           </div>
           <div style="display: flex;margin-bottom:30px; justify-content:center">
             <pv-dropdown v-model="selectedDrink" :options="drinks"  placeholder="Eliga una bebida" style="width:500px"></pv-dropdown>
