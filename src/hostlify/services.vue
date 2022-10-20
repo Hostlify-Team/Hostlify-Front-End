@@ -13,7 +13,7 @@
                   <img src="@/assets/food.png" alt="" class="img">
                 </div>
                 <div style="display: flex; justify-content: center;margin-top: 4.3rem">
-                  <h2>{{$t("food service")}}</h2>
+                  <h2>{{$t("Choose your plan")}}</h2>
                 </div>
 
               </div>

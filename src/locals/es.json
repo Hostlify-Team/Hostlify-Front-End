@@ -44,5 +44,17 @@
   "add": "Agregar",
   "add a room": "Agregar una habitacion",
   "yes": "SI",
-  "no": "NO"
+  "no": "NO",
+
+  "step number": "Paso 1 de 3",
+  "choose your plan": "Elige tu plan en Hostlify",
+  "this plan allows": "Este plan te permite tener",
+  "until": "hasta",
+  "infinite rooms": "infinitas habitaciones",
+  "personalized plan": "Plan personalizado",
+  "how many rooms": "Cuantas habitaciones tienes?",
+  "prices from": "Precios desde S/6.50 por mes",
+  "plans to satisfy": "Planes para satisfacer cada etapa de tu hotel",
+  "choose": "Elegir",
+  "our plans": "Nuestros planes"
 }
