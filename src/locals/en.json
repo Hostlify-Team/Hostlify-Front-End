@@ -63,5 +63,10 @@
   "privacy of hostlify": "de privacidad de Hostlify",
   "create account": "Create account",
 
-  "log out" : "Log Out"
+  "log out" : "Log Out",
+  "log in": "Log In",
+ "email": "Email",
+  "password": "Password",
+  "did you forget": "Did you forget",
+  "your password?": "your password?"
 }

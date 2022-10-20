@@ -64,5 +64,10 @@
   "privacy of hostlify": "de privacidad de Hostlify",
   "create account": "Crear cuenta",
 
-  "log out" : "Cerrar Sesion"
+  "log out" : "Cerrar Sesion",
+ "log in":"Iniciar sesion",
+  "email": "Correo Electronico ",
+  "password": "Contraseña",
+  "did you forget": "¿Olvidaste tu",
+  "your password?": "contraseña?"
 }
