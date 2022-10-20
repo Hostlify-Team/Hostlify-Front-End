@@ -4,16 +4,16 @@
       <template #content>
         <div class="content" style="width: 50vw">
           <div class="steps" >
-            <h4 style="margin: 0 0 0 2rem">Paso 3 de 3</h4>
+            <h4 style="margin: 0 0 0 2rem">{{$t("step number3")}}</h4>
           </div>
           <div class="phrase" style="margin-bottom: 1rem; display: flex; justify-content: center">
-            <h1>Agrega un metodo  de pago</h1>
+            <h1>{{$t("add a payment method")}}</h1>
           </div>
           <div class="card" style="justify-content: center;">
             <div class="register" style="width: 30vw;">
               <div class="form" >
                 <div class="Text" style="margin-top: 3rem">
-                  <p>Elige un método de pago, completa la información e inicia tu suscripción</p><br>
+                  <p>{{$t("add a payment method")}}</p><br>
                   <div class="paycards" style="display: flex; align-items: center;justify-content: center">
                     <img src="@/assets/visa.png" alt="" style="width: 50px">
                     <img src="@/assets/MasterCard.png" alt="" style="width: 50px">
@@ -34,7 +34,7 @@
               </div>
               <div class="footer">
                 <div class="buttons" >
-                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="register">Iniciar subscripcion</pv-button ></router-link>
+                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="register">{{$t("Start subscription")}}</pv-button ></router-link>
                 </div>
               </div>
             </div>
