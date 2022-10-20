@@ -69,5 +69,7 @@
   "email": "Correo Electronico ",
   "password": "Contraseña",
   "did you forget": "¿Olvidaste tu",
-  "your password?": "contraseña?"
+  "your password?": "contraseña?",
+  "sos": "Ayuda",
+  "off": "Apagar"
 }

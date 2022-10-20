@@ -68,5 +68,7 @@
  "email": "Email",
   "password": "Password",
   "did you forget": "Did you forget",
-  "your password?": "your password?"
+  "your password?": "your password?",
+  "sos": "SOS",
+  "off": "OFF"
 }
