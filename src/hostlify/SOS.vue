@@ -5,10 +5,10 @@
     </div>
     <div class="SOS_alert">
       <pv-button v-show="emergency===false" @click="emergencyOn">
-        SOS
+        {{$t("sos")}}
       </pv-button>
       <pv-button v-show="emergency===true" style="font-size: 70px;" @click="emergencyOff">
-        APAGAR
+        {{$t("off")}}
       </pv-button>
     </div>
     <div class="SOS_button">

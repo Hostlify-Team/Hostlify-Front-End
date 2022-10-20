@@ -3,25 +3,25 @@
     <pv-card class="SignInCard">
       <template #title >
         <div class="Text">
-          Iniciar sesion
+           {{$t("log in")}}
         </div>
       </template>
       <template #content>
         <div class="form">
-          <label for="email">Correo Electronico</label>
+          <label for="email">{{$t("email")}}</label>
           <pv-input-text id="email" class="input" v-model="email"></pv-input-text>
-          <label for="password">contraseña</label>
+          <label for="password">{{$t("password")}}</label>
           <pv-input-text id="password" type="password" class="input" v-model="password"></pv-input-text>
         </div>
         <div class="footer">
           <div class="Text">
             <router-link to="/forgot-password" class="rw">
-              ¿Olvidaste tu <br> contraseña?
+              {{$t("did you forget")}} <br> {{$t("your password?")}}
             </router-link>
           </div>
           <div class="buttons">
-            <router-link to="/sign-up-plans" class="rw"><pv-button>Crear Cuenta</pv-button></router-link>
-            <pv-button @click="signIn">Iniciar sesion</pv-button>
+            <router-link to="/sign-up-plans" class="rw"><pv-button>{{$t("create account")}}</pv-button></router-link>
+            <pv-button @click="signIn">{{$t("log in")}}</pv-button>
           </div>
         </div>
       </template>

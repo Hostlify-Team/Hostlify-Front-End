@@ -62,8 +62,18 @@
   "create your account": "Create your account",
   "privacy of hostlify": "de privacidad de Hostlify",
   "create account": "Create account",
+
   "step number3": "Step 3 of 3",
   "add a payment method": "Add a payment method",
   "choose a payment method": "Choose a payment method, complete the information and start your subscription",
-  "Start subscription": "Start subscription"
+  "Start subscription": "Start subscription",
+
+  "log out" : "Log Out",
+  "log in": "Log In",
+ "email": "Email",
+  "password": "Password",
+  "did you forget": "Did you forget",
+  "your password?": "your password?",
+  "sos": "SOS",
+  "off": "OFF"
 }
