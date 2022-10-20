@@ -62,5 +62,7 @@
   "create your account": "Crea tu cuenta",
   "by clicking create account": "Al hacer click en Crear Cuenta acepto las condiciones del servicio y la politica",
   "privacy of hostlify": "de privacidad de Hostlify",
-  "create account": "Crear cuenta"
+  "create account": "Crear cuenta",
+
+  "log out" : "Cerrar Sesion"
 }
