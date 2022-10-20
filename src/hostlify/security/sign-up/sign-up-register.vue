@@ -4,10 +4,10 @@
       <template #content>
         <div class="content" style="width: 50vw">
           <div class="steps" >
-            <h4 style="margin: 0 0 0 2rem">Paso 2 de 3</h4>
+            <h4 style="margin: 0 0 0 2rem">{{$t("step number2")}}</h4>
           </div>
           <div class="phrase" style="margin-bottom: 1rem; display: flex; justify-content: center">
-            <h1>Crea tu cuenta</h1>
+            <h1>{{$t("create your account")}}</h1>
           </div>
           <div class="card" style="justify-content: center;">
             <div class="register" style="width: 30vw">
@@ -24,11 +24,11 @@
               </div>
               <div class="footer">
                 <div class="Text" style="margin: 3rem 0">
-                  Al hacer click en Crear Cuenta acepto las condiciones del servicio y la politica
-                  <br>de privacidad de Hostlify
+                  {{$t("by clicking create account")}}
+                  <br>{{$t("privacy of hostlify")}}
                 </div>
                 <div class="buttons" >
-                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="addTemporaryUser">Crear Cuenta</pv-button ></router-link>
+                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="addTemporaryUser">{{$t("create account")}}</pv-button ></router-link>
                 </div>
               </div>
             </div>
