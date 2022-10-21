@@ -20,9 +20,9 @@
       </template>
     </pv-card>
     <pv-dialog header="Solicitud enviada" v-model:visible="confirmDialog"  :style="{width: '30vw'}" :modal="true">
-      <p class="m-0">Si existe alguna cuenta registrada con este correo electronico se le enviara un correo</p>
+      <p class="m-0">{{$t("RequestSendContent")}}</p>
       <template #footer>
-        <pv-button label="Entendido" @click="closeDialog" />
+        <pv-button label="Entendido" @click="closeDialog" >{{$t("Okey")}}</pv-button>
       </template>
     </pv-dialog>
   </div>

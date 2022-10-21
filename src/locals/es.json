@@ -84,5 +84,8 @@
   "loginAsManager":"Iniciar sesion como Manager",
   "loginAsGuest":"Iniciar sesion como Guest",
   "send": "Enviar",
-  "ResetPassword": "Cambiar contraseña"
+  "ResetPassword": "Cambiar contraseña",
+  "RequestSend": "Solicitud Enviada",
+  "RequestSendContent": "Si existe alguna cuenta registrada con este correo electronico se le enviara un correo",
+  "Okey": "Entendido"
 }

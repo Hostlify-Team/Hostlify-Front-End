@@ -83,5 +83,9 @@
   "loginAsManager":"LogIn as Manager",
   "loginAsGuest":"LogIn as Guest",
   "send": "Send",
-  "ResetPassword": "Reset password"
+  "ResetPassword": "Reset password",
+  "RequestSend": "Request send",
+  "RequestSendContent": "If there is any account registered with this email, an email will be sent",
+  "Okey": "Okey"
+
 }
