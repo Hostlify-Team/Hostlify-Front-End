@@ -53,7 +53,7 @@
             <pv-tag v-else severity="danger">{{$t('occupied')}}</pv-tag>
           </template>
         </pv-column>
-        <pv-column field="progressTime" header="Tiempo" :sortable="true" style="min-width: 16rem">
+        <pv-column field="progressTime" header="Tiempo" style="min-width: 16rem">
           <template #body="slotProps">
             <pv-progress-bar :value="slotProps.data.progressTime"></pv-progress-bar>
           </template>

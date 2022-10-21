@@ -60,16 +60,18 @@ export default {
   },
   methods:{
     logOut(){
+      sessionStorage.clear()
       localStorage.setItem('type',null)
       this.showNavBar=false
       this.$router.push("/")
-      sessionStorage.clear()
     }
   },
   created() {
     if(sessionStorage.getItem("jwt")===null){
+      console.log("Morri")
       this.showNavBar=false
     }else {
+      console.log("SIGO VIVO")
       this.showNavBar=true
       this.currentUserName=sessionStorage.getItem("name")
       this.currentUserType=sessionStorage.getItem("type")

@@ -124,7 +124,14 @@ export default {
     }
   },
   created() {
-    sessionStorage.clear()
+    if(sessionStorage.getItem("jwt")!==null){
+      if(sessionStorage.getItem("type")==="manager"){
+        this.$router.push("/rooms")
+      }else {
+        this.$router.push("/services")
+      }
+    }
+    //sessionStorage.clear()
   }
 }
 </script>
