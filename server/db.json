@@ -128,6 +128,21 @@
       "emergency": false,
       "servicePending": false,
       "id": 5
+    },
+    {
+      "roomName": "A-008",
+      "managerId": 1,
+      "guestId": null,
+      "initialDate": null,
+      "endDate": null,
+      "status": true,
+      "guestStayComplete": null,
+      "price": null,
+      "image": "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg",
+      "description": "Matrimonial",
+      "emergency": false,
+      "servicePending": false,
+      "id": 6
     }
   ],
   "history": [
@@ -215,17 +230,6 @@
       "id": 2
     },
     {
-      "roomId": 2,
-      "dish": "Pollo a la brasa",
-      "dishQuantity": "1",
-      "drink": "Inca Kola",
-      "drinkQuantity": "1",
-      "cream": "Mayonesa",
-      "creamQuantity": "1",
-      "instruction": null,
-      "id": 3
-    },
-    {
       "roomId": 1,
       "dish": "Lomo saltado",
       "dishQuantity": "2",
@@ -235,17 +239,6 @@
       "creamQuantity": "2",
       "instruction": "little",
       "id": 4
-    },
-    {
-      "roomId": 1,
-      "dish": "Ceviche",
-      "dishQuantity": "2",
-      "drink": "null",
-      "drinkQuantity": "1",
-      "cream": "Aji",
-      "creamQuantity": "1",
-      "instruction": "more  chili peper \nand ice soda",
-      "id": 5
     },
     {
       "roomId": 1,

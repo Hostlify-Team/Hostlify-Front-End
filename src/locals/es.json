@@ -78,5 +78,7 @@
   "sos": "Ayuda",
   "off": "Apagar",
   "select your extras": "Seleccione sus extras",
-  "instructions for the preparation": "Instrucciones para la preparación"
+  "instructions for the preparation": "Instrucciones para la preparación",
+  "bedrooms": "Habitaciones",
+  "do you want to delete the selected rooms?" : "¿Quieres eliminiar las habitaciones seleccionadas?"
 }

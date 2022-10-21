@@ -26,7 +26,7 @@
       >
         <template #header>
           <div class="table-header flex flex-column md:flex-row md:justify-content-between">
-            <h5 class="mb-2 md:m-0 p-as-md-center text-xl">Habitaciones</h5>
+            <h5 class="mb-2 md:m-0 p-as-md-center text-xl">{{$t("bedrooms")}}</h5>
             <span class="p-input-icon-left">
               <i class="pi pi-search"/>
               <pv-input-text v-model="filters['global'].value" placeholder="Search..."/>
@@ -50,7 +50,7 @@
         </pv-column>
 
         <pv-dialog v-model:visible="deleteRoomsDialog" :style="{ width: '450px' }" header="Eliminar las habitaciones" :modal="true">
-          <span>Quieres eliminiar las habitaciones seleccionadas?</span>
+          <span>{{$t("do you want to delete the selected rooms?")}}</span>
           <template #footer>
             <pv-button :label="'No'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
             <pv-button :label="'Yes'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="deleteRooms" />
