@@ -347,9 +347,10 @@ export default {
       }
     },
     showNotificationsRoomDialog(data){
+      this.guestServices=[]
       this.notificationsRoomsDialog=true
       this.room=data
-      this.getServicesForRoom(data.id)
+      this.getActualServicesForRoom(data.id)
     },
     showGuestServiceInfo(data,len){
       this.guestServiceInfoQuantity=len
@@ -539,15 +540,23 @@ export default {
       if(this.notificationsRoomsDialog===false){
         this.guestServices=[]
         new FoodServices().getFoodServiceByRoomId(id).then(response=>{
-          for(let i=0;i<(response.data.length);i++){
-            this.guestServices.push(response.data[i])
-          }
           let index=this.findIndexById(id)
           this.rooms[index].quantityOfServices=response.data.length
 
         })
 
       }
+    },
+    getActualServicesForRoom(id){
+      this.guestServices=[]
+      new FoodServices().getFoodServiceByRoomId(id).then(response=>{
+        for(let i=0;i<(response.data.length);i++){
+          this.guestServices.push(response.data[i])
+        }
+        let index=this.findIndexById(id)
+        this.rooms[index].quantityOfServices=response.data.length
+
+      })
     },
     startProgress() {
       this.interval = setInterval(() => {
