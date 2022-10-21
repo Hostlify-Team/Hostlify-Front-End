@@ -32,7 +32,7 @@
         </pv-select-button>
         <p style="margin-right: 1rem">{{$t("hello")}} {{currentUserName}} !</p>
         <pv-button @click="logOut">
-          Cerrar Sesion
+       {{$t("log out")}}
         </pv-button>
       </template>
     </Toolbar>

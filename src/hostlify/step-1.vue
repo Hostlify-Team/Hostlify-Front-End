@@ -26,7 +26,7 @@
             <h2>{{$t("select your dish")}}</h2>
           </div>
           <div style="display: flex;margin-bottom:30px; justify-content:center">
-            <pv-dropdown v-model="selectedDish" :options="dishes"  placeholder="Eliga un platillo" style="width:500px"></pv-dropdown>
+            <pv-dropdown v-model="selectedDish" :options="dishes"  placeholder="Eliga un platillo"  style="width:500px"></pv-dropdown>
           </div>
           <div style="display: flex; justify-content:center">
             <br>

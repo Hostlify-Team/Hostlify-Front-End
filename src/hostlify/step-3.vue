@@ -18,7 +18,7 @@
       <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:left">
-            <h2>Seleccione sus extras</h2>
+            <h2>{{$t("select your extras")}}</h2>
           </div>
           <div style="display: flex;margin-bottom:30px; justify-content:center">
             <pv-dropdown v-model="selectedCream" :options="creams"  placeholder="Eliga una crema" style="width:500px"></pv-dropdown>
@@ -30,7 +30,7 @@
           </div>
 
           <div style="display: flex; justify-content:left">
-            <h2>Instrucciones de preparación</h2>
+            <h2>{{$t("instructions for the preparation")}}</h2>
           </div>
           <div style="display: flex; justify-content:center">
             <pv-text-area id="food" v-model="instructions" style="width: 28rem;"/>

@@ -1,13 +1,14 @@
 <template>
+  <SwitchButton></SwitchButton>
   <div style="height: 98vh ;margin: 0;display:flex; justify-content: center; align-items: center;">
     <pv-card style=" border-radius: 1rem;justify-content: center;width: 70vw;">
       <template #content>
         <div>
           <div class="steps" >
-            <h4 style="margin: 0 0 0 2rem">Paso 1 de 3</h4>
+            <h4 style="margin: 0 0 0 2rem">{{$t("step number")}}</h4>
           </div>
           <div class="phrase" style="margin-bottom: 1rem; display: flex; justify-content: center; text-align: center">
-            <h1>Elige tu plan en Hostlify</h1>
+            <h1>{{$t("choose your plan")}}</h1>
           </div>
           <div class="switch" >
             <pv-select-button v-model="value1" :options="options" aria-labelledby="single" @click="changePlan"/>
@@ -28,16 +29,16 @@
                         <div class="visible">
                           <template v-if="plan.rooms!==null" >
                             <div class="usher">
-                              <p style="margin-top: 6px">Este plan te permite tener </p>
-                              <p class="until">hasta</p>
+                              <p style="margin-top: 6px">{{$t("this plan allows")}} </p>
+                              <p class="until">{{$t("until")}}</p>
                             </div>
-                            <p style="margin-top: 6px">{{plan.rooms}} habitaciones</p>
+                            <p style="margin-top: 6px">{{plan.rooms}} {{$t("rooms")}}</p>
                           </template>
                           <template v-else >
                             <div class="usherVisible">
-                              <p style="margin-top: 15px">Este plan te permite tener </p>
+                              <p style="margin-top: 15px">{{$t("this plan allows")}} </p>
                             </div>
-                            <p style="margin-top: 14px">infinitas habitaciones</p>
+                            <p style="margin-top: 14px">{{$t("infinite rooms")}}</p>
                           </template>
                         </div>
                         <div class="price">
@@ -46,9 +47,9 @@
                             <p style="margin: 0;padding: 0 0 0.45rem 0.1rem ;align-items: end ;display: table-cell;vertical-align: bottom; color: darkgrey" >mo*</p>
                           </div>
                         </div>
-                        <pv-button class="planButton" v-if="plan.name==='Standard'" style="background-color: #FFC286; color:white" @click="planSelected('Standard')">Elegir</pv-button>
-                        <pv-button class="planButton" v-if="plan.name==='Pro'" style="background-color: #EA9D51; color:white" @click="planSelected('Pro')">Elegir</pv-button>
-                        <pv-button class="planButton" v-if="plan.name==='Premium'" style="background-color: #F1C94E; color:white" @click="planSelected('Premium')">Elegir</pv-button>
+                        <pv-button class="planButton" v-if="plan.name==='Standard'" style="background-color: #FFC286; color:white" @click="planSelected('Standard')">{{$t("choose")}}</pv-button>
+                        <pv-button class="planButton" v-if="plan.name==='Pro'" style="background-color: #EA9D51; color:white" @click="planSelected('Pro')">{{$t("choose")}}</pv-button>
+                        <pv-button class="planButton" v-if="plan.name==='Premium'" style="background-color: #F1C94E; color:white" @click="planSelected('Premium')">{{$t("choose")}}</pv-button>
                       </div>
                     </template>
                   </pv-card >
@@ -64,8 +65,8 @@
                   <template #content>
                     <div style="display: flex; justify-content: space-evenly">
                       <div class="content" >
-                        <h2 style="margin-bottom: 1rem">Plan personalizado</h2>
-                        <p style="margin-bottom: 1.1rem">Cuantas habitaciones tienes?</p>
+                        <h2 style="margin-bottom: 1rem">{{$t("personalized plan")}}</h2>
+                        <p style="margin-bottom: 1.1rem">{{$t("how many rooms")}}</p>
                         <div class="input" >
                           <pv-input-text type="number" style="background-color: white; color: black" v-model="customPlanPrice" />
                         </div>
@@ -74,15 +75,15 @@
                         <i class="pi pi-arrow-right"></i>
                       </div>
                       <div class="content" >
-                        <h2 style="margin-bottom: 1rem">Precios desde S/6.50 por mes</h2>
-                        <p style="margin-bottom: 0">Planes para satisfacer cada etapa de tu hotel</p>
+                        <h2 style="margin-bottom: 1rem">{{$t("prices from")}}</h2>
+                        <p style="margin-bottom: 0">{{$t("plans to satisfy")}}</p>
                         <div class="price">
                           <p style="font-weight: bold; font-size: 3rem; margin: 0">S/{{ customPlanPrice*6.50 }} </p>
                           <div style="display: table;">
                             <p style="margin: 0;padding: 0 0 0.5rem 0.5rem ;align-items: end ;display: table-cell;vertical-align: bottom;color: darkgrey" >mo*</p>
                           </div>
                         </div>
-                        <pv-button style="margin-top: .5em; background-color: #D6A049; color:white" @click="planSelected('Custom')">Elegir</pv-button>
+                        <pv-button style="margin-top: .5em; background-color: #D6A049; color:white" @click="planSelected('Custom')">{{$t("choose")}}</pv-button>
                       </div>
                     </div>
                   </template>
@@ -97,13 +98,16 @@
 </template>
 <script>
 import {PlanServices} from "../../../services/plan-services";
+import SwitchButton from "../../../components/switchButton.vue";
 export default {
   name: "sign-up-plans",
-  components: {},
+  components:{
+    SwitchButton
+  },
   data(){
     return{
-      value1: 'Nuestros Planes',
-      options: ['Nuestros Planes', 'Plan personalizado'],
+      value1: 'Nuestros planes',
+      options: ['Nuestros planes', 'Plan personalizado'],
       defaultPlan: true,
       customPlan: false,
       customPlanPrice:null,
