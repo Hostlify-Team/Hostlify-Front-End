@@ -1,4 +1,5 @@
 <template>
+  <SwitchButton></SwitchButton>
   <div style="height: 98vh ;margin: 0;display:flex; justify-content: center; align-items: center;">
     <pv-card style=" border-radius: 1rem;justify-content: center;width: 70vw;">
       <template #content>
@@ -97,9 +98,12 @@
 </template>
 <script>
 import {PlanServices} from "../../../services/plan-services";
+import SwitchButton from "../../../components/switchButton.vue";
 export default {
   name: "sign-up-plans",
-  components: {},
+  components:{
+    SwitchButton
+  },
   data(){
     return{
       value1: 'Nuestros planes',

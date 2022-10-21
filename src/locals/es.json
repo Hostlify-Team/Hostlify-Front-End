@@ -80,5 +80,9 @@
   "select your extras": "Seleccione sus extras",
   "instructions for the preparation": "Instrucciones para la preparación",
   "bedrooms": "Habitaciones",
-  "do you want to delete the selected rooms?" : "¿Quieres eliminiar las habitaciones seleccionadas?"
+  "do you want to delete the selected rooms?" : "¿Quieres eliminiar las habitaciones seleccionadas?",
+  "loginAsManager":"Iniciar sesion como Manager",
+  "loginAsGuest":"Iniciar sesion como Guest",
+  "send": "Enviar",
+  "ResetPassword": "Cambiar contraseña"
 }

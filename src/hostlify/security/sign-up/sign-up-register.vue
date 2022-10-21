@@ -1,4 +1,5 @@
 <template>
+  <SwitchButton></SwitchButton>
   <div class="card" style="height: 98vh ">
     <pv-card style=" border-radius: 1rem;justify-content: center;">
       <template #content>
@@ -39,6 +40,8 @@
   </div>
 </template>
 <script>
+import SwitchButton from "../../../components/switchButton.vue";
+
 export default {
   name: "sign-up-register",
   data(){
@@ -49,6 +52,9 @@ export default {
         password:null,
       }
     }
+  },
+  components:{
+    SwitchButton
   },
   methods:{
     addTemporaryUser(){

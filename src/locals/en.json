@@ -72,12 +72,16 @@
   "log in": "Log In",
  "email": "Email",
   "password": "Password",
-  "did you forget": "Did you forget",
-  "your password?": "your password?",
+  "did you forget": "Forgot password?",
+  "your password?": "",
   "sos": "SOS",
   "off": "OFF",
   "select your extras": "Select your extras",
   "instructions for the preparation": "Instructions for the preparation",
   "bedrooms": "Bedrooms",
-  "do you want to delete the selected rooms?" : "Do you want to delete the selected rooms?"
+  "do you want to delete the selected rooms?" : "Do you want to delete the selected rooms?",
+  "loginAsManager":"LogIn as Manager",
+  "loginAsGuest":"LogIn as Guest",
+  "send": "Send",
+  "ResetPassword": "Reset password"
 }

@@ -1,10 +1,10 @@
 import axios from "axios";
 export class FoodServices{
     getFoodServices=()=>{
-        return axios.get("http://localhost:3000/foodServices")
+        return axios.get("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/foodServices")
     }
     postFoodService=(foodOrder)=>{
-        return axios.post("http://localhost:3000/foodServices",{
+        return axios.post("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/foodServices",{
             "id": foodOrder.id,
             "roomId": foodOrder.roomId,
             "managerId": foodOrder.managerId,
@@ -18,12 +18,12 @@ export class FoodServices{
         })
     }
     getFoodServiceByRoomId(id){
-        return axios.get("http://localhost:3000/room/"+id+"/foodServices")
+        return axios.get("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/room/"+id+"/foodServices")
     }
     deleteFoodServiceByRoomId(id){
-        return axios.delete("http://localhost:3000/room/"+id+"/foodServices")
+        return axios.delete("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/room/"+id+"/foodServices")
     }
     deleteFoodServiceById(id){
-        return axios.delete("http://localhost:3000/foodServices/"+id)
+        return axios.delete("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/"+id)
     }
 }

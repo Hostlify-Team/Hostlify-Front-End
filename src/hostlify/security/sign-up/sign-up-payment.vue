@@ -1,4 +1,5 @@
 <template>
+  <SwitchButton></SwitchButton>
   <div class="card" style="height: 98vh ">
     <pv-card style=" border-radius: 1rem;justify-content: center;">
       <template #content>
@@ -47,6 +48,7 @@
 
 <script>
 import {UserServices} from "@/services/user-services";
+import SwitchButton from "../../../components/switchButton.vue";
 
 export default {
   name: "sign-up-payment",
@@ -60,6 +62,9 @@ export default {
         plan:null
       }
     }
+  },
+  components:{
+    SwitchButton
   },
   methods:{
     register(){

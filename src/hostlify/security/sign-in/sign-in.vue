@@ -1,6 +1,7 @@
 <template >
+  <SwitchButton></SwitchButton>
   <div class="card" >
-    <pv-card class="SignInCard">
+    <!--pv-card-- class="SignInCard">
       <template #title >
         <div class="Text">
            {{$t("log in")}}
@@ -25,20 +26,52 @@
           </div>
         </div>
       </template>
+    </pv-card-->
+    <pv-card class="SignInCard">
+      <template #title >
+        <div class="Text">
+          {{$t("log in")}}
+        </div>
+      </template>
+      <template #content>
+        <div class="form_" style="display: block;justify-content: space-around;">
+          <div style="display: flex;justify-content: center; margin-bottom: 1rem">
+            <pv-button @click="signInProvitional('manager')">{{$t("loginAsManager")}}</pv-button>
+          </div>
+          <div style="display: flex;justify-content: center">
+            <pv-button @click="signInProvitional('guest')">{{$t("loginAsGuest")}}</pv-button>
+          </div>
+
+        </div>
+        <div class="footer">
+          <div class="Text">
+            <router-link to="/forgot-password" class="rw">
+              {{$t("did you forget")}} <br> {{$t("your password?")}}
+            </router-link>
+          </div>
+          <div class="buttons">
+            <router-link to="/sign-up-plans" class="rw"><pv-button>{{$t("create account")}}</pv-button></router-link>
+            <pv-button @click="signIn">{{$t("log in")}}</pv-button>
+          </div>
+        </div>
+      </template>
     </pv-card>
-    <navbar key="navbarReload"></navbar>
   </div>
 </template>
 
 <script>
 import {UserServices} from "../../../services/user-services";
 import {RoomServices} from "../../../services/room-services";
+import SwitchButton from "../../../components/switchButton.vue";
 export default {
   data(){
     return{
       email:"",
       password:""
     }
+  },
+  components:{
+    SwitchButton
   },
   methods:{
     signIn(){
@@ -58,6 +91,28 @@ export default {
           this.$router.push("/services")
         }
       })
+    },
+    signInProvitional(usertype){
+      if(usertype==="manager"){
+        this.sendMessage(usertype,"Diego Talledo")
+        sessionStorage.setItem("jwt","123456")
+        sessionStorage.setItem("id","1")
+        sessionStorage.setItem("name","Diego Talledo")
+        sessionStorage.setItem("email","diego@gmail.com")
+        sessionStorage.setItem("type",usertype)
+        sessionStorage.setItem("plan","Premium")
+        this.$router.push("/rooms")
+      }else{
+        this.sendMessage(usertype,"Alonso Sanchez")
+        sessionStorage.setItem("jwt","147852")
+        sessionStorage.setItem("id","2")
+        sessionStorage.setItem("name","Alonso Sanchez")
+        sessionStorage.setItem("email","alonso@gmail.com")
+        sessionStorage.setItem("type",usertype)
+        sessionStorage.setItem("plan",null)
+        this.$router.push("/services")
+      }
+      console.log("Ingresaste como: ",usertype)
     },
     sendMessage(type,name){
       let obj={

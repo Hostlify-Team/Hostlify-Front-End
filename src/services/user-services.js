@@ -18,10 +18,10 @@ export class UserServices{
             })
     }
     getUser(id){
-        return axios.get("http://localhost:3000/users/"+id)
+        return axios.get("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/users/"+id)
 
     }
     deleteUser(id){
-        return axios.delete("http://localhost:3000/users/"+id)
+        return axios.delete("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/users/"+id)
     }
 }

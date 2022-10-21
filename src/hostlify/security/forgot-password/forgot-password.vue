@@ -1,19 +1,20 @@
 <template>
+  <SwitchButton></SwitchButton>
   <div class="card" >
     <pv-card class="ForgotPasswordCard">
       <template #title >
         <div class="Text">
-          Recuperar Contraseña
+          {{$t("ResetPassword")}}
         </div>
       </template>
       <template #content>
         <div class="form">
-          <label for="user">Correo Electronico</label>
+          <label for="user">{{$t("email")}}</label>
           <pv-input-text id="user" class="input"></pv-input-text>
         </div>
         <div class="footer">
           <div class="buttons">
-            <pv-button @click="showDialog">Enviar</pv-button>
+            <pv-button @click="showDialog">{{$t("send")}}</pv-button>
           </div>
         </div>
       </template>
@@ -28,8 +29,12 @@
 </template>
 
 <script>
+import SwitchButton from "../../../components/switchButton.vue";
 export default {
   name: "forgot-password",
+  components:{
+    SwitchButton
+  },
   data(){
     return{
       confirmDialog: false,
