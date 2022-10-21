@@ -1,4 +1,4 @@
-# URL de la aplicacion desplegada para la entrega TB3: https://tranquil-hummingbird-55aa4c.netlify.app/
+# URL de la aplicacion desplegada para la entrega TB3: https://splendid-kashata-7cbe5b.netlify.app/
 
 # Hostlify-FrontEnd
 
