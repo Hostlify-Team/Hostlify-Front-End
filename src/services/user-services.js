@@ -1,5 +1,6 @@
 import axios from "axios";
 export class UserServices{
+
     register = (email,password,type,plan,name) => {
         return axios.post("http://localhost:3000/register",{
             email,
@@ -11,7 +12,7 @@ export class UserServices{
     }
 
     login= (email,password) =>{
-        return axios.post("http://localhost:3000/login",
+        return axios.post("https://localhost:7217/api/User/Login",
             {
                 email,
                 password
@@ -23,5 +24,17 @@ export class UserServices{
     }
     deleteUser(id){
         return axios.delete("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/users/"+id)
+    }
+    getUsers(token){
+        return axios.get("https://localhost:7217/api/User",{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
+    getUserByEmail(token,email){
+        return axios.get("https://localhost:7217/api/User/GetByEmail/"+email,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
+    loginTest(email,password){
+        return axios.post("https://localhost:7217/api/User/Login",{
+            email,
+            password
+        })
     }
 }
