@@ -70,7 +70,7 @@ export default {
       this.user.plan=JSON.parse(localStorage.getItem("selectedPlan"))
       this.user.type="manager"
       console.log("Usuario:",this.user)
-      new UserServices().register(this.user.email,this.user.password,this.user.type,this.user.plan,this.user.name).then(response=>{
+      new UserServices().register(this.user.email,this.user.password,this.user.plan,this.user.name).then(response=>{
         localStorage.clear()
         this.$router.push("/")
       }).catch(error=>{
