@@ -44,7 +44,7 @@
         <pv-column field="initialDate" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
         <pv-column field="price" header="Precio" :sortable="true" style="min-width: 16rem">
           <template #body="slotProps">
-            <p v-if="slotProps.data.price!==null">S/. {{slotProps.data.price}}</p>
+            <p v-if="slotProps.data.price!==0">S/. {{slotProps.data.price}}</p>
           </template>
         </pv-column>
         <pv-column field="status" header="Status" :sortable="true" style="min-width: 12rem">
@@ -92,7 +92,7 @@
           <div style="margin: 2rem">
             <span class="p-float-label">
               <pv-text-area type="text" id="description" v-model.trim="room.description" required="true" autofocus :class="{'p-invalid': submitted && !room.description }"/>
-              <label for="description">Decripcion</label>
+              <label for="description">Descripcion</label>
               <small class="p-error" v-if="submitted && !room.description">Se requiere una descripcion de habitacion</small>
             </span>
           </div>
@@ -130,7 +130,7 @@
           <div class="confirmation-content">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 1rem" />
             <span>Estas seguro que quieres eliminar la habitacion <br> <b>{{ room.roomName }}</b>?</span>
-            <span v-if="room.guestId!==null"> <br>Tambien se eliminara al huesped <b>{{ room.guestName }}</b></span>
+            <span v-if="room.guestId!==0"> <br>Tambien se eliminara al huesped <b>{{ room.guestName }}</b></span>
           </div>
           <template #footer >
             <pv-button icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("no")}}</pv-button>
@@ -258,6 +258,7 @@ export default {
   },
   data() {
     return {
+        token: sessionStorage.getItem("jwt"),
       rooms:[],
       addRoomDialog:false,
       editRoomDialog:false,
@@ -282,10 +283,10 @@ export default {
     };
   },
   created() {
-    new RoomServices().getRoomsForManager(sessionStorage.getItem("id")).then(response=>{
+    new RoomServices().getRoomsForManager(this.token,sessionStorage.getItem("id")).then(response=>{
       this.rooms=response.data
       this.setGuestInfo()
-      console.log("Rooms",this.rooms)
+      console.log("Rooms",response.data)
       this.setVisibleNotifications()
     })
 
@@ -367,17 +368,17 @@ export default {
       this.room.price = null
       this.room.emergency = false
       this.room.servicePending = false
-      this.room.image = "https://www.europahotelbelfast.com/wp-content/uploads/2021/12/Shannon-Suite-5.jpg"
-      new RoomServices().postRoom(this.room).then(response => {
-        this.rooms.push(response.data)
+      this.room.image = ""
+      new RoomServices().postRoom(this.token,this.room).then(response => {
+        this.rooms.push(this.room)
         console.log("Room added successfully", response.data)
         this.room = {}
         this.addRoomDialog = false
       })
     },
     editRoom() {
-      new RoomServices().updateRoom(this.room.id, this.room).then(response => {
-        let temporaryIndex=this.findIndexById(response.data.id)
+      new RoomServices().updateRoom(this.token, this.room.id, this.room).then(response => {
+        let temporaryIndex=this.findIndexById(this.room.id)
         this.rooms[temporaryIndex] = this.room
         this.room = {}
         this.editRoomDialog = false
@@ -386,13 +387,14 @@ export default {
           this.rooms[temporaryIndex].guestName=response.data.name
 
         })
+          console.log(response.status)
       })
     },
     deleteRoom(roomData) {
       if(roomData.guestId!==null){
         this.deleteGuest(roomData)
       }
-      new RoomServices().deleteRoom(this.room.id).then(response => {
+      new RoomServices().deleteRoom(this.token,this.room.id).then(response => {
         this.rooms = this.rooms.filter(
             (t) => t.id !== this.room.id
         );
@@ -405,7 +407,7 @@ export default {
     setGuestInfo(){
       for(let i=0;i<this.rooms.length;i++){
         if(this.rooms[i].guestId!==null){
-          new UserServices().getUser(this.rooms[i].guestId).then(response=>{
+          new UserServices().getUser(this.token,this.rooms[i].guestId).then(response=>{
             this.rooms[i].guestName=response.data.name
             let formatGoal=this.rooms[i].endDate.split("/")
             let goalDate=(formatGoal[1]+"/"+formatGoal[0]+"/"+formatGoal[2])
@@ -455,7 +457,7 @@ export default {
     },
     deleteRooms() {
       this.selectedRooms.forEach((room) => {
-        new RoomServices().deleteRoom(room.id).then((response) => {
+        new RoomServices().deleteRoom(this.token,room.id).then((response) => {
           this.rooms = this.rooms.filter(
               (t) => t.id !== room.id
           );

@@ -17,8 +17,8 @@ export class UserServices{
                 password
             })
     }
-    getUser(id){
-        return axios.get("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/users/"+id)
+    getUser(token,id){
+        return axios.get("https://localhost:7217/api/User/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
 
     }
     deleteUser(id){
@@ -29,11 +29,5 @@ export class UserServices{
     }
     getUserByEmail(token,email){
         return axios.get("https://localhost:7217/api/User/GetByEmail/"+email,{ headers: {"Authorization" : `Bearer ${token}`} })
-    }
-    loginTest(email,password){
-        return axios.post("https://localhost:7217/api/User/Login",{
-            email,
-            password
-        })
     }
 }

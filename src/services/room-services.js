@@ -1,6 +1,6 @@
 import axios from "axios";
 const http = axios.create({
-    baseURL:"https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/",
+    baseURL:"https://localhost:7217/api/",
     headers: { "Content-type": "application/json" },
 })
 
@@ -8,46 +8,38 @@ export class RoomServices{
     getRooms(){
         return http.get("rooms")
     }
-    getRoomsForManager(id){
-        return http.get("manager/"+id+"/rooms")
+    getRoomsForManager(token,id){
+        return http.get("Rooms/byManagerId?managerId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     getRoomForGuest(id){
         return http.get("guest/"+id+"/rooms")
     }
-    postRoom(room){
-        return http.post("rooms",{
+    postRoom(token,room){
+        return http.post("Rooms",{
             "roomName":room.roomName,
-            "managerId": room.managerId,
-            "guestId": room.guestId,
-            "initialDate": room.initialDate,
-            "endDate": room.endDate,
-            "status": room.status,
-            "guestStayComplete": room.guestStayComplete,
-            "price": room.price,
-            "image": room.image,
-            "description": room.description,
-            "emergency":room.emergency,
-            "servicePending": room.servicePending,
-        })
+            "ManagerId": room.managerId,
+            "Description": room.description
+        },{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    updateRoom(id,room){
-        return http.put("rooms/"+id,{
+    updateRoom(token,id,room){
+        let initialDate="";let endDate=""
+        if(room.status){initialDate="none";endDate="none"}
+        else {initialDate=room.initialDate;endDate=room.end}
+        return http.put("Rooms/"+id,{
             "roomName":room.roomName,
-            "managerId": room.managerId,
             "guestId": room.guestId,
-            "initialDate": room.initialDate,
-            "endDate": room.endDate,
+            "managerId": room.managerId,
+            "initialDate": initialDate,
+            "endDate": endDate,
             "status": room.status,
-            "guestStayComplete": room.guestStayComplete,
             "price": room.price,
-            "image": room.image,
             "description": room.description,
-            "emergency":room.emergency,
+            "emergency":room.end,
             "servicePending": room.servicePending,
-        })
+        },{ headers: {"Authorization" : `Bearer ${token}`} })
 
     }
-    deleteRoom(id){
-        return http.delete("rooms/"+id)
+    deleteRoom(token,id){
+        return http.delete("Rooms/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
 }
