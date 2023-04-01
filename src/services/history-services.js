@@ -4,8 +4,8 @@ const http = axios.create({
     headers: { "Content-type": "application/json" },
 })
 export class HistoryServices{
-    getHistoryForManager(id){
-        return http.get("manager/"+id+"/history")
+    getHistoryForManager(token,id){
+        return http.get("History/byManagerId?managerId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     postRoomHistory(token,room){
         return http.post("History/byResource",{
@@ -17,7 +17,7 @@ export class HistoryServices{
             "price": room.price
         },{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    deleteRoomHistory(id){
-        return http.delete("history/"+id)
+    deleteRoomHistory(token,id){
+        return http.delete("History/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
 }
