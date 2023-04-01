@@ -1,24 +1,21 @@
 import axios from "axios";
 const http = axios.create({
-    baseURL:"https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/",
+    baseURL:"https://localhost:7217/api/",//
     headers: { "Content-type": "application/json" },
 })
 export class HistoryServices{
     getHistoryForManager(id){
         return http.get("manager/"+id+"/history")
     }
-    postRoomHistory(room){
-        return http.post("history",{
+    postRoomHistory(token,room){
+        return http.post("History/byResource",{
             "roomName":room.roomName,
             "managerId": room.managerId,
-            "guestId": room.guestId,
             "guestName": room.guestName,
-            "guestEmail": room.guestEmail,
             "initialDate": room.initialDate,
             "endDate": room.endDate,
-            "price": room.price,
-            "description": room.description
-        })
+            "price": room.price
+        },{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     deleteRoomHistory(id){
         return http.delete("history/"+id)

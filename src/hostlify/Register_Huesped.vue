@@ -27,7 +27,6 @@
         <div style="display: flex ;justify-content: end">
           <pv-button class="buttonRegister"  @click="ResumeDialogData">Siguiente</pv-button>
         </div>
-
       </div>
       <div class="inputsContainer" v-show="visibleResumeDateGuest">
         <h1>Credenciales del usuario</h1>
@@ -55,6 +54,7 @@ export default {
 
   data(){
     return{
+        token: sessionStorage.getItem("jwt"),
       name:"",
       email:"",
       password:"",
@@ -70,7 +70,7 @@ export default {
     }
   },
   methods:{
-    validateCalendarDate(firstDayDate,lastDayDate){
+      validateCalendarDate(firstDayDate,lastDayDate){
       let day1 = new Date(firstDayDate);
       let day2 = new Date(lastDayDate);
 
@@ -82,7 +82,7 @@ export default {
         return true
       }
     },
-    getDiferenceDays(firstDayDate,lastDayDate){
+      getDiferenceDays(firstDayDate,lastDayDate){
       let day1 = new Date(firstDayDate);
       let day2 = new Date(lastDayDate);
 
@@ -91,7 +91,7 @@ export default {
 
       return totalDays
     },
-    register(){
+      register(){
       this.resumeDateGuest=false
       const date = new Date();
       let actualDay= date.getDate()
@@ -99,23 +99,26 @@ export default {
 
       let firstDayDate= (actualMonth+1)+"/"+actualDay+"/"+date.getFullYear()
       let lastDayDate= (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear()
-      new UserServices().register(this.email,this.password,"guest",null,this.name).then(response=>{
+      new UserServices().register(this.email,this.password,"none",this.name,"guest").then(response=>{
         console.log("Register Successfully")
         this.emitter.emit("register-form", false);
         const date = new Date();
         let actualDay= date.getDate()
         let actualMonth= date.getMonth()
-        let guest={
-            id: response.data.user.id,
-            initialDate: actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
-            lastDay:this.endDate.getDate(),
-            endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
-            progressTime: null,
-            firstDayDate: (actualMonth+1)+"/"+actualDay+"/"+date.getFullYear(),
-            lastDayDate: (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear(),
-            price: this.setPrice(firstDayDate,lastDayDate),
-          }
-        this.emitter.emit("new-guest", guest);
+          new UserServices().getUserByEmail(this.token,this.email).then(response=>{
+              let guest={
+                  id: response.data.id,
+                  initialDate: actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
+                  lastDay:this.endDate.getDate(),
+                  endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
+                  progressTime: null,
+                  firstDayDate: (actualMonth+1)+"/"+actualDay+"/"+date.getFullYear(),
+                  lastDayDate: (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear(),
+                  price: this.setPrice(firstDayDate,lastDayDate),
+              }
+              this.emitter.emit("new-guest", guest);
+          })
+
       })
 
     },

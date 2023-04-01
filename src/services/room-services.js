@@ -24,7 +24,7 @@ export class RoomServices{
     updateRoom(token,id,room){
         let initialDate="";let endDate=""
         if(room.status){initialDate="none";endDate="none"}
-        else {initialDate=room.initialDate;endDate=room.end}
+        else {initialDate=room.initialDate;endDate=room.endDate}
         return http.put("Rooms/"+id,{
             "roomName":room.roomName,
             "guestId": room.guestId,
@@ -41,5 +41,9 @@ export class RoomServices{
     }
     deleteRoom(token,id){
         return http.delete("Rooms/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
+    getRoomByRoomName(token,name){
+        return http.get("Rooms/byRoomName?roomName="+name,{ headers: {"Authorization" : `Bearer ${token}`} })
+
     }
 }

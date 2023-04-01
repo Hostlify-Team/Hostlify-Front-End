@@ -38,7 +38,7 @@
         <pv-column field="roomName" header="Habitacion" :sortable="true" style="min-width: 16rem"></pv-column>
         <pv-column field="guestId" header="Huesped" :sortable="true" style="min-width: 16rem">
           <template #body="slotProps">
-            <p v-if="slotProps.data.guestId!==null">{{slotProps.data.guestName}}</p>
+            <p v-if="slotProps.data.guestId!==0">{{slotProps.data.guestName}}</p>
           </template>
         </pv-column>
         <pv-column field="initialDate" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
@@ -70,8 +70,8 @@
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
-            <pv-button  v-if="slotProps.data.guestId!==null" @click="showDeleteGuestDialog(slotProps.data)">{{$t('evict')}}</pv-button>
-            <pv-button  v-if="slotProps.data.guestId===null" @click="showRegisterGuestDialog(slotProps.data)">{{$t('register')}}</pv-button>
+            <pv-button v-if="slotProps.data.status===false" @click="showDeleteGuestDialog(slotProps.data)">{{$t('evict')}}</pv-button>
+            <pv-button  v-if="slotProps.data.status" @click="showRegisterGuestDialog(slotProps.data)">{{$t('register')}}</pv-button>
           </template>
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
@@ -299,23 +299,24 @@ export default {
       this.addRoomDialog = true
     },
     showEditRoomDialog(data) {
-      console.log(data.id,data.emergency,data.guestId,data.servicePending)
-      this.room.id = data.id
-      this.room.roomName = data.roomName
-      this.room.managerId = data.managerId
-      this.room.guestId = data.guestId
-      this.room.status = data.status
-      this.room.progressTime = data.progressTime
-      this.room.guestStayComplete = data.guestStayComplete
-      this.room.initialDate = data.initialDate
-      this.room.endDate = data.endDate
-      this.room.price = data.price
-      this.room.image = data.image
-      this.room.description = data.description
-      this.room.emergency = data.emergency
-      this.room.servicePending = data.servicePending
-      this.editRoomDialog = true
-      this.setGuestInfo()
+      console.log(data.id,data.roomName,data.guestId,data.managerId)
+        this.room.id = data.id
+        this.room.roomName = data.roomName
+        this.room.managerId = data.managerId
+        this.room.guestId = data.guestId
+        this.room.guestName=data.guestName
+        this.room.status = data.status
+        this.room.progressTime = data.progressTime
+        this.room.guestStayComplete = data.guestStayComplete
+        this.room.initialDate = data.initialDate
+        this.room.endDate = data.endDate
+        this.room.price = data.price
+        this.room.image = data.image
+        this.room.description = data.description
+        this.room.emergency = data.emergency
+        this.room.servicePending = data.servicePending
+        this.editRoomDialog = true
+        this.setGuestInfo()
     },
     showDeleteRoomDialog(data) {
       this.room.roomName = data.roomName
@@ -359,36 +360,48 @@ export default {
     },
     addRoom() {
       this.room.managerId = parseInt(sessionStorage.getItem("id"))//Todo: Guardar en int Y actualizar el progress cuando se elimine
-      this.room.guestId = null
+      this.room.guestId = 0
       this.room.status = true
       this.room.progressTime = 0
       this.room.guestStayComplete = null
       this.room.initialDate = null
       this.room.endDate = null
-      this.room.price = null
+      this.room.price = 0
       this.room.emergency = false
       this.room.servicePending = false
       this.room.image = ""
       new RoomServices().postRoom(this.token,this.room).then(response => {
-        this.rooms.push(this.room)
-        console.log("Room added successfully", response.data)
-        this.room = {}
-        this.addRoomDialog = false
+          new RoomServices().getRoomByRoomName(this.token,this.room.roomName).then(response_=>{
+              this.room.id=response_.data.id
+              this.rooms.push(this.room)
+              this.room = {}
+              this.addRoomDialog = false
+              console.log("Room added successfully :)", this.rooms)
+          })
       })
+
     },
     editRoom() {
-      new RoomServices().updateRoom(this.token, this.room.id, this.room).then(response => {
         let temporaryIndex=this.findIndexById(this.room.id)
+        console.log("id: "+this.room.id+" GuestId: "+this.room.guestId+" roomGuest: "+this.room.price)
+        if(this.room.guestId===null){this.room.guestId=0;this.room.price=0}
+        new RoomServices().updateRoom(this.token, this.room.id, this.room).then(response => {
+          console.log("TEMP INDEX: "+this.room.id)
+          console.log("Se actualiza a: "+this.room)
         this.rooms[temporaryIndex] = this.room
         this.room = {}
         this.editRoomDialog = false
-        console.log(this.rooms[temporaryIndex].progressTime)
-        new UserServices().getUser(this.rooms[temporaryIndex].guestId).then(response=>{
-          this.rooms[temporaryIndex].guestName=response.data.name
-
-        })
           console.log(response.status)
       })
+        if(this.rooms[temporaryIndex].guestId!==0){
+            console.log("Estoy Actualizando el room CON UN HUESPED")
+            console.log("guestId: "+this.rooms[temporaryIndex].guestId)
+            new UserServices().getUser(this.token,this.rooms[temporaryIndex].guestId).then(response=>{
+                this.rooms[temporaryIndex].guestName=response.data.name
+                console.log("MI ROOM INDEX SE MODIFICO: "+this.rooms[temporaryIndex].guestName)
+            })
+        }
+
     },
     deleteRoom(roomData) {
       if(roomData.guestId!==null){
@@ -425,23 +438,23 @@ export default {
     },
     deleteGuest(roomData) {
       this.evictGuestDialog=false
-      new UserServices().deleteUser(roomData.guestId).then(response=>{
+      new UserServices().deleteUser(this.token, roomData.guestId).then(response=>{
           console.log("Guest deleted",response.data)
         if(this.room.servicePending===true){
           this.deleteServiceByRoomId(roomData.id)
         }
         let id=this.findIndexById(this.room.id)
-        this.rooms[id].guestId=null
+        this.rooms[id].guestId=0
         this.rooms[id].status=true
         this.rooms[id].initialDate=null
         this.rooms[id].endDate=null
-        this.rooms[id].price=null
+        this.rooms[id].price=0
         this.rooms[id].emergency=false
         this.rooms[id].progressTime=null
         this.rooms[id].totalTime=null
         this.rooms[id].guestStayComplete=null
         this.rooms[id].servicePending=false
-        new RoomServices().updateRoom(this.room.id,this.rooms[id]).then(response=>{
+        new RoomServices().updateRoom(this.token,this.room.id,this.rooms[id]).then(response=>{
           this.setGuestInfo()
           this.rooms[id].progressTime=0
           this.rooms[id].totalTime=null
@@ -617,20 +630,23 @@ export default {
       this.rooms[id].totalTime=this.setTotalTimeForGuest(response.firstDayDate,response.lastDayDate)
       this.rooms[id].progressTime=this.getProgressTimeForGuest(response.lastDayDate,this.rooms[id].totalTime)
 
-      new UserServices().getUser(this.rooms[id].guestId).then(response=>{
+      new UserServices().getUser(this.token, this.rooms[id].guestId).then(response=>{
         let roomStorable=this.rooms[id]
         roomStorable.guestName= response.data.name
         roomStorable.guestEmail= response.data.email
-        new HistoryServices().postRoomHistory(roomStorable).then(response=>{
+        new HistoryServices().postRoomHistory(this.token,roomStorable).then(response=>{
           console.log("Room added to history",response.data)
         })
       })
-      new RoomServices().updateRoom(this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
+        console.log("EL AUXILIAR: "+this.editRoomAuxiliaryId+this.rooms[id].status+this.rooms[id].guestId)
+      new RoomServices().updateRoom(this.token,this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
           this.setGuestInfo()
           console.log("Guest added successfully",response.data)
           this.editRoomAuxiliaryId=null
         this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
-        })
+        }).catch(reason=>{
+            console.log(reason)
+      })
       console.log(this.rooms)
     });
   }
