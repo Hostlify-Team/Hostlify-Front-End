@@ -11,8 +11,8 @@ export class RoomServices{
     getRoomsForManager(token,id){
         return http.get("Rooms/byManagerId?managerId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    getRoomForGuest(id){
-        return http.get("guest/"+id+"/rooms")
+    getRoomForGuest(token,id){
+        return http.get("Rooms/byGuestId?guestId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     postRoom(token,room){
         return http.post("Rooms",{

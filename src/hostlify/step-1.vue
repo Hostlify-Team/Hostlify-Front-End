@@ -54,6 +54,7 @@ export default {
   name: "step-1",
   data(){
     return{
+        token: sessionStorage.getItem("jwt"),
       roomName:null,
       dishes:["Ceviche","Lomo saltado","Aji de gallina","Causa Limeña","Arroz con pollo","Tallarines verdes","Pollo a la brasa"],
       selectedDish:null,
@@ -61,8 +62,8 @@ export default {
     }
   },
   created() {
-    new RoomServices().getRoomForGuest(sessionStorage.getItem("id")).then(response=> {
-      this.roomName=response.data[0].roomName
+    new RoomServices().getRoomForGuest(this.token, sessionStorage.getItem("id")).then(response=> {
+      this.roomName=response.data.roomName
     })
 
   },
