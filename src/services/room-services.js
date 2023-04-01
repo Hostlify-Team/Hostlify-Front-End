@@ -34,7 +34,7 @@ export class RoomServices{
             "status": room.status,
             "price": room.price,
             "description": room.description,
-            "emergency":room.end,
+            "emergency":room.emergency,
             "servicePending": room.servicePending,
         },{ headers: {"Authorization" : `Bearer ${token}`} })
 

@@ -25,7 +25,8 @@ export default {
   components: {},
   data(){
     return{
-      emergency:false,
+        token: sessionStorage.getItem("jwt"),
+        emergency:false,
     }
   },
   methods:{
@@ -41,18 +42,20 @@ export default {
       this.emergencyRoom(false)
     },
     emergencyRoom(emergencyStatus){
-      new RoomServices().getRoomForGuest(sessionStorage.getItem("id")).then(response=>{
-        let room =response.data[0]
+      new RoomServices().getRoomForGuest(this.token, sessionStorage.getItem("id")).then(response=>{
+        let room =response.data
         room.emergency=emergencyStatus
-        new RoomServices().updateRoom(response.data[0].id,room).then(response=>{
+          console.log("Room: "+room.roomName+room.guestId+room.emergency)
+        new RoomServices().updateRoom(this.token,response.data.id,room).then(response=>{
           console.log("Emegency: ",emergencyStatus)
         })
       })
     }
   },
   created() {
-    new RoomServices().getRoomForGuest(sessionStorage.getItem("id")).then(response=>{
-      this.emergency=response.data[0].emergency
+    new RoomServices().getRoomForGuest(this.token,sessionStorage.getItem("id")).then(response=>{
+        console.log("ACTIVO?: "+response.data.emergency)
+      this.emergency=response.data.emergency
     })
   }
 }
