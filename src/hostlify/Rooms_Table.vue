@@ -351,7 +351,7 @@ export default {
     showNotificationsRoomDialog(data){
       this.notificationsRoomsDialog=true
       this.room=data
-      this.getServicesForRoom(data.id)
+      this.getServicesForRoom( data.id)
     },
     showGuestServiceInfo(data,len){
       this.guestServiceInfoQuantity=len
@@ -506,7 +506,7 @@ export default {
       }
     },
     deleteService(id){
-      new FoodServices().deleteFoodServiceById(id).then(response=>{
+      new FoodServices().deleteFoodServiceById(this.token,id).then(response=>{
         console.log(response.data)
         this.guestServices = this.guestServices.filter(
             (t) => t.id !== id);
@@ -514,7 +514,7 @@ export default {
       if(this.guestServiceInfoQuantity===1){
         let temporalRoom=this.room
         temporalRoom.servicePending=false
-        new RoomServices().updateRoom(this.room.id,temporalRoom).then(response=>{
+        new RoomServices().updateRoom(this.token, this.room.id,temporalRoom).then(response=>{
           console.log("Rooms.service",response.data.service)
           this.notificationsRoomsDialog=false
         })
@@ -553,7 +553,7 @@ export default {
     getServicesForRoom(id){
       if(this.notificationsRoomsDialog===false){
         this.guestServices=[]
-        new FoodServices().getFoodServiceByRoomId(id).then(response=>{
+        new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
           for(let i=0;i<(response.data.length);i++){
             this.guestServices.push(response.data[i])
           }

@@ -20,12 +20,12 @@ export class FoodServices{
         },{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     getFoodServiceByRoomId(token,id){
-        return axios.get("FoodServices/byRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+        return http.get("FoodServices/byRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     deleteFoodServiceByRoomId(id){
         return axios.delete("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/room/"+id+"/foodServices")
     }
-    deleteFoodServiceById(id){
-        return axios.delete("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/"+id)
+    deleteFoodServiceById(token,id){
+        return http.delete("FoodServices/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
 }
