@@ -1,8 +1,14 @@
 import axios from "axios";
+
+const http = axios.create({
+    baseURL:"https://localhost:7217/api/",
+    headers: { "Content-type": "application/json" },
+})
+
 export class UserServices{
 
     register = (email,password,plan,name,type) => {
-        return axios.post("https://localhost:7217/api/User/Signup",{
+        return http.post("User/Signup",{
             name,
             password,
             email,
@@ -12,23 +18,20 @@ export class UserServices{
     }
 
     login= (email,password) =>{
-        return axios.post("https://localhost:7217/api/User/Login",
+        return http.post("User/Login",
             {
                 email,
                 password
             })
     }
     getUser(token,id){
-        return axios.get("https://localhost:7217/api/User/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+        return http.get("User/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
 
     }
     deleteUser(token,id){
-        return axios.delete("https://localhost:7217/api/User/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
-    }
-    getUsers(token){
-        return axios.get("https://localhost:7217/api/User",{ headers: {"Authorization" : `Bearer ${token}`} })
+        return http.delete("User/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     getUserByEmail(token,email){
-        return axios.get("https://localhost:7217/api/User/GetByEmail/"+email,{ headers: {"Authorization" : `Bearer ${token}`} })
+        return http.get("User/GetByEmail/"+email,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
 }

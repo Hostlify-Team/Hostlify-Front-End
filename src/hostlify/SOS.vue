@@ -45,16 +45,13 @@ export default {
       new RoomServices().getRoomForGuest(this.token, sessionStorage.getItem("id")).then(response=>{
         let room =response.data
         room.emergency=emergencyStatus
-          console.log("Room: "+room.roomName+room.guestId+room.emergency)
         new RoomServices().updateRoom(this.token,response.data.id,room).then(response=>{
-          console.log("Emegency: ",emergencyStatus)
         })
       })
     }
   },
   created() {
     new RoomServices().getRoomForGuest(this.token,sessionStorage.getItem("id")).then(response=>{
-        console.log("ACTIVO?: "+response.data.emergency)
       this.emergency=response.data.emergency
     })
   }

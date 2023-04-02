@@ -48,7 +48,6 @@ export default {
               sessionStorage.setItem("email",response.data.email)
               sessionStorage.setItem("type",response.data.type)
               sessionStorage.setItem("plan",response.data.plan)
-              console.log("Ingresaste como: ",response.data.type)
               if(response.data.type==="manager"){
                   this.sendMessage("manager",response.data.name)
                   this.$router.push("/rooms")

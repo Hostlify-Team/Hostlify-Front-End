@@ -333,7 +333,6 @@ export default {
       this.registerGuestDialog = true
       this.editRoomAuxiliaryId=data.id
       sessionStorage.setItem("temporaryRoomId",data.id)
-      console.log("Room id: ",data.id,data.roomName)
     },
     showDeleteGuestDialog(data){
       this.evictGuestDialog=true
@@ -419,7 +418,7 @@ export default {
     },
     setGuestInfo(){
       for(let i=0;i<this.rooms.length;i++){
-        if(this.rooms[i].guestId!==null){
+        if(this.rooms[i].guestId!==0){
           new UserServices().getUser(this.token,this.rooms[i].guestId).then(response=>{
             this.rooms[i].guestName=response.data.name
             let formatGoal=this.rooms[i].endDate.split("/")
@@ -428,8 +427,10 @@ export default {
             let actualDay= currentTime.getDate()
             let actualMonth= currentTime.getMonth()
             let currentTimeFormat=(actualMonth+1)+"/"+actualDay+"/"+currentTime.getFullYear()
+            this.rooms[i].guestStayComplete=false
             this.rooms[i].totalTime=this.setTotalTimeForGuest(currentTimeFormat,goalDate)
             this.rooms[i].progressTime=this.getProgressTimeForGuest(goalDate,this.rooms[i].totalTime)
+
           })
         }else {
           this.rooms[i].guestName=null
@@ -492,9 +493,6 @@ export default {
       this.serviceInformation=false
     },
     findIndexById(id) {
-      console.log("findIndexByIdid:",id)
-      console.log("findIndexByIdtypeid:",typeof (id))
-      console.log("resultado",this.rooms.findIndex((room) => room.id === id))
       return this.rooms.findIndex((room) => room.id === id);
     },
     exportToCSV() {
@@ -570,7 +568,6 @@ export default {
           if(this.rooms[i].guestStayComplete===false){
             this.increaseProgress(i)
             if(this.rooms[i].progressTime===100 && this.rooms[i].guestStayComplete===false){
-              console.log("En progreso",this.rooms[i].guestId)
               this.room=[]
               this.rooms[i].guestStayComplete=true
               this.room=this.rooms[i]
@@ -578,20 +575,21 @@ export default {
             }
           }
         }
-      }, 60000);
+      }, 30000);
     },
     watchServices(){
+      console.log("Watching services")
       this.interval = setInterval(() => {
         for(let i=0;i<this.rooms.length;i++){
           if(this.rooms[i].guestStayComplete===false){
-            new RoomServices().getRoomForGuest(this.rooms[i].guestId).then(response=>{
-              if(response.data[0].emergency===true){
+            new RoomServices().getRoomForGuest(this.token,this.rooms[i].guestId).then(response=>{
+              if(response.data.emergency===true){
                 this.rooms[i].emergency=true
-              }if(response.data[0].emergency===false){
+              }if(response.data.emergency===false){
                 this.rooms[i].emergency=false
               }
-              if(response.data[0].servicePending!==false){
-                this.rooms[i].servicePending=response.data[0].servicePending
+              if(response.data.servicePending!==false){
+                this.rooms[i].servicePending=response.data.servicePending
                 this.setVisibleNotifications()
               }else {
                 this.rooms[i].servicePending=false
@@ -599,12 +597,13 @@ export default {
             })
           }
         }
-      }, 5000);
+      }, 9000);
     },
     increaseProgress(i){
       let format=this.rooms[i].endDate.split("/")
       let goalDate=(format[1]+"/"+format[0]+"/"+format[2])
       this.rooms[i].progressTime=this.getProgressTimeForGuest(goalDate,this.rooms[i].totalTime)
+      console.log("ProgressBar update")
     },
   },
   mounted() {
@@ -615,11 +614,7 @@ export default {
     });
     this.emitter.on("new-guest", response => {
       let auxiliaryRoomId= parseInt(sessionStorage.getItem("temporaryRoomId"))
-      console.log("Json",auxiliaryRoomId)
       let id=this.findIndexById(auxiliaryRoomId)
-      console.log("Index",id)
-      console.log(this.rooms[id].guestId,this.rooms)
-      console.log("Response",response.id)
       this.rooms[id].guestId=response.id
       this.rooms[id].status=false
       this.rooms[id].initialDate=response.initialDate
@@ -638,14 +633,13 @@ export default {
           console.log("Room added to history",response.data)
         })
       })
-        console.log("EL AUXILIAR: "+this.editRoomAuxiliaryId+this.rooms[id].status+this.rooms[id].guestId)
       new RoomServices().updateRoom(this.token,this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
           this.setGuestInfo()
           console.log("Guest added successfully",response.data)
           this.editRoomAuxiliaryId=null
         this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
         }).catch(reason=>{
-            console.log(reason)
+
       })
       console.log(this.rooms)
     });

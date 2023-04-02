@@ -131,7 +131,6 @@ export default {
       this.$router.push("/sign-up-register")
     },
     addTemporaryPlan(plan){
-      console.log("PLAN TEMPORALMENTE GUARDADO: ",plan)
       localStorage.setItem("selectedPlan",JSON.stringify(plan))
     }
   }

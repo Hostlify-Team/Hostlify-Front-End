@@ -76,7 +76,6 @@ export default {
 
       if((day2.getMonth()+1)<(day1.getMonth()+1) && day2.getFullYear()<=day1.getFullYear() ||
           (day2.getMonth()+1)===(day1.getMonth()+1) && day2.getDate()<day1.getDate() && day2.getFullYear()<=day1.getFullYear()){
-        console.log("Elegiste una fecha antigua")
         return false
       }else{
         return true

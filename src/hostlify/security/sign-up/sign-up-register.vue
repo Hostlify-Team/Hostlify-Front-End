@@ -52,9 +52,6 @@ export default {
   },
   methods:{
     addTemporaryUser(){
-      console.log("nombre temporalmente guardado: ",this.user.name)
-      console.log("nombre temporalmente guardado: ",this.user.email)
-      console.log("nombre temporalmente guardado: ",this.user.password)
       localStorage.setItem("user",JSON.stringify(this.user))
     }
   }
