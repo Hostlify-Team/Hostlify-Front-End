@@ -22,6 +22,11 @@ const router = createRouter({
       component: () => import('../hostlify/services.vue')
     },
     {
+      path: '/clean-room',
+      name: 'cleanRoom',
+      component: () => import('../hostlify/CleanRoomService.vue')
+    },
+    {
       path: '/step-1',
       name: 'step1',
       component: () => import('../hostlify/step-1.vue')

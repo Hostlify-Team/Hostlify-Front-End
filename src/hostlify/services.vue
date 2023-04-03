@@ -20,7 +20,7 @@
             </template>
             <template #footer>
               <div style="display: flex; justify-content: center">
-                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('food')">{{$t("request service")}}</pv-button>
+                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('step-1')">{{$t("request service")}}</pv-button>
               </div>
             </template>
           </pv-card>
@@ -28,44 +28,23 @@
         <div class="cardiv">
           <pv-card class="card">
             <template #content>
-              <div>
+              <di>
                 <div style="display: flex; justify-content: center;margin-top: 3rem">
-                  <img src="@/assets/garden.png" alt="" class="img">
+                  <img src="@/assets/cleaning.png" alt="" class="img">
                 </div>
                 <div style="display: flex; justify-content: center">
-                  <h2>{{$t("recreational areas")}}</h2>
+                  <h2>{{$t("room cleaning")}}</h2>
                 </div>
-
-              </div>
+              </di>
             </template>
             <template #footer>
               <div style="display: flex; justify-content: center">
-                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Recreational')">{{$t("request service")}}</pv-button>
+                <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('clean-room')">{{$t("request service")}}</pv-button>
               </div>
             </template>
           </pv-card>
         </div>
       </div>
-      <div class="secondGroup">
-        <pv-card class="card">
-          <template #content>
-            <di>
-              <div style="display: flex; justify-content: center;margin-top: 3rem">
-                <img src="@/assets/cleaning.png" alt="" class="img">
-              </div>
-              <div style="display: flex; justify-content: center">
-                <h2>{{$t("room cleaning")}}</h2>
-              </div>
-            </di>
-          </template>
-          <template #footer>
-            <div style="display: flex; justify-content: center">
-              <pv-button style="border-radius: 0.4rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="saveService('Cleaning')">{{$t("request service")}}</pv-button>
-            </div>
-          </template>
-        </pv-card>
-      </div>
-
 
     </div>
   </div>
@@ -84,7 +63,7 @@ export default {
     saveService(type){
       console.log(type)
       localStorage.setItem("service",type)
-      this.$router.push("/step-1")
+      this.$router.push("/"+type)
     }
   }
 }

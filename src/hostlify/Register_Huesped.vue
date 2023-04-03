@@ -105,6 +105,7 @@ export default {
         let actualDay= date.getDate()
         let actualMonth= date.getMonth()
           new UserServices().getUserByEmail(this.token,this.email).then(response=>{
+            console.log(response.data.id,response.data.name)
               let guest={
                   id: response.data.id,
                   initialDate: actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
@@ -115,6 +116,7 @@ export default {
                   lastDayDate: (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear(),
                   price: this.setPrice(firstDayDate,lastDayDate),
               }
+            console.log(guest.id,guest.price)
               this.emitter.emit("new-guest", guest);
           })
 

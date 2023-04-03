@@ -107,13 +107,33 @@ export default {
       defaultPlan: true,
       customPlan: false,
       customPlanPrice:null,
-      plans:null
+      plans:[]
     }
   },
   created() {
-    new PlanServices().getPlans().then(response=>{
-      this.plans=response.data
-    })
+    var planStandar={} ;
+    var planPro={} ;
+    var planPremium={} ;
+
+    planStandar.id=1
+    planStandar.name="Standard"
+    planStandar.rooms=30
+    planStandar.price=180
+
+    planPro.id=2
+    planPro.name="Pro"
+    planPro.rooms=50
+    planPro.price=260
+
+    planPremium.id=3
+    planPremium.name="Premium"
+    planPremium.rooms=null
+    planPremium.price=400
+
+    this.plans.push(planStandar)
+    this.plans.push(planPro)
+    this.plans.push(planPremium)
+
   },
   methods:{
     changePlan(){
