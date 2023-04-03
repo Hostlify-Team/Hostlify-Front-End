@@ -82,7 +82,7 @@
                             <p style="margin: 0;padding: 0 0 0.5rem 0.5rem ;align-items: end ;display: table-cell;vertical-align: bottom;color: darkgrey" >mo*</p>
                           </div>
                         </div>
-                        <pv-button style="margin-top: .5em; background-color: #D6A049; color:white" @click="planSelected('Custom')">Elegir</pv-button>
+                        <pv-button style="margin-top: .5em; background-color: #D6A049; color:white" @click="customPlanSelected('Custom',customPlanPrice*6.50)">Elegir</pv-button>
                       </div>
                     </div>
                   </template>
@@ -130,8 +130,16 @@ export default {
       this.addTemporaryPlan(plan)
       this.$router.push("/sign-up-register")
     },
+    customPlanSelected(plan,price){
+      this.customPlanPrice=price
+      this.addTemporaryPlan(plan)
+      this.$router.push("/sign-up-register")
+    },
     addTemporaryPlan(plan){
       localStorage.setItem("selectedPlan",JSON.stringify(plan))
+      if(plan==="Custom"){
+        localStorage.setItem("mountPlan",JSON.stringify(this.customPlanPrice))
+      }
     }
   }
 }

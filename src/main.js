@@ -42,6 +42,7 @@ import InputNumber from 'primevue/inputnumber';
 import ProgressBar from 'primevue/progressbar';
 import Calendar from 'primevue/calendar';
 import Badge from 'primevue/badge';
+import Image from 'primevue/image';
 
 
 const app = createApp(App)
@@ -79,6 +80,7 @@ app.component("pv-progress-bar",ProgressBar)
 app.component("pv-calendar",Calendar)
 app.component("pv-text-area",Textarea)
 app.component("pv-badge",Badge)
+app.component("pv-image",Image)
 app.directive('badge', BadgeDirective);
 
 
