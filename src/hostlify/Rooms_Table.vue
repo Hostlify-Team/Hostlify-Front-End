@@ -609,38 +609,46 @@ export default {
   mounted() {
     this.startProgress()
     this.watchServices()
-    this.emitter.on("register-form", response => {
-      this.registerGuestDialog = response;
-    });
-    this.emitter.on("new-guest", response => {
-      let auxiliaryRoomId= parseInt(sessionStorage.getItem("temporaryRoomId"))
-      let id=this.findIndexById(auxiliaryRoomId)
-      this.rooms[id].guestId=response.id
-      this.rooms[id].status=false
-      this.rooms[id].initialDate=response.initialDate
-      this.rooms[id].endDate=response.endDate
-      this.rooms[id].price=response.price
-      this.rooms[id].emergency=false
-      this.rooms[id].guestStayComplete=false
-      this.rooms[id].totalTime=this.setTotalTimeForGuest(response.firstDayDate,response.lastDayDate)
-      this.rooms[id].progressTime=this.getProgressTimeForGuest(response.lastDayDate,this.rooms[id].totalTime)
 
-      new UserServices().getUser(this.token, this.rooms[id].guestId).then(response=>{
-        let roomStorable=this.rooms[id]
-        roomStorable.guestName= response.data.name
-        roomStorable.guestEmail= response.data.email
-        new HistoryServices().postRoomHistory(this.token,roomStorable).then(response=>{
-          console.log("Room added to history",response.data)
+    this.emitter.on("new-guest", guestResponse => {
+      this.registerGuestDialog=false
+      console.log("GUEST EMITTED: "+guestResponse)
+      new UserServices().register(guestResponse.userEmail,guestResponse.userPassword,'none',guestResponse.userName,'guest').then(response=>{
+        console.log("User registered Successfully")
+        const date = new Date();
+        let actualDay= date.getDate()
+        let actualMonth= date.getMonth()
+        new UserServices().getUserByEmail(this.token,guestResponse.userEmail).then(response=>{
+          console.log("Currente User Registered: "+response.data.id,response.data.name)
+          let auxiliaryRoomId= parseInt(sessionStorage.getItem("temporaryRoomId"))
+          let id=this.findIndexById(auxiliaryRoomId)
+          console.log("QQQQQQQQQQ: "+this.rooms[id].guestId)
+          this.rooms[id].guestId=response.data.id
+          this.rooms[id].status=false
+          this.rooms[id].initialDate=actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear()
+          this.rooms[id].endDate=guestResponse.endDate
+          this.rooms[id].price=guestResponse.price
+          this.rooms[id].emergency=false
+          this.rooms[id].guestStayComplete=false
+          this.rooms[id].totalTime=this.setTotalTimeForGuest(guestResponse.firstDayDate,guestResponse.lastDayDate)
+          this.rooms[id].progressTime=this.getProgressTimeForGuest(guestResponse.lastDayDate,this.rooms[id].totalTime)
+
+          new RoomServices().updateRoom(this.token,this.editRoomAuxiliaryId,this.rooms[id]).then(response_update=>{
+            this.setGuestInfo()
+            console.log("Guest added successfully",response_update.data)
+            this.editRoomAuxiliaryId=null
+            this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
+            let roomStorable=this.rooms[id]
+            roomStorable.guestName= response.data.name
+            roomStorable.guestEmail= response.data.email
+            new HistoryServices().postRoomHistory(this.token,roomStorable).then(response_history=>{
+              console.log("Room added to history",response_history.data)
+            })
+
+          })
         })
       })
-      new RoomServices().updateRoom(this.token,this.editRoomAuxiliaryId,this.rooms[id]).then(response=>{
-          this.setGuestInfo()
-          console.log("Guest added successfully",response.data)
-          this.editRoomAuxiliaryId=null
-        this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
-        }).catch(reason=>{
 
-      })
       console.log(this.rooms)
     });
   }

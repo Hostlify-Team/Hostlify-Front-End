@@ -10,7 +10,7 @@ const emitter = mitt();
 import BadgeDirective from 'primevue/badgedirective';
 
 //PrimeVue Styles
-import "primevue/resources/themes/vela-orange/theme.css"       //theme
+import "primevue/resources/themes/mdc-dark-indigo/theme.css"       //theme
 import "primevue/resources/primevue.min.css"                //core css
 import "primeicons/primeicons.css"                           //icons
 

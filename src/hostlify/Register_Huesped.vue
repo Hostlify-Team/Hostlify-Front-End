@@ -91,37 +91,26 @@ export default {
       return totalDays
     },
       register(){
-      this.resumeDateGuest=false
+
       const date = new Date();
+
       let actualDay= date.getDate()
       let actualMonth= date.getMonth()
 
       let firstDayDate= (actualMonth+1)+"/"+actualDay+"/"+date.getFullYear()
       let lastDayDate= (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear()
-      new UserServices().register(this.email,this.password,"none",this.name,"guest").then(response=>{
-        console.log("Register Successfully")
-        this.emitter.emit("register-form", false);
-        const date = new Date();
-        let actualDay= date.getDate()
-        let actualMonth= date.getMonth()
-          new UserServices().getUserByEmail(this.token,this.email).then(response=>{
-            console.log(response.data.id,response.data.name)
-              let guest={
-                  id: response.data.id,
-                  initialDate: actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
-                  lastDay:this.endDate.getDate(),
-                  endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
-                  progressTime: null,
-                  firstDayDate: (actualMonth+1)+"/"+actualDay+"/"+date.getFullYear(),
-                  lastDayDate: (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear(),
-                  price: this.setPrice(firstDayDate,lastDayDate),
-              }
-            console.log(guest.id,guest.price)
-              this.emitter.emit("new-guest", guest);
-          })
 
-      })
-
+        let guestEmitter= {
+          userEmail: this.email,
+          userPassword: this.password,
+          userName: this.name,
+          endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
+          lastDay:this.endDate.getDate(),
+          firstDayDate: (actualMonth + 1) + "/" + actualDay + "/" + date.getFullYear(),
+          lastDayDate: (this.endDate.getMonth() + 1) + "/" + this.endDate.getDate() + "/" + this.endDate.getFullYear(),
+          price: this.setPrice(firstDayDate, lastDayDate),
+        }
+        this.emitter.emit("new-guest", guestEmitter);
     },
     setPrice(firstDayDate,lastDayDate){
       let day1 = new Date(firstDayDate);
