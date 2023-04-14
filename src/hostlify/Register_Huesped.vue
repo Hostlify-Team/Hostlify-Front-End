@@ -6,11 +6,6 @@
         <p >Datos del Huesped</p>
         <pv-input-text class="inputRegister" type="text" placeholder="Nombre y apellido*" v-model="name"/>
         <pv-input-text class="inputRegister" type="text" placeholder="Correo Electronico*" v-model="email"/>
-        <div style="display: flex;justify-content: space-between">
-          <pv-input-text class="inputRegister" style="width: 28%" type="text" placeholder="Edad*" />
-          <pv-input-text class="inputRegister" style="width: 28%" type="text" placeholder="Pais*" />
-          <pv-input-text class="inputRegister" style="width: 28%" type="text" placeholder="DNI*" />
-        </div>
         <pv-input-text class="inputRegister" type="text" placeholder="Contraseña*" v-model="password"/>
         <div style="display: flex ;justify-content: end">
           <pv-button class="buttonRegister" style="align-items: end" @click="showDateDialog">Siguiente</pv-button>
@@ -47,7 +42,6 @@
 </template>
 
 <script>
-import {UserServices} from "../services/user-services";
 export default {
   name: "Registrar Huesped",
   components: {},

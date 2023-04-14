@@ -14,6 +14,9 @@ export class RoomServices{
     getRoomForGuest(token,id){
         return http.get("Rooms/byGuestId?guestId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
+    evictGuest(token,id){
+        return http.put("Rooms/evict/"+id,{},{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
     postRoom(token,room){
         return http.post("Rooms",{
             "roomName":room.roomName,
@@ -44,6 +47,18 @@ export class RoomServices{
     }
     getRoomByRoomName(token,name){
         return http.get("Rooms/byRoomName?roomName="+name,{ headers: {"Authorization" : `Bearer ${token}`} })
+
+    }
+    registerGuest(token,id,registerGuest){
+        return http.put("Rooms/register/"+id,{
+            "Id":registerGuest.roomId,
+            "name": registerGuest.name,
+            "password": registerGuest.password,
+            "email": registerGuest.email,
+            "initialDate": registerGuest.initialDate,
+            "endDate": registerGuest.endDate,
+            "price": registerGuest.price
+        },{ headers: {"Authorization" : `Bearer ${token}`} })
 
     }
 }

@@ -41,21 +41,20 @@ export default {
   methods:{
     signIn(){
       new UserServices().login(this.email,this.password).then(response=>{
-        sessionStorage.setItem("jwt",response.data)
-          new UserServices().getUserByEmail(response.data,this.email).then(response=>{
-              sessionStorage.setItem("id",response.data.id)
-              sessionStorage.setItem("name",response.data.name)
-              sessionStorage.setItem("email",response.data.email)
-              sessionStorage.setItem("type",response.data.type)
-              sessionStorage.setItem("plan",response.data.plan)
-              if(response.data.type==="manager"){
-                  this.sendMessage("manager",response.data.name)
-                  this.$router.push("/rooms")
-              }else{
-                  this.sendMessage("guest",response.data.name)
-                  this.$router.push("/services")
-              }
-          })
+        sessionStorage.setItem("jwt",response.data.jwt)
+          sessionStorage.setItem("id",response.data.id)
+          sessionStorage.setItem("name",response.data.name)
+          sessionStorage.setItem("email",response.data.email)
+          sessionStorage.setItem("type",response.data.type)
+          sessionStorage.setItem("plan",response.data.plan)
+          if(response.data.type==="manager"){
+              this.sendMessage("manager",response.data.name)
+              this.$router.push("/rooms")
+          }
+          else{
+              this.sendMessage("guest",response.data.name)
+              this.$router.push("/services")
+          }
       })
     },
     sendMessage(type,name){

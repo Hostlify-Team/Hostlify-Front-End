@@ -370,13 +370,11 @@ export default {
       this.room.servicePending = false
       this.room.image = ""
       new RoomServices().postRoom(this.token,this.room).then(response => {
-          new RoomServices().getRoomByRoomName(this.token,this.room.roomName).then(response_=>{
-              this.room.id=response_.data.id
-              this.rooms.push(this.room)
-              this.room = {}
-              this.addRoomDialog = false
-              console.log("Room added successfully :)", this.rooms)
-          })
+          this.room.id=response.data
+          this.rooms.push(this.room)
+          this.room = {}
+          this.addRoomDialog = false
+          console.log("Room added successfully :)", this.rooms)
       })
 
     },
@@ -439,35 +437,30 @@ export default {
     },
     deleteGuest(roomData) {
       this.evictGuestDialog=false
-      new UserServices().deleteUser(this.token, roomData.guestId).then(response=>{
-          console.log("Guest deleted",response.data)
-        if(this.room.servicePending===true){
-          this.deleteServiceByRoomId(roomData.id)
-        }
-        let id=this.findIndexById(this.room.id)
-        this.rooms[id].guestId=0
-        this.rooms[id].status=true
-        this.rooms[id].initialDate=null
-        this.rooms[id].endDate=null
-        this.rooms[id].price=0
-        this.rooms[id].emergency=false
-        this.rooms[id].progressTime=null
-        this.rooms[id].totalTime=null
-        this.rooms[id].guestStayComplete=null
-        this.rooms[id].servicePending=false
-        new RoomServices().updateRoom(this.token,this.room.id,this.rooms[id]).then(response=>{
-          this.setGuestInfo()
-          this.rooms[id].progressTime=0
-          this.rooms[id].totalTime=null
-          this.rooms[id].guestStayComplete=null
-          console.log("Guest evicted successfully",response.data)
-          this.editRoomAuxiliaryId=null
-          this.$toast.add({severity:'success', summary: 'Huesped desalojado', detail:'Se desalojo el huesped correctamente', life: 3000});
-        }).catch(Result=>{
-          console.log("Handled Error",Result.data)
-        })
+        new RoomServices().evictGuest(this.token,this.room.id).then(response=>{
+            if(this.room.servicePending===true){
+                this.deleteServiceByRoomId(roomData.id)
+            }
+            let id=this.findIndexById(this.room.id)
+            this.rooms[id].guestId=0
+            this.rooms[id].status=true
+            this.rooms[id].initialDate=null
+            this.rooms[id].endDate=null
+            this.rooms[id].price=0
+            this.rooms[id].emergency=false
+            this.rooms[id].progressTime=null
+            this.rooms[id].totalTime=null
+            this.rooms[id].guestStayComplete=null
+            this.rooms[id].servicePending=false
+            this.setGuestInfo()
+            this.rooms[id].progressTime=0
+            this.rooms[id].totalTime=null
+            this.rooms[id].guestStayComplete=null
+            this.editRoomAuxiliaryId=null
+            console.log("Guest evicted successfully")
+            this.$toast.add({severity:'success', summary: 'Huesped desalojado', detail:'Se desalojo el huesped correctamente', life: 3000});
 
-      })
+        })
     },
     deleteRooms() {
       this.selectedRooms.forEach((room) => {
@@ -613,7 +606,43 @@ export default {
     this.emitter.on("new-guest", guestResponse => {
       this.registerGuestDialog=false
       console.log("GUEST EMITTED: "+guestResponse)
-      new UserServices().register(guestResponse.userEmail,guestResponse.userPassword,'none',guestResponse.userName,'guest').then(response=>{
+        const date = new Date();
+        let actualDay= date.getDate()
+        let actualMonth= date.getMonth()
+        let auxiliaryRoomId= parseInt(sessionStorage.getItem("temporaryRoomId"))
+        let id=this.findIndexById(auxiliaryRoomId)
+
+        let guestRegister={
+            roomId: this.rooms[id].id,
+            name: guestResponse.userName,
+            email: guestResponse.userEmail,
+            password: guestResponse.userPassword,
+            initialDate: this.rooms[id].initialDate=actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
+            endDate:guestResponse.endDate,
+            price:guestResponse.price
+        }
+        new UserServices().register(guestRegister.email,guestRegister.password,'none',guestRegister.name,'guest').then(response=>{
+            console.log("User Register")
+            new RoomServices().registerGuest(this.token,this.rooms[id].id,guestRegister).then(response=>{
+                this.rooms[id].guestId=response.data.id
+                this.rooms[id].status=false
+                this.rooms[id].initialDate=actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear()
+                this.rooms[id].endDate=guestResponse.endDate
+                this.rooms[id].price=guestResponse.price
+                this.rooms[id].emergency=false
+                this.rooms[id].guestStayComplete=false
+                this.rooms[id].totalTime=this.setTotalTimeForGuest(guestResponse.firstDayDate,guestResponse.lastDayDate)
+                this.rooms[id].progressTime=this.getProgressTimeForGuest(guestResponse.lastDayDate,this.rooms[id].totalTime)
+                this.setGuestInfo()//AQUI ESTA MI ERROR
+                console.log("Guest added successfully",response.data)
+                this.editRoomAuxiliaryId=null
+                this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
+
+            }).catch(error=>{
+            })
+        })
+
+      /*new UserServices().register(guestResponse.userEmail,guestResponse.userPassword,'none',guestResponse.userName,'guest').then(response=>{
         console.log("User registered Successfully")
         const date = new Date();
         let actualDay= date.getDate()
@@ -647,8 +676,7 @@ export default {
 
           })
         })
-      })
-
+      })*/
       console.log(this.rooms)
     });
   }

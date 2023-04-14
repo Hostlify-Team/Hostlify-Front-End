@@ -96,7 +96,6 @@
   </div>
 </template>
 <script>
-import {PlanServices} from "../../../services/plan-services";
 export default {
   name: "sign-up-plans",
   components: {},
