@@ -690,23 +690,20 @@ export default {
           }
           this.registerGuestDialog=false
           this.editRoomAuxiliaryId=parseInt(sessionStorage.getItem("temporaryRoomId"))
-          console.log("this.editRoomAuxiliaryId: "+this.editRoomAuxiliaryId )
-          console.log("Romiews: "+this.rooms )
           let id=this.findIndexById(this.editRoomAuxiliaryId)
-          console.log("id index: "+id)
 
           let guestRegister={
               roomId: this.rooms[id].id,
               name: guestEmitter.userName,
               email: guestEmitter.userEmail,
               password: guestEmitter.userPassword,
-              initialDate: this.rooms[id].initialDate=actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
+              initialDate:actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
               endDate:guestEmitter.endDate,
               price:guestEmitter.price
           }
           new UserServices().register(guestRegister.email,guestRegister.password,'none',guestRegister.name,'guest').then(response=>{
+              console.log("ESTOY ADENTRO")
               new RoomServices().registerGuest(this.token,this.rooms[id].id,guestRegister).then(response=>{
-                  console.log("EL ROOM FOR GUEST: "+response.data)
                   this.rooms[id].guestName=guestRegister.name
                   this.rooms[id].guestId=response.data
                   this.rooms[id].status=false
@@ -717,10 +714,14 @@ export default {
                   this.rooms[id].guestStayComplete=false
                   this.rooms[id].totalTime=this.setTotalTimeForGuest(guestEmitter.firstDayDate,guestEmitter.lastDayDate)
                   this.rooms[id].progressTime=this.getProgressTimeForGuest(guestEmitter.lastDayDate,this.rooms[id].totalTime)
-                  this.setGuestInfo()//AQUI ESTA MI ERROR
+                  this.setGuestInfo()
                   console.log("Guest added successfully")
                   this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
+                  this.reset()
+
               })
+          }).catch(error=>{
+              this.reset()
           })
       },
       setPrice(firstDayDate,lastDayDate){
@@ -769,8 +770,21 @@ export default {
       showDateDialog(){
           this.visibleFormDialog=false
           this.visibleDateDialog=true
+      },
+      reset(){
+            this.name="",
+              this.email="",
+              this.password="",
+              this.endDate=null,
+              this.price=84,
+              this.visibleResumeDateGuest=false,
+              this.visibleFormDialog=true,
+              this.visibleDateDialog=false,
+              this.resumeInitialDate=null,
+              this.resumeEndDate=null,
+              this.resumePrice=null,
+              this.resumeHotelDays=null
       }
-
 
   },
   mounted() {
