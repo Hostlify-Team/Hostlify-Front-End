@@ -12,7 +12,6 @@
         </div>
       </div>
       <div class="inputsContainer" v-show="visibleDateDialog">
-        <p >Estadia del Huesped</p>
         <div style="display: flex;justify-content: space-evenly">
           <h3>Precio por dia: </h3>
           <pv-input-text id="price" v-model="price" type="number" style="width: 3rem"></pv-input-text>
@@ -49,18 +48,18 @@ export default {
   data(){
     return{
         token: sessionStorage.getItem("jwt"),
-      name:"",
-      email:"",
-      password:"",
-      endDate:null,
-      price:84,
-      visibleResumeDateGuest:false,
-      visibleFormDialog:true,
-      visibleDateDialog:false,
-      resumeInitialDate:null,
-      resumeEndDate:null,
-      resumePrice:null,
-      resumeHotelDays:null
+        name:"",
+        email:"",
+        password:"",
+        endDate:null,
+        price:84,
+        visibleResumeDateGuest:false,
+        visibleFormDialog:true,
+        visibleDateDialog:false,
+        resumeInitialDate:null,
+        resumeEndDate:null,
+        resumePrice:null,
+        resumeHotelDays:null
     }
   },
   methods:{
@@ -104,9 +103,11 @@ export default {
           lastDayDate: (this.endDate.getMonth() + 1) + "/" + this.endDate.getDate() + "/" + this.endDate.getFullYear(),
           price: this.setPrice(firstDayDate, lastDayDate),
         }
+
         this.emitter.emit("new-guest", guestEmitter);
+
     },
-    setPrice(firstDayDate,lastDayDate){
+      setPrice(firstDayDate,lastDayDate){
       let day1 = new Date(firstDayDate);
       let day2 = new Date(lastDayDate);
 
@@ -116,7 +117,7 @@ export default {
 
       return totalPrice
     },
-    ResumeDialogData(){
+      ResumeDialogData(){
       const date = new Date();
       let actualDay= date.getDate()
       let actualMonth= date.getMonth()
@@ -135,7 +136,7 @@ export default {
       }
 
     },
-    Cancel(){
+      Cancel(){
       this.visibleResumeDateGuest=false
       this.visibleFormDialog=true
       this.name=""
@@ -149,7 +150,7 @@ export default {
       this.resumePrice=null
       this.resumeHotelDays=null
     },
-    showDateDialog(){
+      showDateDialog(){
       this.visibleFormDialog=false
       this.visibleDateDialog=true
     }

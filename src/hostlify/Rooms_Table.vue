@@ -147,7 +147,45 @@
         </pv-dialog>
 
         <pv-dialog v-model:visible="registerGuestDialog" :style="{ width: '60vw'}" header="Registrar un huesped" :modal="true" class="p-fluid">
-          <Register_Huesped></Register_Huesped>
+            <div class="containerRegister">
+                <div class="registerContainer">
+                    <h1>Registrar Huesped</h1>
+                    <div class="inputsContainer" v-show="visibleFormDialog">
+                        <p >Datos del Huesped</p>
+                        <pv-input-text class="inputRegister" type="text" placeholder="Nombre y apellido*" v-model="name"/>
+                        <pv-input-text class="inputRegister" type="text" placeholder="Correo Electronico*" v-model="email"/>
+                        <pv-input-text class="inputRegister" type="text" placeholder="Contraseña*" v-model="password"/>
+                        <div style="display: flex ;justify-content: end">
+                            <pv-button class="buttonRegister" style="align-items: end" @click="showDateDialog">Siguiente</pv-button>
+                        </div>
+                    </div>
+                    <div class="inputsContainer" v-show="visibleDateDialog">
+                        <div style="display: flex;justify-content: space-evenly">
+                            <h3>Precio por dia: </h3>
+                            <pv-input-text id="price" v-model="price" type="number" style="width: 3rem"></pv-input-text>
+                            <h3> Soles</h3>
+                        </div>
+                        <pv-calendar v-model="endDate" :inline="true" :showWeek="true" />
+                        <div style="display: flex ;justify-content: end">
+                            <pv-button class="buttonRegister"  @click="ResumeDialogData">Siguiente</pv-button>
+                        </div>
+                    </div>
+                    <div class="inputsContainer" v-show="visibleResumeDateGuest">
+                        <h1>Credenciales del usuario</h1>
+                        <h3 style="margin: 0">Correo: {{email}}</h3>
+                        <h3 style="margin: 0">Contraseña: {{password}}</h3>
+                        <h1>Resumen de registro</h1>
+                        <h4 style="margin: 0">Fecha de ingreso: {{resumeInitialDate}}</h4>
+                        <h4 style="margin: 0">Fecha de salida: {{resumeEndDate}}</h4>
+                        <h4 style="margin: 0">Dias totales: {{resumeHotelDays}}</h4>
+                        <h4 style="margin: 0">Precio total: {{resumePrice}}</h4>
+                        <div style="display: flex;justify-content: space-around;">
+                            <pv-button class="buttonRegister"  @click="Cancel">Cancelar</pv-button>
+                            <pv-button class="buttonRegister"  @click="register">Registrar</pv-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </pv-dialog>
 
         <pv-dialog v-model:visible="evictGuestDialog" :style="{ width: '450px' }" header="Desalojar huesped" :modal="true">
@@ -247,7 +285,6 @@
 <script>
 import {RoomServices} from "../services/room-services";
 import {UserServices} from "../services/user-services";
-import {HistoryServices} from "../services/history-services";
 import {FoodServices} from "../services/food-services";
 import { FilterMatchMode } from "primevue/api";
 import Register_Huesped from "./Register_Huesped.vue";
@@ -279,14 +316,28 @@ export default {
         { value: "Ocupada" },
       ],
       filters: {},
-      submitted: false
+      submitted: false,
+        ///////////////
+        name:"",
+        email:"",
+        password:"",
+        endDate:null,
+        price:84,
+        visibleResumeDateGuest:false,
+        visibleFormDialog:true,
+        visibleDateDialog:false,
+        resumeInitialDate:null,
+        resumeEndDate:null,
+        resumePrice:null,
+        resumeHotelDays:null
+
     };
   },
   created() {
     new RoomServices().getRoomsForManager(this.token,sessionStorage.getItem("id")).then(response=>{
       this.rooms=response.data
       this.setGuestInfo()
-      console.log("Rooms",response.data)
+      console.log("Rooms",this.rooms)
       this.setVisibleNotifications()
     })
 
@@ -330,9 +381,9 @@ export default {
       this.deleteRoomsDialog = true
     },
     showRegisterGuestDialog(data) {
-      this.registerGuestDialog = true
-      this.editRoomAuxiliaryId=data.id
-      sessionStorage.setItem("temporaryRoomId",data.id)
+        this.registerGuestDialog = true
+        this.editRoomAuxiliaryId=data.id
+        sessionStorage.setItem("temporaryRoomId",data.id)
     },
     showDeleteGuestDialog(data){
       this.evictGuestDialog=true
@@ -340,6 +391,7 @@ export default {
       this.room.guestName = data.guestName
       this.room.id = data.id
       this.room.servicePending = data.servicePending
+        console.log("Lo hago nulo 343: "+data.id)
       this.editRoomAuxiliaryId=data.id
     },
     setVisibleNotifications(){
@@ -380,22 +432,16 @@ export default {
     },
     editRoom() {
         let temporaryIndex=this.findIndexById(this.room.id)
-        console.log("id: "+this.room.id+" GuestId: "+this.room.guestId+" roomGuest: "+this.room.price)
         if(this.room.guestId===null){this.room.guestId=0;this.room.price=0}
         new RoomServices().updateRoom(this.token, this.room.id, this.room).then(response => {
-          console.log("TEMP INDEX: "+this.room.id)
-          console.log("Se actualiza a: "+this.room)
         this.rooms[temporaryIndex] = this.room
         this.room = {}
         this.editRoomDialog = false
           console.log(response.status)
       })
         if(this.rooms[temporaryIndex].guestId!==0){
-            console.log("Estoy Actualizando el room CON UN HUESPED")
-            console.log("guestId: "+this.rooms[temporaryIndex].guestId)
             new UserServices().getUser(this.token,this.rooms[temporaryIndex].guestId).then(response=>{
                 this.rooms[temporaryIndex].guestName=response.data.name
-                console.log("MI ROOM INDEX SE MODIFICO: "+this.rooms[temporaryIndex].guestName)
             })
         }
 
@@ -456,6 +502,7 @@ export default {
             this.rooms[id].progressTime=0
             this.rooms[id].totalTime=null
             this.rooms[id].guestStayComplete=null
+            console.log("Lo hago nulo 460")
             this.editRoomAuxiliaryId=null
             console.log("Guest evicted successfully")
             this.$toast.add({severity:'success', summary: 'Huesped desalojado', detail:'Se desalojo el huesped correctamente', life: 3000});
@@ -598,89 +645,139 @@ export default {
       this.rooms[i].progressTime=this.getProgressTimeForGuest(goalDate,this.rooms[i].totalTime)
       console.log("ProgressBar update")
     },
+
+
+    /////////////////
+      validateCalendarDate(firstDayDate,lastDayDate){
+          let day1 = new Date(firstDayDate);
+          let day2 = new Date(lastDayDate);
+
+          if((day2.getMonth()+1)<(day1.getMonth()+1) && day2.getFullYear()<=day1.getFullYear() ||
+              (day2.getMonth()+1)===(day1.getMonth()+1) && day2.getDate()<day1.getDate() && day2.getFullYear()<=day1.getFullYear()){
+              return false
+          }else{
+              return true
+          }
+      },
+      getDiferenceDays(firstDayDate,lastDayDate){
+          let day1 = new Date(firstDayDate);
+          let day2 = new Date(lastDayDate);
+
+          let totalDifference= Math.abs(day2-day1);
+          let totalDays = totalDifference/(1000 * 3600 * 24)
+
+          return totalDays
+      },
+      register(){
+
+          const date = new Date();
+
+          let actualDay= date.getDate()
+          let actualMonth= date.getMonth()
+
+          let firstDayDate= (actualMonth+1)+"/"+actualDay+"/"+date.getFullYear()
+          let lastDayDate= (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear()
+
+          let guestEmitter= {
+              userEmail: this.email,
+              userPassword: this.password,
+              userName: this.name,
+              endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
+              lastDay:this.endDate.getDate(),
+              firstDayDate: (actualMonth + 1) + "/" + actualDay + "/" + date.getFullYear(),
+              lastDayDate: (this.endDate.getMonth() + 1) + "/" + this.endDate.getDate() + "/" + this.endDate.getFullYear(),
+              price: this.setPrice(firstDayDate, lastDayDate),
+          }
+          this.registerGuestDialog=false
+          this.editRoomAuxiliaryId=parseInt(sessionStorage.getItem("temporaryRoomId"))
+          console.log("this.editRoomAuxiliaryId: "+this.editRoomAuxiliaryId )
+          console.log("Romiews: "+this.rooms )
+          let id=this.findIndexById(this.editRoomAuxiliaryId)
+          console.log("id index: "+id)
+
+          let guestRegister={
+              roomId: this.rooms[id].id,
+              name: guestEmitter.userName,
+              email: guestEmitter.userEmail,
+              password: guestEmitter.userPassword,
+              initialDate: this.rooms[id].initialDate=actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
+              endDate:guestEmitter.endDate,
+              price:guestEmitter.price
+          }
+          new UserServices().register(guestRegister.email,guestRegister.password,'none',guestRegister.name,'guest').then(response=>{
+              new RoomServices().registerGuest(this.token,this.rooms[id].id,guestRegister).then(response=>{
+                  console.log("EL ROOM FOR GUEST: "+response.data)
+                  this.rooms[id].guestName=guestRegister.name
+                  this.rooms[id].guestId=response.data
+                  this.rooms[id].status=false
+                  this.rooms[id].initialDate=actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear()
+                  this.rooms[id].endDate=guestEmitter.endDate
+                  this.rooms[id].price=guestEmitter.price
+                  this.rooms[id].emergency=false
+                  this.rooms[id].guestStayComplete=false
+                  this.rooms[id].totalTime=this.setTotalTimeForGuest(guestEmitter.firstDayDate,guestEmitter.lastDayDate)
+                  this.rooms[id].progressTime=this.getProgressTimeForGuest(guestEmitter.lastDayDate,this.rooms[id].totalTime)
+                  this.setGuestInfo()//AQUI ESTA MI ERROR
+                  console.log("Guest added successfully")
+                  this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
+              })
+          })
+      },
+      setPrice(firstDayDate,lastDayDate){
+          let day1 = new Date(firstDayDate);
+          let day2 = new Date(lastDayDate);
+
+          let difference= Math.abs(day2-day1);
+          let days = difference/(1000 * 3600 * 24)
+          let totalPrice=days*this.price
+
+          return totalPrice
+      },
+      ResumeDialogData(){
+          const date = new Date();
+          let actualDay= date.getDate()
+          let actualMonth= date.getMonth()
+          let firstDayDate= (actualMonth+1)+"/"+actualDay+"/"+date.getFullYear()
+          let lastDayDate= (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear()
+
+          if (this.validateCalendarDate(firstDayDate,lastDayDate)){
+              this.visibleDateDialog=false
+              this.visibleResumeDateGuest=true
+              this.resumeInitialDate= actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear()
+              this.resumeEndDate=this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear()
+              this.resumePrice=this.setPrice(firstDayDate,lastDayDate)
+              this.resumeHotelDays=this.getDiferenceDays(firstDayDate,lastDayDate)
+          }else{
+              this.$toast.add({severity:'error', summary: 'Fecha antigua', detail:'Seleccione una fecha valida', life: 3000});
+          }
+
+      },
+      Cancel(){
+          this.visibleResumeDateGuest=false
+          this.visibleFormDialog=true
+          this.name=""
+          this.email=""
+          this.password=""
+          this.endDate=null
+          this.price=84
+          this.resumeDateGuest=false
+          this.resumeInitialDate=null
+          this.resumeEndDate=null
+          this.resumePrice=null
+          this.resumeHotelDays=null
+      },
+      showDateDialog(){
+          this.visibleFormDialog=false
+          this.visibleDateDialog=true
+      }
+
+
   },
   mounted() {
     this.startProgress()
     this.watchServices()
 
-    this.emitter.on("new-guest", guestResponse => {
-      this.registerGuestDialog=false
-      console.log("GUEST EMITTED: "+guestResponse)
-        const date = new Date();
-        let actualDay= date.getDate()
-        let actualMonth= date.getMonth()
-        let auxiliaryRoomId= parseInt(sessionStorage.getItem("temporaryRoomId"))
-        let id=this.findIndexById(auxiliaryRoomId)
-
-        let guestRegister={
-            roomId: this.rooms[id].id,
-            name: guestResponse.userName,
-            email: guestResponse.userEmail,
-            password: guestResponse.userPassword,
-            initialDate: this.rooms[id].initialDate=actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
-            endDate:guestResponse.endDate,
-            price:guestResponse.price
-        }
-        new UserServices().register(guestRegister.email,guestRegister.password,'none',guestRegister.name,'guest').then(response=>{
-            console.log("User Register")
-            new RoomServices().registerGuest(this.token,this.rooms[id].id,guestRegister).then(response=>{
-                this.rooms[id].guestId=response.data.id
-                this.rooms[id].status=false
-                this.rooms[id].initialDate=actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear()
-                this.rooms[id].endDate=guestResponse.endDate
-                this.rooms[id].price=guestResponse.price
-                this.rooms[id].emergency=false
-                this.rooms[id].guestStayComplete=false
-                this.rooms[id].totalTime=this.setTotalTimeForGuest(guestResponse.firstDayDate,guestResponse.lastDayDate)
-                this.rooms[id].progressTime=this.getProgressTimeForGuest(guestResponse.lastDayDate,this.rooms[id].totalTime)
-                this.setGuestInfo()//AQUI ESTA MI ERROR
-                console.log("Guest added successfully",response.data)
-                this.editRoomAuxiliaryId=null
-                this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
-
-            }).catch(error=>{
-            })
-        })
-
-      /*new UserServices().register(guestResponse.userEmail,guestResponse.userPassword,'none',guestResponse.userName,'guest').then(response=>{
-        console.log("User registered Successfully")
-        const date = new Date();
-        let actualDay= date.getDate()
-        let actualMonth= date.getMonth()
-        new UserServices().getUserByEmail(this.token,guestResponse.userEmail).then(response=>{
-          console.log("Currente User Registered: "+response.data.id,response.data.name)
-          let auxiliaryRoomId= parseInt(sessionStorage.getItem("temporaryRoomId"))
-          let id=this.findIndexById(auxiliaryRoomId)
-          console.log("QQQQQQQQQQ: "+this.rooms[id].guestId)
-          this.rooms[id].guestId=response.data.id
-          this.rooms[id].status=false
-          this.rooms[id].initialDate=actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear()
-          this.rooms[id].endDate=guestResponse.endDate
-          this.rooms[id].price=guestResponse.price
-          this.rooms[id].emergency=false
-          this.rooms[id].guestStayComplete=false
-          this.rooms[id].totalTime=this.setTotalTimeForGuest(guestResponse.firstDayDate,guestResponse.lastDayDate)
-          this.rooms[id].progressTime=this.getProgressTimeForGuest(guestResponse.lastDayDate,this.rooms[id].totalTime)
-
-          new RoomServices().updateRoom(this.token,this.editRoomAuxiliaryId,this.rooms[id]).then(response_update=>{
-            this.setGuestInfo()
-            console.log("Guest added successfully",response_update.data)
-            this.editRoomAuxiliaryId=null
-            this.$toast.add({severity:'success', summary: 'Usuario Registrado', detail:'Se registro el usuario correctamente', life: 3000});
-            let roomStorable=this.rooms[id]
-            roomStorable.guestName= response.data.name
-            roomStorable.guestEmail= response.data.email
-            new HistoryServices().postRoomHistory(this.token,roomStorable).then(response_history=>{
-              console.log("Room added to history",response_history.data)
-            })
-
-          })
-        })
-      })*/
-      console.log(this.rooms)
-    });
   }
-  //!Todo: Para la proxima revision arreglar el registro de usuario inclompleto y observador de notificaciones
 };
 </script>
 
@@ -688,5 +785,42 @@ export default {
 .product-image {
   width: 50px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
+}
+
+.containerRegister {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Roboto', sans-serif;
+}
+.registerContainer {
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+.inputsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 80%;
+}
+.buttonRegister {
+    width: fit-content;
+    padding-left: 50px;
+    padding-right: 50px;
+    color: white;
+    background-color: #D6A049;
+    border-radius: 25px;
+}
+.inputRegister {
+    background-color: white;
+    border-radius: 15px;
+    color: black;
+}
+.inputRegister::placeholder {
+    color: black;
 }
 </style>
