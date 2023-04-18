@@ -350,7 +350,6 @@ export default {
       this.addRoomDialog = true
     },
     showEditRoomDialog(data) {
-      console.log(data.id,data.roomName,data.guestId,data.managerId)
         this.room.id = data.id
         this.room.roomName = data.roomName
         this.room.managerId = data.managerId
@@ -391,7 +390,6 @@ export default {
       this.room.guestName = data.guestName
       this.room.id = data.id
       this.room.servicePending = data.servicePending
-        console.log("Lo hago nulo 343: "+data.id)
       this.editRoomAuxiliaryId=data.id
     },
     setVisibleNotifications(){
@@ -437,7 +435,7 @@ export default {
         this.rooms[temporaryIndex] = this.room
         this.room = {}
         this.editRoomDialog = false
-          console.log(response.status)
+          console.log("Room updated successfully :)",response.status)
       })
         if(this.rooms[temporaryIndex].guestId!==0){
             new UserServices().getUser(this.token,this.rooms[temporaryIndex].guestId).then(response=>{
@@ -456,7 +454,7 @@ export default {
         );
 
         this.room = {}
-        console.log("room deleted successfully",response.data)
+        console.log("Room deleted successfully :)",response.data)
         this.deleteRoomDialog = false
       })
     },
@@ -502,7 +500,6 @@ export default {
             this.rooms[id].progressTime=0
             this.rooms[id].totalTime=null
             this.rooms[id].guestStayComplete=null
-            console.log("Lo hago nulo 460")
             this.editRoomAuxiliaryId=null
             console.log("Guest evicted successfully")
             this.$toast.add({severity:'success', summary: 'Huesped desalojado', detail:'Se desalojo el huesped correctamente', life: 3000});
@@ -511,12 +508,23 @@ export default {
     },
     deleteRooms() {
       this.selectedRooms.forEach((room) => {
-        new RoomServices().deleteRoom(this.token,room.id).then((response) => {
-          this.rooms = this.rooms.filter(
-              (t) => t.id !== room.id
-          );
-          console.log(response);
-        });
+        if(room.guestId!==0){
+          new UserServices().deleteUser(this.token,room.guestId).then(r=>{
+            new RoomServices().deleteRoom(this.token,room.id).then((response) => {
+              this.rooms = this.rooms.filter(
+                  (t) => t.id !== room.id
+              );
+            });
+          })
+        }
+        else {
+          new RoomServices().deleteRoom(this.token,room.id).then((response) => {
+            this.rooms = this.rooms.filter(
+                (t) => t.id !== room.id
+            );
+          });
+        }
+
       });
       this.deleteRoomsDialog = false;
     },
@@ -553,7 +561,6 @@ export default {
         let temporalRoom=this.room
         temporalRoom.servicePending=false
         new RoomServices().updateRoom(this.token, this.room.id,temporalRoom).then(response=>{
-          console.log("Rooms.service",response.data.service)
           this.notificationsRoomsDialog=false
         })
       }
@@ -561,10 +568,8 @@ export default {
       this.guestServiceInfo={}
     },
     deleteServiceByRoomId(id){
-      console.log(id,typeof(id))
       new FoodServices().getFoodServiceByRoomId(id).then(response=>{
         for (let i=0;i<response.data.length;i++){
-          console.log(response.data[i].id)
           new FoodServices().deleteFoodServiceById(response.data[i].id)
         }
         console.log("Service deleted successfully")
@@ -618,7 +623,7 @@ export default {
       }, 30000);
     },
     watchServices(){
-      console.log("Watching services")
+      console.log("Watching services ")
       this.interval = setInterval(() => {
         for(let i=0;i<this.rooms.length;i++){
           if(this.rooms[i].guestStayComplete===false){
@@ -643,7 +648,6 @@ export default {
       let format=this.rooms[i].endDate.split("/")
       let goalDate=(format[1]+"/"+format[0]+"/"+format[2])
       this.rooms[i].progressTime=this.getProgressTimeForGuest(goalDate,this.rooms[i].totalTime)
-      console.log("ProgressBar update")
     },
 
 
@@ -702,7 +706,6 @@ export default {
               price:guestEmitter.price
           }
           new UserServices().register(guestRegister.email,guestRegister.password,'none',guestRegister.name,'guest').then(response=>{
-              console.log("ESTOY ADENTRO")
               new RoomServices().registerGuest(this.token,this.rooms[id].id,guestRegister).then(response=>{
                   this.rooms[id].guestName=guestRegister.name
                   this.rooms[id].guestId=response.data
