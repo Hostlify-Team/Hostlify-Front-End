@@ -9,7 +9,7 @@
       <template #content>
         <div class="form">
           <label for="user">Correo Electronico</label>
-          <pv-input-text id="user" class="input"></pv-input-text>
+          <pv-input-text id="user" class="input" maxlength="256"></pv-input-text>
         </div>
         <div class="footer">
           <div class="buttons">

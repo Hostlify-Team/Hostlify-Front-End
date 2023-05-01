@@ -13,7 +13,7 @@
             <div class="register" style="width: 30vw">
               <div class="form" >
                 <div class="nombre" style="display: flex; justify-content: center; margin: 1rem 0">
-                  <pv-input-text id="name" class="input" placeholder="Nombre" style="border-radius: 1rem" v-model="user.name"></pv-input-text>
+                  <pv-input-text id="name" class="input" placeholder="Nombre" style="border-radius: 1rem" v-model="user.name" maxlength="56" @keypress="validarNombre($event)"></pv-input-text>
                 </div>
                 <div class="email" style="display: flex; justify-content: center; margin: 1rem 0">
                   <pv-input-text id="email" class="input" placeholder="Correo Electronico" style="border-radius: 1rem" v-model="user.email"></pv-input-text>
@@ -53,6 +53,18 @@ export default {
   methods:{
     addTemporaryUser(){
       localStorage.setItem("user",JSON.stringify(this.user))
+    },
+    validarNombre(evento) {
+      const codigo = evento.keyCode || evento.which;
+      const caracter = String.fromCharCode(codigo);
+      const patron = /^[a-zA-Z\s]*$/; // Patrón para permitir solo letras y espacios
+
+      if (caracter.match(patron)) {
+        return true;
+      } else {
+        evento.preventDefault();
+        return false;
+      }
     }
   }
 }

@@ -9,7 +9,7 @@
       <template #content>
         <div class="form">
           <label for="email">Correo Electronico</label>
-          <pv-input-text id="email" class="input" v-model="email"></pv-input-text>
+          <pv-input-text id="email" class="input" v-model="email" maxlength="256"></pv-input-text>
           <label for="password">contraseña</label>
           <pv-input-text id="password" type="password" class="input" v-model="password"></pv-input-text>
         </div>

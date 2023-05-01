@@ -67,7 +67,7 @@
                         <h2 style="margin-bottom: 1rem">Plan personalizado</h2>
                         <p style="margin-bottom: 1.1rem">Cuantas habitaciones tienes?</p>
                         <div class="input" >
-                          <pv-input-text type="number" style="background-color: white; color: black" v-model="customPlanPrice" />
+                          <pv-input-text type="number" style="background-color: white; color: black" v-model="customPlanPrice" min="1"/>
                         </div>
                       </div>
                       <div class="content" style="display: flex; align-items: center; margin-top: 3rem">
@@ -105,7 +105,7 @@ export default {
       options: ['Nuestros Planes', 'Plan personalizado'],
       defaultPlan: true,
       customPlan: false,
-      customPlanPrice:null,
+      customPlanPrice:1,
       plans:[]
     }
   },
