@@ -13,22 +13,22 @@
             <div class="register" style="width: 30vw">
               <div class="form" >
                 <div class="nombre" style="display: flex; justify-content: center; margin: 1rem 0">
-                  <pv-input-text id="name" class="input" placeholder="Nombre" style="border-radius: 1rem" v-model="user.name" maxlength="56" @keypress="validarNombre($event)"></pv-input-text>
+                  <pv-input-text id="name" class="input" @input="actualizarEstadoBoton()" placeholder="Nombre" style="border-radius: 1rem" v-model="user.name" maxlength="56" @keypress="validarNombre($event)"></pv-input-text>
                 </div>
                 <div class="email" style="display: flex; justify-content: center; margin: 1rem 0">
-                  <pv-input-text id="email" class="input" placeholder="Correo Electronico" style="border-radius: 1rem" v-model="user.email"></pv-input-text>
+                  <pv-input-text id="email" class="input" @input="actualizarEstadoBoton()" placeholder="Correo Electronico" style="border-radius: 1rem" maxlength="256" v-model="user.email"></pv-input-text>
                 </div>
                 <div class="password" style="display: flex; justify-content: center; margin: 1rem 0">
-                  <pv-input-text id="password" type="password" class="input" placeholder="Contraseña" style="border-radius: 1rem" v-model="user.password"></pv-input-text>
+                  <pv-input-text id="password" type="password" class="input" @input="actualizarEstadoBoton()" placeholder="Contraseña" style="border-radius: 1rem" v-model="user.password"></pv-input-text>
                 </div>
               </div>
               <div class="footer">
                 <div class="Text" style="margin: 3rem 0">
-                  Al hacer click en Crear Cuenta acepto las condiciones del servicio y la politica
+                  Al crear mi cuenta acepto las condiciones del servicio y la politica
                   <br>de privacidad de Hostlify
                 </div>
                 <div class="buttons" >
-                  <router-link to="/sign-up-payment" class="rw" ><pv-button style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="addTemporaryUser">Crear Cuenta</pv-button ></router-link>
+                  <pv-button :disabled="!esFormularioCompleto" style="border-radius: 1rem;color: white;background-color: #D6A049;border-color: #D6A049" @click="addTemporaryUser()">Crear Cuenta</pv-button >
                 </div>
               </div>
             </div>
@@ -39,6 +39,8 @@
   </div>
 </template>
 <script>
+import Toast from "primevue/toast";
+
 export default {
   name: "sign-up-register",
   data(){
@@ -47,12 +49,22 @@ export default {
         name:null,
         email:null,
         password:null,
-      }
+      },
+      esFormularioCompleto: false
     }
   },
   methods:{
+    actualizarEstadoBoton() {
+      this.esFormularioCompleto = (this.user.name.length>0 && this.user.email.length >0 && this.user.password.length >0);
+    },
     addTemporaryUser(){
-      localStorage.setItem("user",JSON.stringify(this.user))
+      if (this.user.email.includes('@') && this.user.email.toString().includes('.')) {
+        localStorage.setItem("user",JSON.stringify(this.user))
+        this.$router.push("/sign-up-payment")
+      } else {
+        this.$toast.add({severity:'info', summary: 'Email invalido', detail:'Se debe ingresar un correo valido', life: 3000});
+      }
+
     },
     validarNombre(evento) {
       const codigo = evento.keyCode || evento.which;

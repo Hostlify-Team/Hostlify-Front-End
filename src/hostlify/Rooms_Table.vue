@@ -41,7 +41,7 @@
             <p v-if="slotProps.data.guestId!==0">{{slotProps.data.guestName}}</p>
           </template>
         </pv-column>
-        <pv-column field="initialDate" header="Fecha de ingreso" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="endDate" header="Fecha de salida" :sortable="true" style="min-width: 16rem"></pv-column>
         <pv-column field="price" header="Precio" :sortable="true" style="min-width: 16rem">
           <template #body="slotProps">
             <p v-if="slotProps.data.price!==0">S/. {{slotProps.data.price}}</p>
@@ -84,21 +84,21 @@
         <pv-dialog v-model:visible="addRoomDialog" :style="{ width: '450px'}" header="Agregue una habitacion" :modal="true" class="p-fluid">
           <div style="margin: 2rem">
             <span class="p-float-label">
-              <pv-input-text type="text" id="room" v-model.trim="room.roomName" required="true" autofocus :class="{'p-invalid': submitted && !room.name }"/>
+              <pv-input-text @input="actualizarEstadoBotonAddRoom()" type="text" id="room" v-model.trim="room.roomName" required="true" :maxlength="10" autofocus :class="{'p-invalid': submitted && !room.name }"/>
               <label for="room">Nro de habitacion</label>
               <small class="p-error" v-if="submitted && !room.name">Se requiere un numero de habitacion</small>
             </span>
           </div>
           <div style="margin: 2rem">
             <span class="p-float-label">
-              <pv-text-area type="text" id="description" v-model.trim="room.description" required="true" autofocus :class="{'p-invalid': submitted && !room.description }"/>
+              <pv-text-area @input="actualizarEstadoBotonAddRoom()" type="text" id="description" v-model.trim="room.description" required="true" :maxlength="230"  autofocus :class="{'p-invalid': submitted && !room.description }"/>
               <label for="description">Descripcion</label>
               <small class="p-error" v-if="submitted && !room.description">Se requiere una descripcion de habitacion</small>
             </span>
           </div>
           <template #footer>
             <pv-button :label="'Cancelar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("cancel")}}</pv-button>
-            <pv-button :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="addRoom" >{{$t("add")}}</pv-button>
+            <pv-button :disabled="!esFormularioAddRoomCompleto" :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="addRoom" >{{$t("add")}}</pv-button>
           </template>
         </pv-dialog>
 
@@ -146,23 +146,23 @@
           </template>
         </pv-dialog>
 
-        <pv-dialog v-model:visible="registerGuestDialog" :style="{ width: '60vw'}" header="Registrar un huesped" :modal="true" class="p-fluid">
+        <pv-dialog v-model:visible="registerGuestDialog" :style="{ width: '60vw'}" header="Registrar un huesped" :modal="true"  class="p-fluid">
             <div class="containerRegister">
                 <div class="registerContainer">
                     <h1>Registrar Huesped</h1>
                     <div class="inputsContainer" v-show="visibleFormDialog">
                         <p >Datos del Huesped</p>
-                        <pv-input-text class="inputRegister" type="text" placeholder="Nombre y apellido*" v-model="name"/>
-                        <pv-input-text class="inputRegister" type="text" placeholder="Correo Electronico*" v-model="email"/>
-                        <pv-input-text class="inputRegister" type="text" placeholder="Contraseña*" v-model="password"/>
+                        <pv-input-text @input="actualizarEstadoBotonRegisterHuesped()" class="inputRegister" type="text" placeholder="Nombre y apellido*" maxlength="128" @keypress="validarNombre($event)" v-model="name"/>
+                        <pv-input-text @input="actualizarEstadoBotonRegisterHuesped()" class="inputRegister" type="text" placeholder="Correo Electronico*" maxlength="256" v-model="email"/>
+                        <pv-input-text @input="actualizarEstadoBotonRegisterHuesped()" class="inputRegister" type="text" placeholder="Contraseña*" v-model="password"/>
                         <div style="display: flex ;justify-content: end">
-                            <pv-button class="buttonRegister" style="align-items: end" @click="showDateDialog">Siguiente</pv-button>
+                            <pv-button :disabled="!esFormularioRegisterCompleto" class="buttonRegister" style="align-items: end" @click="showDateDialog">Siguiente</pv-button>
                         </div>
                     </div>
                     <div class="inputsContainer" v-show="visibleDateDialog">
                         <div style="display: flex;justify-content: space-evenly">
                             <h3>Precio por dia: </h3>
-                            <pv-input-text id="price" v-model="price" type="number" style="width: 3rem"></pv-input-text>
+                            <pv-input-text id="price" v-model="price" type="number" min="0" style="width: 5rem"></pv-input-text>
                             <h3> Soles</h3>
                         </div>
                         <pv-calendar v-model="endDate" :inline="true" :showWeek="true" />
@@ -329,7 +329,9 @@ export default {
         resumeInitialDate:null,
         resumeEndDate:null,
         resumePrice:null,
-        resumeHotelDays:null
+        resumeHotelDays:null,
+      esFormularioRegisterCompleto: false,
+      esFormularioAddRoomCompleto: false
 
     };
   },
@@ -770,9 +772,21 @@ export default {
           this.resumePrice=null
           this.resumeHotelDays=null
       },
+    actualizarEstadoBotonRegisterHuesped() {
+      this.esFormularioRegisterCompleto = (this.name.length>0 && this.email.length >0 && this.password.length >0);
+    },
+    actualizarEstadoBotonAddRoom() {
+      console.log(this.room.roomName.length+"----"+this.room.description.length)
+      this.esFormularioAddRoomCompleto = (this.room.roomName.length>0 && this.room.description.length >0);
+    },
       showDateDialog(){
+        if (this.email.includes('@') && this.email.toString().includes('.')) {
           this.visibleFormDialog=false
           this.visibleDateDialog=true
+        } else {
+          this.$toast.add({severity:'info', summary: 'Email invalido', detail:'Se debe ingresar un correo valido', life: 3000});
+        }
+
       },
       reset(){
             this.name="",
@@ -787,7 +801,19 @@ export default {
               this.resumeEndDate=null,
               this.resumePrice=null,
               this.resumeHotelDays=null
+      },
+    validarNombre(evento) {
+      const codigo = evento.keyCode || evento.which;
+      const caracter = String.fromCharCode(codigo);
+      const patron = /^[a-zA-Z\s]*$/; // Patrón para permitir solo letras y espacios
+
+      if (caracter.match(patron)) {
+        return true;
+      } else {
+        evento.preventDefault();
+        return false;
       }
+    }
 
   },
   mounted() {
