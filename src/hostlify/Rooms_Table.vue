@@ -108,21 +108,21 @@
           </div>
           <div style="margin: 2rem">
             <span class="p-float-label">
-              <pv-input-text type="text" id="room" v-model.trim="room.roomName" required="true" autofocus :class="{'p-invalid': submitted && !room.name }"/>
+              <pv-input-text  @input="actualizarEstadoBotonEditRoom()" type="text" id="room" v-model.trim="room.roomName" required="true" autofocus :class="{'p-invalid': submitted && !room.name }"/>
               <label for="room">Nro de habitacion</label>
               <small class="p-error" v-if="submitted && !room.name">Se requiere un numero de habitacion</small>
             </span>
           </div>
           <div style="margin: 2rem">
             <span class="p-float-label">
-              <pv-text-area type="text" id="description" v-model.trim="room.description" required="true" autofocus :class="{'p-invalid': submitted && !room.description }"/>
+              <pv-text-area  @input="actualizarEstadoBotonEditRoom()" type="text" id="description" v-model.trim="room.description" required="true" autofocus :class="{'p-invalid': submitted && !room.description }"/>
               <label for="description">Decripcion</label>
               <small class="p-error" v-if="submitted && !room.description">Se requiere una descripcion de habitacion</small>
             </span>
           </div>
           <template #footer>
             <pv-button :label="'Cancelar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("cancel")}}</pv-button>
-            <pv-button :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="editRoom" >{{$t("add")}}</pv-button>
+            <pv-button :disabled="!esFormulariEditRoomCompleto" :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="editRoom" >{{$t("add")}}</pv-button>
           </template>
         </pv-dialog>
 
@@ -331,7 +331,8 @@ export default {
         resumePrice:null,
         resumeHotelDays:null,
       esFormularioRegisterCompleto: false,
-      esFormularioAddRoomCompleto: false
+      esFormularioAddRoomCompleto: false,
+      esFormulariEditRoomCompleto: true
 
     };
   },
@@ -776,8 +777,10 @@ export default {
       this.esFormularioRegisterCompleto = (this.name.length>0 && this.email.length >0 && this.password.length >0);
     },
     actualizarEstadoBotonAddRoom() {
-      console.log(this.room.roomName.length+"----"+this.room.description.length)
       this.esFormularioAddRoomCompleto = (this.room.roomName.length>0 && this.room.description.length >0);
+    },
+    actualizarEstadoBotonEditRoom() {
+      this.esFormulariEditRoomCompleto = (this.room.roomName.length>0 && this.room.description.length >0);
     },
       showDateDialog(){
         if (this.email.includes('@') && this.email.toString().includes('.')) {

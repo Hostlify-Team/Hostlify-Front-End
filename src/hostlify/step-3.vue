@@ -18,7 +18,7 @@
       <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:left">
-            <h2>Seleccione sus extras</h2>
+            <h2>Seleccione su crema</h2>
           </div>
           <div style="display: flex;margin-bottom:30px; justify-content:center">
             <pv-dropdown v-model="selectedCream" :options="creams"  placeholder="Eliga una crema" style="width:500px"></pv-dropdown>
@@ -33,7 +33,7 @@
             <h2>Instrucciones de preparación</h2>
           </div>
           <div style="display: flex; justify-content:center">
-            <pv-text-area id="food" v-model="instructions" style="width: 28rem;"/>
+            <pv-text-area id="food" v-model="instructions" :maxlength="256" style="width: 28rem;"/>
           </div>
 
           <div style="display: flex; justify-content:center;margin-bottom:10px;margin-top:30px">
@@ -59,8 +59,8 @@ export default {
   name: "step-3",
   data(){
     return{
-      creams:["Mayonesa","Ketchup","Mostaza","Aji","Ocopa"],
-      selectedCream:null,
+      creams:["Ninguna","Mayonesa","Ketchup","Mostaza","Aji","Ocopa"],
+      selectedCream:"Ninguna",
       creamQuantity:1,
       instructions:null
     }
