@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const http = axios.create({
-    baseURL:"https://localhost:7217/api/",
+    baseURL:"http://sleepless0000-001-site1.atempurl.com/api/",
     headers: { "Content-type": "application/json" },
 })
 
