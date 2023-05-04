@@ -3,8 +3,11 @@
     <pv-card style=" border-radius: 1rem;justify-content: center;">
       <template #content>
         <div class="content" style="width: 50vw">
-          <div class="steps" >
-            <h4 style="margin: 0 0 0 2rem">Paso 2 de 3</h4>
+          <div class="steps" style="margin-top: 2rem">
+              <router-link style="margin: 2rem" to="/sign-up-plans" class="rw">
+                  Regresar
+              </router-link>
+              <h4 style="margin-left: 2rem">Paso 2 de 3</h4>
           </div>
           <div class="phrase" style="margin-bottom: 1rem; display: flex; justify-content: center">
             <h1>Crea tu cuenta</h1>
@@ -58,13 +61,18 @@ export default {
       this.esFormularioCompleto = (this.user.name.length>0 && this.user.email.length >0 && this.user.password.length >0);
     },
     addTemporaryUser(){
-      if (this.user.email.includes('@') && this.user.email.toString().includes('.')) {
+        const arrobaCount = (this.user.email.split("@").length - 1);
+        const dotCount = (this.user.email.split(".").length - 1);
+      if (this.validarEmail(this.user.email)&& this.user.email.includes('@') && this.user.email.toString().includes('.') && arrobaCount===1 && dotCount===1) {
         localStorage.setItem("user",JSON.stringify(this.user))
         this.$router.push("/sign-up-payment")
       } else {
         this.$toast.add({severity:'info', summary: 'Email invalido', detail:'Se debe ingresar un correo valido', life: 3000});
       }
 
+    },validarEmail(email) {
+      const extensionesValidas = /(com|net|org)$/i;
+      return extensionesValidas.test(email);
     },
     validarNombre(evento) {
       const codigo = evento.keyCode || evento.which;

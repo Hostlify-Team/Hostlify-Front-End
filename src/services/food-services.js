@@ -4,11 +4,8 @@ const http = axios.create({
     headers: { "Content-type": "application/json" },
 })
 export class FoodServices{
-    getFoodServices=()=>{
-        return axios.get("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/foodServices")
-    }
     postFoodService=(token,foodOrder)=>{
-        return http.post("FoodServices/byResource",{
+        return http.post("Services/FoodServiceByResource",{
             "roomId": foodOrder.roomId,
             "dish": foodOrder.dish,
             "dishQuantity": foodOrder.dishQuantity,
@@ -20,12 +17,9 @@ export class FoodServices{
         },{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     getFoodServiceByRoomId(token,id){
-        return http.get("FoodServices/byRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
-    }
-    deleteFoodServiceByRoomId(id){
-        return axios.delete("https://my-json-server.typicode.com/Hostlify-Team/hostlify-data/room/"+id+"/foodServices")
+        return http.get("Services/FoodServicebyRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     deleteFoodServiceById(token,id){
-        return http.delete("FoodServices/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+        return http.delete("Services/deleteFoodService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
 }

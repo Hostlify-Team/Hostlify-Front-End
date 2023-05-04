@@ -31,7 +31,13 @@ export class UserServices{
     deleteUser(token,id){
         return http.delete("User/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    getUserByEmail(token,email){
-        return http.get("User/GetByEmail/"+email,{ headers: {"Authorization" : `Bearer ${token}`} })
+    postCustomPlan(email,roomsNumber){
+        return http.post("User/PostRoomsLimit",{
+            "email":email,
+            "roomsLimit":roomsNumber
+        })
+    }
+    getLimitRoom(token,id){
+        return http.get("User/GetRoomsLimit/"+id,{headers: {"Authorization" : `Bearer ${token}`}})
     }
 }

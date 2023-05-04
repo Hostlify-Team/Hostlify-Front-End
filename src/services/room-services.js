@@ -45,10 +45,6 @@ export class RoomServices{
     deleteRoom(token,id){
         return http.delete("Rooms/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    getRoomByRoomName(token,name){
-        return http.get("Rooms/byRoomName?roomName="+name,{ headers: {"Authorization" : `Bearer ${token}`} })
-
-    }
     registerGuest(token,id,registerGuest){
         return http.put("Rooms/register/"+id,{
             "Id":registerGuest.roomId,

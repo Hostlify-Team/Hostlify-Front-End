@@ -3,7 +3,7 @@
     <div class="card">
       <pv-toolbar class="mb-4">
         <template #start>
-          <pv-button  class="p-button-success" style="margin-right: 1rem;" @click="showAddRoomDialog"> <i class="pi pi-plus"/>{{$t("new room")}} </pv-button>
+          <pv-button :disabled="!esFormularioAddNewRoomCompleto"  class="p-button-success" style="margin-right: 1rem;" @click="showAddRoomDialog"> <i class="pi pi-plus"/>{{$t("new room")}} </pv-button>
           <pv-button label="Delete" class="p-button-danger" @click="showDeleteRoomsDialog"
                      :disabled="!selectedRooms || !selectedRooms.length"><i class="pi pi-trash"/>{{$t("delete")}} </pv-button>
         </template>
@@ -82,10 +82,13 @@
         </pv-column>
 
         <pv-dialog v-model:visible="addRoomDialog" :style="{ width: '450px'}" header="Agregue una habitacion" :modal="true" class="p-fluid">
-          <div style="margin: 2rem">
+            <div style="margin: 2rem">
+                <div v-if="plan!=='Premium'" style="display: flex;justify-content: center"><h4 style="margin-top: 0;margin-bottom: 3rem">{{limitRoom-rooms.length}} Habitaciones restantes</h4></div>
+                <div v-if="plan==='Premium'" style="display: flex;justify-content: center"><h4 style="margin-top: 0;margin-bottom: 3rem"> Habitaciones Ilimitadas</h4></div>
             <span class="p-float-label">
+
               <pv-input-text @input="actualizarEstadoBotonAddRoom()" type="text" id="room" v-model.trim="room.roomName" required="true" :maxlength="10" autofocus :class="{'p-invalid': submitted && !room.name }"/>
-              <label for="room">Nro de habitacion</label>
+              <label for="room">Nombre de la habitacion</label>
               <small class="p-error" v-if="submitted && !room.name">Se requiere un numero de habitacion</small>
             </span>
           </div>
@@ -109,7 +112,7 @@
           <div style="margin: 2rem">
             <span class="p-float-label">
               <pv-input-text  @input="actualizarEstadoBotonEditRoom()" type="text" id="room" v-model.trim="room.roomName" required="true" autofocus :class="{'p-invalid': submitted && !room.name }"/>
-              <label for="room">Nro de habitacion</label>
+              <label for="room">Nombre de la habitacion</label>
               <small class="p-error" v-if="submitted && !room.name">Se requiere un numero de habitacion</small>
             </span>
           </div>
@@ -295,6 +298,8 @@ export default {
   },
   data() {
     return {
+        limitRoom:0,
+        plan:"",
         token: sessionStorage.getItem("jwt"),
       rooms:[],
       addRoomDialog:false,
@@ -330,13 +335,29 @@ export default {
         resumeEndDate:null,
         resumePrice:null,
         resumeHotelDays:null,
-      esFormularioRegisterCompleto: false,
-      esFormularioAddRoomCompleto: false,
-      esFormulariEditRoomCompleto: true
+        esFormularioRegisterCompleto: false,
+        esFormularioAddRoomCompleto: false,
+        esFormulariEditRoomCompleto: true,
+        esFormularioAddNewRoomCompleto: true
 
     };
   },
   created() {
+      this.plan=sessionStorage.getItem("plan").toString()
+      if(sessionStorage.getItem("plan")==="Custom"){
+        new UserServices().getLimitRoom(this.token,parseInt(sessionStorage.getItem("id").toString())).then(response=>{
+            this.limitRoom=parseInt(response.data.toString())
+        })
+      }
+      if(sessionStorage.getItem("plan")==="Standard"){
+          this.limitRoom=30
+      }
+      if(sessionStorage.getItem("plan")==="Pro"){
+          this.limitRoom=50
+      }
+      if(sessionStorage.getItem("plan")==="Premium"){
+          this.limitRoom=-1
+      }
     new RoomServices().getRoomsForManager(this.token,sessionStorage.getItem("id")).then(response=>{
       this.rooms=response.data
       this.setGuestInfo()
@@ -411,6 +432,10 @@ export default {
       this.guestServiceInfo=data
     },
     addRoom() {
+
+      if(this.searchDuplicateName(this.room.roomName)){
+          this.$toast.add({severity:'info', summary: 'Habitacion duplicada', detail:'Nombre de habitacion duplicada', life: 3000});
+      }else {
       this.room.managerId = parseInt(sessionStorage.getItem("id"))//Todo: Guardar en int Y actualizar el progress cuando se elimine
       this.room.guestId = 0
       this.room.status = true
@@ -428,8 +453,20 @@ export default {
           this.room = {}
           this.addRoomDialog = false
           console.log("Room added successfully :)", this.rooms)
-      })
+          this.$toast.add({severity:'success', summary: 'Habitacion agregada', detail:'Habitacion agregada exitosamente', life: 3000});
+          if(this.limitRoom-this.rooms.length===0){
+              this.esFormularioAddNewRoomCompleto=false
+          }
+      })}
 
+    },
+    searchDuplicateName(roomName){
+        for (let i = 0; i < this.rooms.length; i++) {
+            if(this.rooms[i].roomName===roomName){
+                return true
+            }
+        }
+        return false
     },
     editRoom() {
         let temporaryIndex=this.findIndexById(this.room.id)
@@ -458,6 +495,9 @@ export default {
 
         this.room = {}
         console.log("Room deleted successfully :)",response.data)
+          if(this.limitRoom-this.rooms.length!==0){
+              this.esFormularioAddNewRoomCompleto=true
+          }
         this.deleteRoomDialog = false
       })
     },
@@ -510,13 +550,18 @@ export default {
         })
     },
     deleteRooms() {
+        //todo: implementar un servicio para eliminar habitaciones en grupo
       this.selectedRooms.forEach((room) => {
         if(room.guestId!==0){
           new UserServices().deleteUser(this.token,room.guestId).then(r=>{
             new RoomServices().deleteRoom(this.token,room.id).then((response) => {
               this.rooms = this.rooms.filter(
                   (t) => t.id !== room.id
+
               );
+                if(this.limitRoom-this.rooms.length!==0){
+                    this.esFormularioAddNewRoomCompleto=true
+                }
             });
           })
         }
@@ -525,6 +570,9 @@ export default {
             this.rooms = this.rooms.filter(
                 (t) => t.id !== room.id
             );
+              if(this.limitRoom-this.rooms.length!==0){
+                  this.esFormularioAddNewRoomCompleto=true
+              }
           });
         }
 

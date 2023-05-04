@@ -3,8 +3,11 @@
     <pv-card style=" border-radius: 1rem;justify-content: center;">
       <template #content>
         <div class="content" style="width: 50vw">
-          <div class="steps" >
-            <h4 style="margin: 0 0 0 2rem">Paso 3 de 3</h4>
+          <div class="steps" style="margin-top: 2rem">
+              <router-link style="margin: 2rem" to="/sign-up-register" class="rw">
+                  Regresar
+              </router-link>
+            <h4 style="margin-left: 2rem">Paso 3 de 3</h4>
           </div>
           <div class="phrase" style="margin-bottom: 1rem; display: flex; justify-content: center">
             <h1>Agrega un metodo  de pago</h1>
@@ -60,7 +63,12 @@ export default {
       this.user.plan=JSON.parse(localStorage.getItem("selectedPlan"))
       this.user.type="manager"
       new UserServices().register(this.user.email,this.user.password,this.user.plan,this.user.name,this.user.type).then(response=>{
-        localStorage.clear()
+          if(JSON.parse(localStorage.getItem("selectedPlan"))==="Custom"){
+              let roomsQuantity=JSON.parse(localStorage.getItem("quantityPlan"))
+              new UserServices().postCustomPlan(this.user.email,parseInt(roomsQuantity))
+          }
+          this.$toast.add({severity:'success', summary: 'Usuario Creado', detail:'Usuario Creado Exitosamente', life: 3000});
+          localStorage.clear()
         this.$router.push("/")
       }).catch(error=>{
         console.log(error.response)

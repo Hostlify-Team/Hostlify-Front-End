@@ -2,10 +2,13 @@
   <div style="height: 98vh ;margin: 0;display:flex; justify-content: center; align-items: center;">
     <pv-card style=" border-radius: 1rem;justify-content: center;width: 70vw;">
       <template #content>
-        <div>
-          <div class="steps" >
-            <h4 style="margin: 0 0 0 2rem">Paso 1 de 3</h4>
-          </div>
+        <div class="content" >
+            <div class="steps" style="margin-top: 2rem">
+                <router-link style="margin: 2rem; text-decoration-line: none;color: white" to="/" >
+                    Regresar
+                </router-link>
+                <h4 style="margin-left: 2rem">Paso 1 de 3</h4>
+            </div>
           <div class="phrase" style="margin-bottom: 1rem; display: flex; justify-content: center; text-align: center">
             <h1>Elige tu plan en Hostlify</h1>
           </div>
@@ -67,7 +70,7 @@
                         <h2 style="margin-bottom: 1rem">Plan personalizado</h2>
                         <p style="margin-bottom: 1.1rem">Cuantas habitaciones tienes?</p>
                         <div class="input" >
-                          <pv-input-text type="number" style="background-color: white; color: black" v-model="customPlanPrice" min="1"/>
+                          <pv-input-text type="number" style="background-color: white; color: black" v-model="customPlanQuantity" min="1"/>
                         </div>
                       </div>
                       <div class="content" style="display: flex; align-items: center; margin-top: 3rem">
@@ -77,12 +80,12 @@
                         <h2 style="margin-bottom: 1rem">Precios desde S/6.50 por mes</h2>
                         <p style="margin-bottom: 0">Planes para satisfacer cada etapa de tu hotel</p>
                         <div class="price">
-                          <p style="font-weight: bold; font-size: 3rem; margin: 0">S/{{ customPlanPrice*6.50 }} </p>
+                          <p style="font-weight: bold; font-size: 3rem; margin: 0">S/{{ customPlanQuantity*6.50 }} </p>
                           <div style="display: table;">
                             <p style="margin: 0;padding: 0 0 0.5rem 0.5rem ;align-items: end ;display: table-cell;vertical-align: bottom;color: darkgrey" >mo*</p>
                           </div>
                         </div>
-                        <pv-button style="margin-top: .5em; background-color: #D6A049; color:white" @click="customPlanSelected('Custom',customPlanPrice*6.50)">Elegir</pv-button>
+                        <pv-button style="margin-top: .5em; background-color: #D6A049; color:white" @click="customPlanSelected('Custom',customPlanQuantity)">Elegir</pv-button>
                       </div>
                     </div>
                   </template>
@@ -105,7 +108,7 @@ export default {
       options: ['Nuestros Planes', 'Plan personalizado'],
       defaultPlan: true,
       customPlan: false,
-      customPlanPrice:1,
+        customPlanQuantity:1,
       plans:[]
     }
   },
@@ -149,15 +152,15 @@ export default {
       this.addTemporaryPlan(plan)
       this.$router.push("/sign-up-register")
     },
-    customPlanSelected(plan,price){
-      this.customPlanPrice=price
+    customPlanSelected(plan,roomsQuantity){
+      this.customPlanQuantity=roomsQuantity
       this.addTemporaryPlan(plan)
       this.$router.push("/sign-up-register")
     },
     addTemporaryPlan(plan){
       localStorage.setItem("selectedPlan",JSON.stringify(plan))
       if(plan==="Custom"){
-        localStorage.setItem("mountPlan",JSON.stringify(this.customPlanPrice))
+        localStorage.setItem("quantityPlan",JSON.stringify(this.customPlanQuantity))
       }
     }
   }

@@ -3,7 +3,7 @@
     <Toolbar>
       <template #start>
         <avatar
-            image="https://github.com/Hostlify-Team/Hostlify-Landing-Page/blob/main/src/assets/images/Logo.png?raw=true"
+                image="../../src/assets/Logo.png"
             class="mr-2"
         />
         <div v-if="currentUserType==='manager'">
