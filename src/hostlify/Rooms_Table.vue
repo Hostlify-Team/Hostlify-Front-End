@@ -550,11 +550,12 @@ export default {
         })
     },
     deleteRooms() {
-        //todo: implementar un servicio para eliminar habitaciones en grupo
+      let contador=0
       this.selectedRooms.forEach((room) => {
         if(room.guestId!==0){
           new UserServices().deleteUser(this.token,room.guestId).then(r=>{
             new RoomServices().deleteRoom(this.token,room.id).then((response) => {
+
               this.rooms = this.rooms.filter(
                   (t) => t.id !== room.id
 
@@ -562,17 +563,22 @@ export default {
                 if(this.limitRoom-this.rooms.length!==0){
                     this.esFormularioAddNewRoomCompleto=true
                 }
+              contador++
+              console.log(contador)
             });
           })
         }
         else {
           new RoomServices().deleteRoom(this.token,room.id).then((response) => {
+
             this.rooms = this.rooms.filter(
                 (t) => t.id !== room.id
             );
               if(this.limitRoom-this.rooms.length!==0){
                   this.esFormularioAddNewRoomCompleto=true
               }
+            contador++
+            console.log(contador)
           });
         }
 

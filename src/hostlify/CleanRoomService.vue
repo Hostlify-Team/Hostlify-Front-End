@@ -1,14 +1,17 @@
 <template>
   <div class="container">
-    <h1 style="font-weight: bolder;color: #D6A049">{{$t("request service")}}</h1>
+    <h1 style="font-weight: bolder;color: #D6A049;">{{$t("request service")}}</h1>
     <div style="display: flex; justify-content: space-around;margin-top: 3rem;" >
-      <pv-card style="width: 50vw; border-radius: 1rem">
+      <pv-card style="width: 50vw; border-radius: 1rem;">
         <template #content>
-          <div style="display: flex; justify-content:left">
+          <div style="display: flex; justify-content:left;margin-left: 4rem">
             <h2>{{$t("room")}}</h2>
           </div>
           <div style="display: flex; justify-content:center">
             <h1 style="text-align: center">{{ roomName }}</h1>
+          </div>
+          <div style="display: flex; justify-content:center">
+            <pv-text-area id="food" v-model="instructions" :maxlength="256" style="width: 28rem;"/>
           </div>
           <div style="display: flex; justify-content:center">
             <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold;margin-top: 1.5rem" @click="next">Solicitar limpieza</pv-button>
@@ -27,23 +30,32 @@
 
 <script>
 import {RoomServices} from "../services/room-services";
+import {CleaningServices} from "../services/cleaning-services";
 export default {
   name: "CleanRoomService",
   data(){
     return{
       token: sessionStorage.getItem("jwt"),
-      roomName:null
+      roomName:null,
+      roomId:null,
+      instructions:null,
+      cleanOrder:[]
     }
   },
   created() {
     new RoomServices().getRoomForGuest(this.token, sessionStorage.getItem("id")).then(response=> {
       this.roomName=response.data.roomName
+      this.roomId=response.data.roomId
     })
 
   },
   methods:{
     next(){
-
+      this.cleanOrder.roomId=this.roomId
+      this.cleanOrder.instruction=this.instructions
+      new CleaningServices().postCleaningService(this.token,this.cleanOrder).then(response=>{
+        this.$toast.add({severity:'success', summary: 'Enviado', detail:'Orden enviada', life: 3000});
+      })
       this.$router.push("/services")
     }
   }
