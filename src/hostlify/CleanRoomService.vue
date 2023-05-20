@@ -10,11 +10,15 @@
           <div style="display: flex; justify-content:center">
             <h1 style="text-align: center">{{ roomName }}</h1>
           </div>
-          <div style="display: flex; justify-content:center">
-            <pv-text-area id="food" v-model="instructions" :maxlength="256" style="width: 28rem;"/>
+          <div>
+              <h1 style="text-align: center">{{$t("instruction")}}</h1>
           </div>
           <div style="display: flex; justify-content:center">
-            <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold;margin-top: 1.5rem" @click="next">Solicitar limpieza</pv-button>
+
+            <pv-text-area @input="actualizarEstadoBoton()" id="food" v-model="instructions" :maxlength="256" style="width: 28rem;"/>
+          </div>
+          <div style="display: flex; justify-content:center">
+            <pv-button :disabled="!esFormularioCompleto" class="button" style="border-radius: 0.4rem; color:white;font-weight:bold;margin-top: 1.5rem" @click="next">Solicitar limpieza</pv-button>
           </div>
           <div style="display: flex; justify-content:center">
             <router-link style="text-decoration:none; color:#D6A049" to="/services"> <h6>{{$t("cancel")}}</h6> </router-link>
@@ -39,7 +43,8 @@ export default {
       roomName:null,
       roomId:null,
       instructions:null,
-      cleanOrder:[]
+      cleanOrder:[],
+        esFormularioCompleto:false
     }
   },
   created() {
@@ -57,7 +62,10 @@ export default {
         this.$toast.add({severity:'success', summary: 'Enviado', detail:'Orden enviada', life: 3000});
       })
       this.$router.push("/services")
-    }
+    },
+      actualizarEstadoBoton() {
+          this.esFormularioCompleto = (this.instructions.length>0);
+      }
   }
 }
 </script>
