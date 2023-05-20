@@ -285,7 +285,8 @@
             </div>
           </div>
           <template #footer>
-            <pv-button :label="'Atender'.toUpperCase()" class="p-button-text" @click="deleteService(guestServiceInfo.id,guestServiceInfo.length)" />
+            <pv-button v-if="guestServiceInfo.dish" :label="'Atender'.toUpperCase()" class="p-button-text" @click="deleteFoodService(guestServiceInfo.id)" />
+            <pv-button v-if="!guestServiceInfo.dish" :label="'Atender'.toUpperCase()" class="p-button-text" @click="deleteCleanService(guestServiceInfo.id)" />
             <pv-button :label="'Volver'.toUpperCase()" class="p-button-text" @click="cancelShowGuestServiceInfo" >{{$t("return")}}</pv-button>
           </template>
         </pv-dialog>
@@ -622,8 +623,24 @@ export default {
         global: {value: null, matchMode: FilterMatchMode.CONTAINS},
       }
     },
-    deleteService(id){
+    deleteFoodService(id){
       new FoodServices().deleteFoodServiceById(this.token,id).then(response=>{
+        console.log(response.data)
+        this.guestServices = this.guestServices.filter(
+            (t) => t.id !== id);
+      })
+      if(this.guestServiceInfoQuantity===1){
+        let temporalRoom=this.room
+        temporalRoom.servicePending=false
+        new RoomServices().updateRoom(this.token, this.room.id,temporalRoom).then(response=>{
+          this.notificationsRoomsDialog=false
+        })
+      }
+      this.serviceInformation=false
+      this.guestServiceInfo={}
+    },
+    deleteCleanService(id){
+      new CleaningServices().deleteCleaningById(this.token,id).then(response=>{
         console.log(response.data)
         this.guestServices = this.guestServices.filter(
             (t) => t.id !== id);
@@ -665,12 +682,15 @@ export default {
       }
     },
     getServicesForRoom(id){
+      let preFoodService= false
       if(this.notificationsRoomsDialog===false){
         this.guestServices=[]
         new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
           if(response.data.length!==0){
+            preFoodService=true
             for(let i=0;i<(response.data.length);i++){
               this.guestServices.push(response.data[i])
+              console.log("ESTO ESTOY MOSTRANDO: "+id+"-"+this.guestServices.length)
             }
             let index=this.findIndexById(id)
             this.rooms[index].quantityOfServices=response.data.length
@@ -683,10 +703,11 @@ export default {
               this.guestServices.push(response.data[i])
             }
             let index=this.findIndexById(id)
-            this.rooms[index].quantityOfServices=this.rooms[index].quantityOfServices+response.data.length
+            if(preFoodService){this.rooms[index].quantityOfServices=this.rooms[index].quantityOfServices+response.data.length}
+            else{this.rooms[index].quantityOfServices=response.data.length}
+
           }
         })
-
       }
     },
     startProgress() {
