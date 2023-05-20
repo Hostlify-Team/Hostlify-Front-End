@@ -50,7 +50,7 @@ export default {
   created() {
     new RoomServices().getRoomForGuest(this.token, sessionStorage.getItem("id")).then(response=> {
       this.roomName=response.data.roomName
-      this.roomId=response.data.roomId
+      this.roomId=response.data.id
     })
 
   },
@@ -60,8 +60,14 @@ export default {
       this.cleanOrder.instruction=this.instructions
       new CleaningServices().postCleaningService(this.token,this.cleanOrder).then(response=>{
         this.$toast.add({severity:'success', summary: 'Enviado', detail:'Orden enviada', life: 3000});
+        new RoomServices().getRoomForGuest(this.token, parseInt(sessionStorage.getItem("id"))).then(response=>{
+          let roomForGuest=response.data
+          roomForGuest.servicePending=true
+          new RoomServices().updateRoom(this.token, roomForGuest.id,roomForGuest)
+        })
+        this.$router.push("/services")
       })
-      this.$router.push("/services")
+
     },
       actualizarEstadoBoton() {
           this.esFormularioCompleto = (this.instructions.length>0);

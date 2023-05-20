@@ -210,8 +210,11 @@
             <div>
               <h3>Pendiente: </h3>
               <div style="display: flex;justify-content: space-between;align-items: center" v-for="service in guestServices">
-                <div>
+                <div v-if="service.dish">
                   <p>Se solicito {{ service.dish }}</p>
+                </div>
+                <div v-if="!service.dish">
+                  <p>Se solicito limpieza a la habitacion</p>
                 </div>
                 <div style="display: flex; justify-content:center">
                   <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="showGuestServiceInfo(service,guestServices.length)">Administrar</pv-button>
@@ -228,8 +231,8 @@
           <div style="display: flex; justify-content:center">
             <h1>Resumen del servicio</h1>
           </div>
-          <div >
-            <div>
+          <div v-if="guestServiceInfo.dish">
+            <div >
               <h3>Platillo: </h3>
               <div style="display: flex;justify-content: space-between;margin: 0 3rem 0 1.5rem">
                 <div>
@@ -271,6 +274,16 @@
               </div>
             </div>
           </div>
+          <div v-if="!guestServiceInfo.dish">
+            <div v-if="guestServiceInfo.instruction!==null">
+              <h3>Intruccion: </h3>
+              <div style="display: flex;justify-content: space-between;margin: 0 3rem 0 1.5rem">
+                <div>
+                  <p>{{guestServiceInfo.instruction}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
           <template #footer>
             <pv-button :label="'Atender'.toUpperCase()" class="p-button-text" @click="deleteService(guestServiceInfo.id,guestServiceInfo.length)" />
             <pv-button :label="'Volver'.toUpperCase()" class="p-button-text" @click="cancelShowGuestServiceInfo" >{{$t("return")}}</pv-button>
@@ -291,6 +304,7 @@ import {UserServices} from "../services/user-services";
 import {FoodServices} from "../services/food-services";
 import { FilterMatchMode } from "primevue/api";
 import Register_Huesped from "./Register_Huesped.vue";
+import {CleaningServices} from "../services/cleaning-services";
 
 export default {
   components:{
@@ -654,12 +668,23 @@ export default {
       if(this.notificationsRoomsDialog===false){
         this.guestServices=[]
         new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
-          for(let i=0;i<(response.data.length);i++){
-            this.guestServices.push(response.data[i])
+          if(response.data.length!==0){
+            for(let i=0;i<(response.data.length);i++){
+              this.guestServices.push(response.data[i])
+            }
+            let index=this.findIndexById(id)
+            this.rooms[index].quantityOfServices=response.data.length
           }
-          let index=this.findIndexById(id)
-          this.rooms[index].quantityOfServices=response.data.length
 
+        })
+        new CleaningServices().getCleaningByRoomId(this.token,id).then(response=>{
+          if(response.data.length!==0){
+            for(let i=0;i<(response.data.length);i++){
+              this.guestServices.push(response.data[i])
+            }
+            let index=this.findIndexById(id)
+            this.rooms[index].quantityOfServices=this.rooms[index].quantityOfServices+response.data.length
+          }
         })
 
       }
