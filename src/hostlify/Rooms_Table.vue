@@ -662,11 +662,19 @@ export default {
       this.guestServiceInfo={}
     },
     deleteServiceByRoomId(id){
-      new FoodServices().getFoodServiceByRoomId(id).then(response=>{
-        for (let i=0;i<response.data.length;i++){
-          new FoodServices().deleteFoodServiceById(response.data[i].id)
+      new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
+        if(response.data.length!==0){
+          for(let i=0;i<(response.data.length);i++){
+            new FoodServices().deleteFoodServiceById(this.token, response.data[i].id)
+          }
         }
-        console.log("Service deleted successfully")
+      })
+      new CleaningServices().getCleaningByRoomId(this.token,id).then(response=>{
+        if(response.data.length!==0){
+          for (let i=0;i<response.data.length;i++){
+            new CleaningServices().deleteCleaningById(this.token, response.data[i].id)
+          }
+        }
       })
     },
     setTotalTimeForGuest(currentDate,goalDate){
