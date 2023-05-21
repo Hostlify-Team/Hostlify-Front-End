@@ -433,7 +433,7 @@ export default {
     },
     setVisibleNotifications(){
       for(let i=0;i<(this.rooms.length);i++){
-       this.getServicesForRoom(this.rooms[i].id)
+       this.getServicesNotificationsForRoom(this.rooms[i].id)
       }
     },
     showNotificationsRoomDialog(data){
@@ -625,9 +625,9 @@ export default {
     },
     deleteFoodService(id){
       new FoodServices().deleteFoodServiceById(this.token,id).then(response=>{
-        console.log(response.data)
         this.guestServices = this.guestServices.filter(
             (t) => t.id !== id);
+        //todo: eliminar la cantidad en las notificaciones
       })
       if(this.guestServiceInfoQuantity===1){
         let temporalRoom=this.room
@@ -644,6 +644,7 @@ export default {
         console.log(response.data)
         this.guestServices = this.guestServices.filter(
             (t) => t.id !== id);
+        //todo: eliminar la cantidad en las notificaciones
       })
       if(this.guestServiceInfoQuantity===1){
         let temporalRoom=this.room
@@ -681,34 +682,39 @@ export default {
         return progress
       }
     },
-    getServicesForRoom(id){
-      let preFoodService= false
+    getServicesNotificationsForRoom(id){
+      let index=this.findIndexById(id)
+      this.rooms[index].quantityOfServices=0
       if(this.notificationsRoomsDialog===false){
-        this.guestServices=[]
         new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
           if(response.data.length!==0){
-            preFoodService=true
-            for(let i=0;i<(response.data.length);i++){
-              this.guestServices.push(response.data[i])
-              console.log("ESTO ESTOY MOSTRANDO: "+id+"-"+this.guestServices.length)
-            }
-            let index=this.findIndexById(id)
-            this.rooms[index].quantityOfServices=response.data.length
+            this.rooms[index].quantityOfServices+=response.data.length
           }
 
         })
         new CleaningServices().getCleaningByRoomId(this.token,id).then(response=>{
           if(response.data.length!==0){
-            for(let i=0;i<(response.data.length);i++){
-              this.guestServices.push(response.data[i])
-            }
-            let index=this.findIndexById(id)
-            if(preFoodService){this.rooms[index].quantityOfServices=this.rooms[index].quantityOfServices+response.data.length}
-            else{this.rooms[index].quantityOfServices=response.data.length}
-
+            this.rooms[index].quantityOfServices+=response.data.length
           }
         })
       }
+    },
+    getServicesForRoom(id){
+      this.guestServices=[]
+      new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
+        if(response.data.length!==0){
+          for(let i=0;i<(response.data.length);i++){
+            this.guestServices.push(response.data[i])
+          }
+        }
+      })
+      new CleaningServices().getCleaningByRoomId(this.token,id).then(response=>{
+        if(response.data.length!==0){
+          for(let i=0;i<(response.data.length);i++){
+            this.guestServices.push(response.data[i])
+          }
+        }
+      })
     },
     startProgress() {
       this.interval = setInterval(() => {
@@ -726,7 +732,6 @@ export default {
       }, 30000);
     },
     watchServices(){
-      console.log("Watching services ")
       this.interval = setInterval(() => {
         for(let i=0;i<this.rooms.length;i++){
           if(this.rooms[i].guestStayComplete===false){
@@ -738,13 +743,14 @@ export default {
               }
               if(response.data.servicePending!==false){
                 this.rooms[i].servicePending=response.data.servicePending
-                this.setVisibleNotifications()
               }else {
                 this.rooms[i].servicePending=false
               }
+
             })
           }
         }
+        this.setVisibleNotifications()
       }, 9000);
     },
     increaseProgress(i){
