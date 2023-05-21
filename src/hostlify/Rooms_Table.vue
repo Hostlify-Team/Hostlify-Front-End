@@ -437,6 +437,7 @@ export default {
       }
     },
     showNotificationsRoomDialog(data){
+      this.getServicesNotificationsForRoom(data.id)
       this.notificationsRoomsDialog=true
       this.room=data
       this.getServicesForRoom( data.id)
@@ -627,7 +628,9 @@ export default {
       new FoodServices().deleteFoodServiceById(this.token,id).then(response=>{
         this.guestServices = this.guestServices.filter(
             (t) => t.id !== id);
-        //todo: eliminar la cantidad en las notificaciones
+        let index=this.findIndexById(this.room.id)
+        this.rooms[index].quantityOfServices-=1
+
       })
       if(this.guestServiceInfoQuantity===1){
         let temporalRoom=this.room
@@ -644,6 +647,8 @@ export default {
         console.log(response.data)
         this.guestServices = this.guestServices.filter(
             (t) => t.id !== id);
+        let index=this.findIndexById(this.room.id)
+        this.rooms[index].quantityOfServices-=1
         //todo: eliminar la cantidad en las notificaciones
       })
       if(this.guestServiceInfoQuantity===1){
@@ -683,9 +688,9 @@ export default {
       }
     },
     getServicesNotificationsForRoom(id){
-      let index=this.findIndexById(id)
-      this.rooms[index].quantityOfServices=0
       if(this.notificationsRoomsDialog===false){
+        let index=this.findIndexById(id)
+        this.rooms[index].quantityOfServices=0
         new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
           if(response.data.length!==0){
             this.rooms[index].quantityOfServices+=response.data.length
@@ -733,6 +738,7 @@ export default {
     },
     watchServices(){
       this.interval = setInterval(() => {
+        console.log("WatchingServices")
         for(let i=0;i<this.rooms.length;i++){
           if(this.rooms[i].guestStayComplete===false){
             new RoomServices().getRoomForGuest(this.token,this.rooms[i].guestId).then(response=>{
