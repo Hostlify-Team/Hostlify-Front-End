@@ -1,13 +1,15 @@
-<template >
-  <div class="card" >
-    <div>
+<template>
+    <div class="card" >
       <pv-card class="SignInCard">
         <template #title>
+          <div style="display: flex;justify-content: center">
+            <img   src="../../../assets/Logo.png" style="height: 50px;margin-bottom: 2rem"/>
+          </div>
           <div class="Text" style="display: flex;justify-content: start; padding-left: 2rem">
             Login
           </div>
           <p style="font-weight: lighter; font-size: 1rem;padding-left: 2rem">
-            Bienvenido, Porfavor inicia sesion
+            Bienvenido, Porfavor Inicia sesion.
           </p>
         </template>
         <template #content>
@@ -31,7 +33,7 @@
         </template>
       </pv-card>
     </div>
-  </div>
+
 </template>
 
 <script>
@@ -84,7 +86,7 @@ export default {
 }
 .SignInCard{
   width: 10cm;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   padding-top: 2rem;
 }
 .Text{
@@ -98,7 +100,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 97vh;
 }
 .form{
   margin: 0 0 0 2rem;
@@ -119,5 +121,8 @@ export default {
 .input{
   width: 85%;
 
+}
+.font{
+  font-family: 'Roboto', sans-serif;
 }
 </style>
