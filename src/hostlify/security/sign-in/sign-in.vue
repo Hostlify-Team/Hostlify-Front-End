@@ -1,31 +1,36 @@
 <template >
   <div class="card" >
-    <pv-card class="SignInCard">
-      <template #title >
-        <div class="Text">
-          Iniciar sesion
-        </div>
-      </template>
-      <template #content>
-        <div class="form">
-          <label for="email">Correo Electronico</label>
-          <pv-input-text id="email" class="input" v-model="email" maxlength="256"></pv-input-text>
-          <label for="password">contraseña</label>
-          <pv-input-text id="password" type="password" class="input" v-model="password"></pv-input-text>
-        </div>
-        <div class="footer">
-          <div class="Text">
-            <router-link to="/forgot-password" class="rw">
-              ¿Olvidaste tu <br> contraseña?
-            </router-link>
+    <div>
+      <pv-card class="SignInCard">
+        <template #title>
+          <div class="Text" style="display: flex;justify-content: start; padding-left: 2rem">
+            Login
           </div>
-          <div class="buttons">
-            <router-link to="/sign-up-plans" class="rw"><pv-button>Crear Cuenta</pv-button></router-link>
-            <pv-button @click="signIn">Iniciar sesion</pv-button>
+          <p style="font-weight: lighter; font-size: 1rem;padding-left: 2rem">
+            Bienvenido, Porfavor inicia sesion
+          </p>
+        </template>
+        <template #content>
+          <div class="form">
+            <label >Correo Electronico</label>
+            <pv-input-text id="email" class="input" v-model="email" maxlength="256" ></pv-input-text>
+            <label style="margin-top: 0.5rem">Contraseña</label>
+            <pv-input-text id="password" type="password" class="input" v-model="password"></pv-input-text>
           </div>
-        </div>
-      </template>
-    </pv-card>
+          <div class="footer"  >
+            <div class="Text" style="font-weight: lighter; font-size: 0.9rem; margin-bottom: 3rem">
+              <router-link to="/forgot-password" class="rw">
+                ¿Olvidaste tu contraseña?
+              </router-link>
+            </div>
+            <div class="buttons">
+              <router-link to="/sign-up-plans" class="rw"><pv-button>Crear Cuenta</pv-button></router-link>
+              <pv-button @click="signIn">Iniciar sesion</pv-button>
+            </div>
+          </div>
+        </template>
+      </pv-card>
+    </div>
   </div>
 </template>
 
@@ -97,9 +102,11 @@ export default {
 }
 .form{
   margin: 0 0 0 2rem;
+  padding-top: 1rem;
 }
 .form .input{
   margin: 0.3rem 0;
+
 }
 .buttons{
   display: flex;
@@ -107,7 +114,7 @@ export default {
   justify-content: space-around;
 }
 .footer{
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 .input{
   width: 85%;
