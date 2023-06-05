@@ -42,7 +42,7 @@
           </template>
         </pv-column>
         <pv-column field="endDate" header="Fecha de salida" :sortable="true" style="min-width: 16rem"></pv-column>
-        <pv-column field="price" header="Precio" :sortable="true" style="min-width: 16rem">
+        <pv-column field="price" header="Precio" :sortable="true" style="min-width: 12rem">
           <template #body="slotProps">
             <p v-if="slotProps.data.price!==0">S/. {{slotProps.data.price}}</p>
           </template>
@@ -74,12 +74,35 @@
             <pv-button  v-if="slotProps.data.status" @click="showRegisterGuestDialog(slotProps.data)">{{$t('register')}}</pv-button>
           </template>
         </pv-column>
-        <pv-column :exportable="false" style="min-width: 8rem">
+        <pv-column :exportable="false" style="min-width: 10rem">
           <template #body="slotProps">
             <pv-button icon="pi pi-pencil" class="p-button-text p-button-rounded" @click="showEditRoomDialog(slotProps.data)"/>
             <pv-button icon="pi pi-trash" class="p-button-text p-button-rounded" @click="showDeleteRoomDialog(slotProps.data)"/>
+            <pv-button icon="pi pi-info-circle" class="p-button-text p-button-rounded" @click="showInfoRoomDialog(slotProps.data)"/>
           </template>
         </pv-column>
+
+        <pv-dialog v-model:visible="infoRoomDialog" :style="{ width: '450px'}" header="Informacion " :modal="true" class="p-fluid">
+          <div style="margin: 2rem">
+            <div style="display: flex; justify-content: center">
+              <pv-tag v-if="room.status === true" severity="success">{{$t('available')}}</pv-tag>
+              <pv-tag v-else severity="danger">{{$t('occupied')}}</pv-tag>
+            </div>
+            <p>{{ $t('room') }}: {{room.roomName}}</p>
+            <div v-if="!room.status">
+              <p>{{ $t('price') }}: S/ {{room.price}} </p>
+              <p>{{ $t('guest') }}: {{ room.guestName }}</p>
+              <p>{{ $t('entrance') }}: {{ room.initialDate }}</p>
+              <p>{{ $t('departure') }}: {{ room.endDate }}</p>
+            </div>
+
+            <p>{{ $t('description') }}: </p>
+            <p>{{room.description}}</p>
+          </div>
+          <template #footer>
+            <pv-button :label="'Ocultar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("hide")}}</pv-button>
+          </template>
+        </pv-dialog>
 
         <pv-dialog v-model:visible="addRoomDialog" :style="{ width: '450px'}" header="Agregue una habitacion" :modal="true" class="p-fluid">
             <div style="margin: 2rem">
@@ -319,6 +342,7 @@ export default {
       rooms:[],
       addRoomDialog:false,
       editRoomDialog:false,
+      infoRoomDialog:false,
       deleteRoomDialog:false,
       deleteRoomsDialog:false,
       notificationsRoomsDialog:false,
@@ -406,6 +430,25 @@ export default {
         this.room.servicePending = data.servicePending
         this.editRoomDialog = true
         this.setGuestInfo()
+    },
+    showInfoRoomDialog(data) {
+      this.room.id = data.id
+      this.room.roomName = data.roomName
+      this.room.managerId = data.managerId
+      this.room.guestId = data.guestId
+      this.room.guestName=data.guestName
+      this.room.status = data.status
+      this.room.progressTime = data.progressTime
+      this.room.guestStayComplete = data.guestStayComplete
+      this.room.initialDate = data.initialDate
+      this.room.endDate = data.endDate
+      this.room.price = data.price
+      this.room.image = data.image
+      this.room.description = data.description
+      this.room.emergency = data.emergency
+      this.room.servicePending = data.servicePending
+      this.infoRoomDialog = true
+      this.setGuestInfo()
     },
     showDeleteRoomDialog(data) {
       this.room.roomName = data.roomName
@@ -608,6 +651,7 @@ export default {
       this.deleteRoomsDialog = false
       this.evictGuestDialog=false
       this.notificationsRoomsDialog=false
+      this.infoRoomDialog=false
       this.room = {}
     },
     cancelShowGuestServiceInfo(data){
