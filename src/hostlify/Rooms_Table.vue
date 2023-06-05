@@ -4,8 +4,9 @@
       <pv-toolbar class="mb-4">
         <template #start>
           <pv-button :disabled="!esFormularioAddNewRoomCompleto"  class="p-button-success" style="margin-right: 1rem;" @click="showAddRoomDialog"> <i class="pi pi-plus"/>{{$t("new room")}} </pv-button>
-          <pv-button label="Delete" class="p-button-danger" @click="showDeleteRoomsDialog"
+          <pv-button label="Delete" class="p-button-danger" @click="showDeleteRoomsDialog" style="margin-right: 1rem;"
                      :disabled="!selectedRooms || !selectedRooms.length"><i class="pi pi-trash"/>{{$t("delete")}} </pv-button>
+          <pv-button label="Delete" class="p-button-warning" @click="showAttendServicesDialog"><i class="pi pi-bell"/>{{$t("attend")}} </pv-button>
         </template>
         <template #end>
           <pv-button label="Exportar" class="p-button-help" @click="exportToCSV($event)"><i class="pi pi-download"/>{{$t("export")}}</pv-button>
@@ -314,6 +315,31 @@
           </template>
         </pv-dialog>
 
+        <pv-dialog v-model:visible="attendAllServicesDialog" :style="{ width: '500px' }" header="Servicios pendientes" :modal="true">
+          <div style="display: flex; justify-content:center">
+            <h1>Solicitudes</h1>
+          </div>
+          <div class="container">
+            <div>
+              <h3>Solicitudes pendientes: </h3>
+              <div style="display: flex;justify-content: space-between;align-items: center" v-for="service in guestServices">
+                <div v-if="service.dish">
+                  <p>Habitacion {{service.roomName}} solicito {{ service.dish }}</p>
+                </div>
+                <div v-if="!service.dish">
+                  <p>Habitacion {{service.roomName}} solicito limpieza a la habitacion</p>
+                </div>
+                <div style="display: flex; justify-content:center">
+                  <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="showGuestServiceInfoForGeneralView(service)">Administrar</pv-button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <template #footer>
+            <pv-button :label="'Cerrar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" />
+          </template>
+        </pv-dialog>
+
 
 
 
@@ -341,6 +367,7 @@ export default {
         token: sessionStorage.getItem("jwt"),
       rooms:[],
       addRoomDialog:false,
+      attendAllServicesDialog:false,
       editRoomDialog:false,
       infoRoomDialog:false,
       deleteRoomDialog:false,
@@ -485,8 +512,25 @@ export default {
       this.room=data
       this.getServicesForRoom( data.id)
     },
+    showAttendServicesDialog(){
+      this.attendAllServicesDialog=true
+      this.getAllServicesToManager()
+      console.log(this.guestServices)
+
+    },
     showGuestServiceInfo(data,len){
       this.guestServiceInfoQuantity=len
+      this.serviceInformation=true
+      this.guestServiceInfo=data
+    },
+    showGuestServiceInfoForGeneralView(data){
+      let quantity=0
+      for (let i = 0; i < this.guestServices.length; i++) {
+        if(data.roomId===this.guestServices[i].roomId){
+          quantity++
+        }
+      }
+      this.guestServiceInfoQuantity=quantity
       this.serviceInformation=true
       this.guestServiceInfo=data
     },
@@ -652,6 +696,7 @@ export default {
       this.evictGuestDialog=false
       this.notificationsRoomsDialog=false
       this.infoRoomDialog=false
+      this.attendAllServicesDialog=false
       this.room = {}
     },
     cancelShowGuestServiceInfo(data){
@@ -769,6 +814,27 @@ export default {
         if(response.data.length!==0){
           for(let i=0;i<(response.data.length);i++){
             this.guestServices.push(response.data[i])
+          }
+        }
+      })
+    },
+    getAllServicesToManager(){
+      this.guestServices=[]
+      new CleaningServices().getAllCleaningServices(this.token).then(response=>{
+        if(response!=null){
+          for(let i=0;i<(response.data.length);i++){
+            let temp=response.data[i]
+            temp.roomName=this.getRoomNameById(temp.roomId)
+            this.guestServices.push(temp)
+          }
+        }
+      })
+      new FoodServices().getAllFoodServices(this.token).then(response=>{
+        if(response!=null){
+          for(let i=0;i<(response.data.length);i++){
+            let temp=response.data[i]
+            temp.roomName=this.getRoomNameById(temp.roomId)
+            this.guestServices.push(temp)
           }
         }
       })
@@ -979,6 +1045,13 @@ export default {
       } else {
         evento.preventDefault();
         return false;
+      }
+    },
+    getRoomNameById(id){
+      for(let i=0;i<(this.rooms.length);i++){
+        if(this.rooms[i].id===id){
+          return this.rooms[i].roomName
+        }
       }
     }
 
