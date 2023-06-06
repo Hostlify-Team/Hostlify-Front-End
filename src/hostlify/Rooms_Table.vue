@@ -36,19 +36,19 @@
         </template>
 
         <pv-column selectionMode="multiple" style="width: 3rem" :exportable="false"></pv-column>
-        <pv-column field="roomName" header="Habitacion" :sortable="true" style="min-width: 16rem"></pv-column>
-        <pv-column field="guestId" header="Huesped" :sortable="true" style="min-width: 16rem">
+        <pv-column field="roomName" header="Habitacion" :sortable="true" style="min-width: 12rem"></pv-column>
+        <pv-column field="guestId" header="Huesped" :sortable="true" style="min-width: 14rem">
           <template #body="slotProps">
             <p v-if="slotProps.data.guestId!==0">{{slotProps.data.guestName}}</p>
           </template>
         </pv-column>
-        <pv-column field="endDate" header="Fecha de salida" :sortable="true" style="min-width: 16rem"></pv-column>
+        <pv-column field="endDate" header="Fecha de salida" :sortable="true" style="min-width: 14rem"></pv-column>
         <pv-column field="price" header="Precio" :sortable="true" style="min-width: 12rem">
           <template #body="slotProps">
             <p v-if="slotProps.data.price!==0">S/. {{slotProps.data.price}}</p>
           </template>
         </pv-column>
-        <pv-column field="status" header="Status" :sortable="true" style="min-width: 12rem">
+        <pv-column field="status" header="Status" :sortable="true" style="min-width: 10rem">
           <template #body="slotProps">
             <pv-tag v-if="slotProps.data.status === true" severity="success">{{$t('available')}}</pv-tag>
             <pv-tag v-else severity="danger">{{$t('occupied')}}</pv-tag>
@@ -67,6 +67,9 @@
             </i>
             <pv-button v-if="slotProps.data.emergency" icon="pi pi-exclamation-circle" class="p-button-rounded p-button-danger">
             </pv-button>
+            <i v-if="slotProps.data.status===false" class="p-text-secondary" style="font-size: 1.5rem;margin-right: 1rem">
+              <pv-button  icon="pi pi-money-bill" class="p-button-rounded p-button-warning" @click="showBillDialog(slotProps.data)"/>
+            </i>
           </template>
         </pv-column>
         <pv-column :exportable="false" style="min-width: 8rem">
@@ -340,6 +343,44 @@
           </template>
         </pv-dialog>
 
+        <pv-dialog v-model:visible="billDialog" :style="{ width: '700px' }" header="Factura" :modal="true">
+          <div style="padding-left: 1rem">
+            <h1>Facturacion</h1>
+          </div>
+          <div style="padding: 1rem">
+            <p>Datos de la empresa</p>
+            <div>
+              <div style="justify-content: center;display: flex">
+                <pv-input-text @input="actualizarEstadoBotonGenerateBill" style="width: 100%" type="text" id="hotelName" v-model.trim="bill.companyName" required="true" :maxlength="250" placeholder="Nombre de la empresa"/>
+              </div>
+              <div style="display: flex;justify-content: space-evenly">
+                <pv-input-text @input="actualizarEstadoBotonGenerateBill" style="width: 80%" type="text" id="hotelName" v-model.trim="bill.address" required="true" :maxlength="250" placeholder="Direccion"/>
+                <pv-input-text @input="actualizarEstadoBotonGenerateBill" style="width: 30%" type="text" id="hotelName" v-model.trim="bill.city" required="true" :maxlength="250" placeholder="Ciudad"/>
+              </div>
+              <div style="display: flex;justify-content: space-evenly">
+                <pv-input-text @input="actualizarEstadoBotonGenerateBill" min="0" style="width: 95%" type="number" id="hotelName" v-model.trim="bill.postalCode" required="true" :maxlength="250" placeholder="Codigo Postal"/>
+                <pv-input-text @input="actualizarEstadoBotonGenerateBill" min="0" style="width: 95%" type="number" id="hotelName" v-model.trim="bill.phone" required="true" :maxlength="250" placeholder="Telefono"/>
+              </div>
+            </div>
+            <p>Servicios</p>
+            <div style="display: flex;justify-content: space-evenly">
+              <pv-input-text @input="actualizarEstadoBotonAddServiceBill" style="width: 62.5%" type="text" id="hotelName" v-model.trim="billService.concepto" required="true" :maxlength="250" placeholder="Tipo de servicio"/>
+              <pv-input-text @input="actualizarEstadoBotonAddServiceBill" min="0" style="width: 22.5%" type="number" id="hotelName" v-model.trim="billService.precio" required="true" :maxlength="10" placeholder="Precio"/>
+              <pv-button :disabled="!areFieldsAddServiceFilled" label="Exportar" @click="addBillService()" >{{$t("add")}}</pv-button>
+            </div>
+            <div style="display: flex;justify-content: space-between;padding: 1rem;padding-bottom: 0rem;padding-top: 0.5rem;align-items: center" v-for="bill in billServices">
+              <p>{{bill.concepto}}</p>
+              <p>S/ {{bill.precio}}</p>
+            </div>
+          </div>
+
+          <template #footer>
+            <pv-button :disabled="!areFieldsBillFilled" label="Exportar" @click="generateInvoice" class="p-button-text">{{$t("generate")}}</pv-button>
+            <pv-button icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("cancel")}}</pv-button>
+
+          </template>
+        </pv-dialog>
+
 
 
 
@@ -355,6 +396,8 @@ import {FoodServices} from "../services/food-services";
 import { FilterMatchMode } from "primevue/api";
 import Register_Huesped from "./Register_Huesped.vue";
 import {CleaningServices} from "../services/cleaning-services";
+import jsPDF from 'jspdf';
+import logo from '@/assets/Logo.png';
 
 export default {
   components:{
@@ -368,6 +411,7 @@ export default {
       rooms:[],
       addRoomDialog:false,
       attendAllServicesDialog:false,
+      billDialog:false,
       editRoomDialog:false,
       infoRoomDialog:false,
       deleteRoomDialog:false,
@@ -376,11 +420,16 @@ export default {
       evictGuestDialog:false,
       registerGuestDialog:false,
       serviceInformation:false,
+      areFieldsAddServiceFilled:false,
       editRoomAuxiliaryId:null,
+      areFieldsBillFilled:false,
       guestServices:[],
       guestServiceInfo:{},
       guestServiceInfoQuantity:null,
       room:{},
+      bill:{},
+      billService:{},
+      billServices:[],
       selectedRooms:null,
       statusesRoom: [
         { value: "Disponible" },
@@ -434,6 +483,141 @@ export default {
     this.initFilters();
   },
   methods: {
+    addBillService(){
+      let precio=this.billService.precio
+      let tempBillService={}
+      tempBillService.Nro=(this.billServices.length+1).toString()
+      tempBillService.concepto=this.billService.concepto.toString()
+      tempBillService.precio=(this.billService.precio).toString()
+      tempBillService.Cant="1"
+      tempBillService.total=(precio*1).toString()
+
+
+      this.billServices.push(tempBillService)
+      this.billService={}
+    },
+    showBillDialog(room){
+      this.billServices=[]
+      this.billDialog=true
+
+      this.billService.Nro="1"
+      this.billService.concepto="Habitacion"
+      this.billService.precio=(room.price).toString()
+      this.billService.Cant="1"
+      this.billService.total=(room.price*1).toString()
+
+      this.billServices.push(this.billService)
+      this.billService={}
+    },
+    generateInvoice() {
+      console.log(this.billServices)
+      const doc = new jsPDF();
+      // Agregar imagen de logo
+      doc.addImage(logo, 'PNG', 10, 5, 30, 30);
+
+      // Encabezado de la factura
+      const companyName = this.bill.companyName;
+      const address = this.bill.address;
+      const cityPostal = this.bill.city+", "+this.bill.postalCode;
+      const phone = this.bill.phone;
+
+      doc.setFont('bold');
+      doc.setFontSize(12);
+      doc.text(companyName, doc.internal.pageSize.getWidth() - 10, 20, { align: 'right' });
+      doc.setFont('normal');
+      doc.text(`${address}\n${cityPostal} - ${phone}`, doc.internal.pageSize.getWidth() - 10, 30, { align: 'right' });
+
+      // Línea de separación
+      doc.setLineWidth(0.5);
+      doc.line(10, 40, doc.internal.pageSize.getWidth() - 10, 40);
+
+      // Body de la factura
+      const invoiceNumber = 'Nro Factura';
+      const invoiceDate = 'Fecha';
+      const dueDate = 'Fecha de vencimiento';
+
+      doc.setFont('bold');
+      doc.setFontSize(12);
+      doc.text('Nombre', 20, 60);
+      doc.text(address, 20, 70);
+      doc.text(cityPostal, 20, 80);
+
+      doc.setFont('normal');
+      doc.text(companyName, 60, 60);
+
+      doc.setFont('bold');
+      doc.text(invoiceNumber, doc.internal.pageSize.getWidth() - 30, 60);
+      doc.text('123456', doc.internal.pageSize.getWidth() - 23, 70);
+      doc.text(invoiceDate, doc.internal.pageSize.getWidth() - 20, 80);
+      doc.text('01 de enero, 2023', doc.internal.pageSize.getWidth() - 40, 90);
+      doc.text(dueDate, doc.internal.pageSize.getWidth() - 47, 100);
+      doc.text('15 de enero, 2023', doc.internal.pageSize.getWidth() - 40, 110);
+
+      // Tabla ----------------------------------------------------------------------------
+      const tableHeaders = ['Nro', 'Concepto', 'Precio', 'Cant', 'Total'];
+      const tableData =this.billServices;
+
+      const startY = 120;
+      const margin = 10;
+      const columnWidth = (doc.internal.pageSize.getWidth() - margin * 2) / tableHeaders.length;
+      const rowHeight = 10;
+
+      doc.setDrawColor(0, 0, 0);
+      doc.setFillColor(255, 255, 255);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('bold');
+
+      // Encabezados de la tabla
+      tableHeaders.forEach((header, index) => {
+        doc.text(header, margin + index * columnWidth + columnWidth / 2, startY + rowHeight / 2, { align: 'center', baseline: 'middle' });
+      });
+
+      doc.setFont('normal');
+
+      // Filas de la tabla
+      tableData.forEach((data, rowIndex) => {
+        console.log("Mi data: "+data.concepto+" Mi index: "+rowIndex)
+        const rowData = Object.values(data);
+
+        rowData.forEach((value, colIndex) => {
+          const cellY = startY + (rowIndex + 1) * rowHeight;
+          doc.line(margin, cellY, doc.internal.pageSize.getWidth() - margin, cellY);
+          doc.text(value, margin + colIndex * columnWidth + columnWidth / 2, cellY + rowHeight / 2, { align: 'center', baseline: 'middle' });
+        });
+      });
+
+      // Subtotal
+      const subtotal = 'Subtotal';
+      let subtotalValue = 0
+      for (let i = 0; i < this.billServices.length; i++) {
+        subtotalValue += parseInt(this.billServices[i].total) ;
+      }
+      subtotalValue=subtotalValue.toString()
+
+      doc.line(margin, startY + (tableData.length + 1) * rowHeight, doc.internal.pageSize.getWidth() - margin, startY + (tableData.length + 1) * rowHeight);
+
+      doc.setFont('bold');
+      doc.text(subtotal, margin + (tableHeaders.length - 2) * columnWidth+15, startY + (tableData.length + 2) * rowHeight);
+      doc.text(subtotalValue, margin + (tableHeaders.length - 1) * columnWidth+13, startY + (tableData.length + 2) * rowHeight);
+
+      // IVA
+      const iva = 'IVA 18%';
+      const ivaValue = (subtotalValue*0.18).toString()
+
+      doc.text(iva, margin + (tableHeaders.length - 2) * columnWidth+15, startY + (tableData.length + 3) * rowHeight);
+      doc.text(ivaValue, margin + (tableHeaders.length - 1) * columnWidth+13, startY + (tableData.length + 3) * rowHeight);
+
+      // Total
+      const total = 'Total';
+      const totalValue = (subtotalValue+(subtotalValue*0.18)).toString()
+
+      doc.setFont('bold');
+      doc.text(total, margin + (tableHeaders.length - 2) * columnWidth+15, startY + (tableData.length + 4) * rowHeight);
+      doc.text(totalValue, margin + (tableHeaders.length - 1) * columnWidth+13, startY + (tableData.length + 4) * rowHeight);
+
+      // Descargar el PDF
+      doc.save('factura.pdf');
+    },
     showAddRoomDialog() {
       this.room = {}
       this.room.description=""
@@ -697,7 +881,9 @@ export default {
       this.notificationsRoomsDialog=false
       this.infoRoomDialog=false
       this.attendAllServicesDialog=false
+      this.billDialog=false
       this.room = {}
+      this.billServices=[]
     },
     cancelShowGuestServiceInfo(data){
       this.serviceInformation=false
@@ -1011,6 +1197,12 @@ export default {
     },
     actualizarEstadoBotonEditRoom() {
       this.esFormulariEditRoomCompleto = (this.room.roomName.length>0 && this.room.description.length >0);
+    },
+    actualizarEstadoBotonGenerateBill() {
+      this.areFieldsBillFilled = (this.bill.companyName.length>0 && this.bill.address.length>0 && this.bill.city.length>2 && this.bill.postalCode.length>4 && this.bill.phone.length>8);
+    },
+    actualizarEstadoBotonAddServiceBill(){
+      this.areFieldsAddServiceFilled= (this.billService.concepto.length>0 && this.billService.precio.length>0);
     },
       showDateDialog(){
         if (this.email.includes('@') && this.email.toString().includes('.')) {
