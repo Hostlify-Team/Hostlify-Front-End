@@ -89,6 +89,11 @@ const router = createRouter({
       path: '/history',
       name: 'HistoryView',
       component: () => import('../hostlify/HistoryView.vue')
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: () => import('../components/ChatBox.vue')
     }
   ]
 })

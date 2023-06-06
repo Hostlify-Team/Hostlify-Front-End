@@ -44,28 +44,16 @@
         </pv-card>
       </div>
     </div>
-    <div class="chatbox">
-      <div class="chatbox-toggle" @click="toggleChatbox()">Chat</div>
-        <div class="chatbox-content" style="height: 0px; overflow-y: scroll;">
-          <div v-for="msg in messages">
-            <div class="bubbleBot"  v-if="msg.bot">
-              <p style="display: flex;justify-content: center;" @click="navigate" >{{ msg.text }} </p>
-            </div>
-            <div class="bubbleGuest" v-if="!msg.bot">
-              <p style="display: flex;justify-content: center;">{{ msg.text }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="p-inputgroup flex-1" v-show="chat">
-          <pv-input-text @input="isChatTextComplete" v-model="message.text" :maxlength="35"/>
-          <pv-button :disabled="!activeSendMessage" icon="pi pi-send" class="p-button-warning" @click="sendMessage()"/>
-        </div>
-      </div>
+    <chatBox/>
     </div>
 </template>
 
 <script>
+import chatBox from "../components/ChatBox.vue";
 export default {
+  components:{
+    chatBox,
+  },
   name: "services",
   data(){
     return{

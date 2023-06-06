@@ -9,12 +9,18 @@
     <div class="map_button">
       <pv-button  class="p-button-raised p-button-rounded" @click="goBack()">{{$t("return")}}</pv-button>
     </div>
+    <chatBox/>
   </div>
 
 </template>
 
 <script>
+import chatBox from "../components/ChatBox.vue";
+
 export default {
+  components:{
+    chatBox,
+  },
   name: "map-hotel",
   methods:{
     goBack(){

@@ -14,15 +14,19 @@
     <div class="SOS_button">
       <pv-button  @click="goBack">{{$t("return")}} </pv-button>
     </div>
+    <chatBox/>
   </div>
 </template>
 
 <script>
 import {RoomServices} from "../services/room-services";
 import {ref} from "vue";
+import chatBox from "../components/ChatBox.vue";
 export default {
   name: "SOS",
-  components: {},
+  components:{
+    chatBox,
+  },
   data(){
     return{
         token: sessionStorage.getItem("jwt"),
