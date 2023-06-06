@@ -49,7 +49,7 @@
         <div class="chatbox-content" style="height: 0px; overflow-y: scroll;">
           <div v-for="msg in messages">
             <div class="bubbleBot"  v-if="msg.bot">
-              <p style="display: flex;justify-content: center;">{{ msg.text }}</p>
+              <p style="display: flex;justify-content: center;" @click="navigate" >{{ msg.text }} </p>
             </div>
             <div class="bubbleGuest" v-if="!msg.bot">
               <p style="display: flex;justify-content: center;">{{ msg.text }}</p>
@@ -57,8 +57,8 @@
           </div>
         </div>
         <div class="p-inputgroup flex-1" v-show="chat">
-          <pv-input-text v-model="message.text" />
-          <pv-button icon="pi pi-send" class="p-button-warning" @click="sendMessage()"/>
+          <pv-input-text @input="isChatTextComplete" v-model="message.text" :maxlength="35"/>
+          <pv-button :disabled="!activeSendMessage" icon="pi pi-send" class="p-button-warning" @click="sendMessage()"/>
         </div>
       </div>
     </div>
@@ -72,7 +72,9 @@ export default {
       showChatbox: false,
       message: {},
       messages:[],
-      chat:false
+      chat:false,
+      activeSendMessage:true,
+      link:""
     }
   },
   created() {
@@ -84,7 +86,6 @@ export default {
   },
   methods:{
     saveService(type){
-      console.log(type)
       localStorage.setItem("service",type)
       this.$router.push("/"+type)
     },
@@ -104,16 +105,25 @@ export default {
       this.message={}
       this.message.bot=true
       this.message.text=this.responseForText(text)
-      this.messages.push(this.message)
+      if(this.message.text!=="null"){
+        this.messages.push(this.message)
+        this.message={}
+      }
       this.message={}
+      this.activeSendMessage =false
+    },
+    isChatTextComplete(){
+      this.activeSendMessage = (this.message.text.length>0);
     },
      responseForText(texto) {
-       const palabrasClaveComida = ["comida","platillo","comer","plato","alimento","bebidas"];
-       const palabrasClaveLimpieza = ["limpieza","limpiar","limpie","sucio","limpien","limpiesa"];
-       const palabrasClaveEmergencia = ["emergencia","ayuda","911","sangre","herido"];
-       const palabrasClaveMapa = ["mapa","instalaciones","ubicacion","pisos","ubicado","infraestructura"];
-       const palabrasServicio = ["servicio","habitacion"];
-       const palabrasDespedida = ["agradecer", "gracias", "muchas gracias", "te agradezco", "genial", "excelente", "perfecto", "maravilloso", "fantástico", "buen trabajo", "bravo",];
+       this.message.link=false
+       const palabrasClaveComida = ["comida", "platillo", "comer", "plato", "alimento", "bebidas", "restaurante", "cena", "desayuno", "almuerzo", "gourmet", "sabroso", "delicioso", "sabor", "menu", "chef", "cocina", "ingredientes", "gastronomía",];
+       const palabrasClaveLimpieza = ["limpieza", "limpiar", "limpie", "sucio", "limpien", "limpiesa", "aseo", "asear", "aseando", "aseada", "orden", "aseado", "higiene", "pulcro", "impecable", "lavar", "asegurar", "desinfectar", "barrer"];
+       const palabrasClaveEmergencia = ["emergencia", "ayuda", "911", "sangre", "herido", "accidente", "urgente", "desastre", "desmayo", "lesion", "rescate", "primeros auxilios", "socorro", "quemadura", "infarto", "paro cardíaco", "asistencia", "evacuacion"];
+       const palabrasClaveMapa = ["mapa", "instalaciones", "ubicacion", "pisos", "ubicado", "infraestructura", "plano", "direccion", "sitio", "navegacion", "orientacion", "recorrido", "ruta", "explorar", "localizar", "puntos de interes", "guiar", "acceso", "como llegar"];
+       const palabrasServicio = ["servicio", "habitacion", "alojamiento", "reserva", "estancia", "habitaciones", "hotel", "alojamiento", "huespedes", "servicios", "instalaciones", "comodidades", "amenidades", "confort", "suites", "reservaciones", "alojar", "hospedaje", "alojarse", "hospedarse"];
+       const palabrasDespedida = ["agradecer", "gracias", "muchas gracias", "te agradezco", "genial", "excelente", "perfecto", "maravilloso", "fantastico", "buen trabajo", "bravo", "hasta luego", "adios", "nos vemos", "hasta pronto", "cuidate", "buen día", "buena noche", "que tengas un buen día", "que tengas una buena noche", "que estes bien", "que te vaya bien"];
+       const palabrasClaveSaludo = ["que haces","hola", "buenos dias", "buenas tardes", "buenas noches", "saludos", "¡hola!", "¡buenos días!", "¡buenas tardes!", "¡buenas noches!", "¡saludos!", "que tal", "cómo estas", "como te va", "cómo ha sido tu día", "espero que estes bien", "hola, ¿como estas?", "buen dia", "buena tarde", "buena noche"];
 
        texto = texto.toLowerCase();
        palabrasClaveComida.map(palabra => palabra.toLowerCase());
@@ -129,41 +139,79 @@ export default {
        const palabraEncontradaEmergencia = palabrasClaveEmergencia.some(palabra => texto.includes(palabra));
        const palabraEncontradaMapa = palabrasClaveMapa.some(palabra => texto.includes(palabra));
        const palabraEncontradaDespedidad = palabrasDespedida.some(palabra => texto.includes(palabra));
+       const palabraEncontradaSaludo = palabrasClaveSaludo.some(palabra => texto.includes(palabra));
 
        // Retornar un mensaje dependiendo del resultado
        if (palabraEncontradaServicio) {
          if (palabraEncontradaComida) {
-           return "Comida";
+           this.link="/step-1"
+           return "Puedes solicitar tu servicio de comida haciendo click aqui";
          }
          if (palabraEncontradaLimpieza) {
-           return "Limpieza";
+           this.link="/clean-room"
+           return "Puedes solicitar tu servicio de limpieza haciendo click aqui";
          }
          if (palabraEncontradaEmergencia) {
-           return "Emergencia";
+           this.link="/SOS"
+           return "Puedes navegar a la alarma de emergencia haciendo click aqui";
          }
          if (palabraEncontradaMapa) {
-           return "Mapa";
+           this.link="/map-hotel"
+           return "Puedes acceder al mapa del hotel click aqui";
          }
          else {
-           return "servicios generales"
+           return "Veo que quieres solicitar un servicio, indicame cual servicio deseas obtener"
+         }
+       }
+       if (palabraEncontradaSaludo) {
+         if (palabraEncontradaComida) {
+           this.link="/step-1"
+           return "¡Hola! puedes solicitar tu servicio de comida haciendo click aqui";
+         }
+         if (palabraEncontradaLimpieza) {
+           this.link="/clean-room"
+           return "¡Hola! puedes solicitar tu servicio de limpieza haciendo click aqui";
+         }
+         if (palabraEncontradaEmergencia) {
+           this.link="/SOS"
+           return "¡Hola! puedes navegar a la alarma de emergencia haciendo click aqui";
+         }
+         if (palabraEncontradaMapa) {
+           this.link="/map-hotel"
+           return "¡Hola! puedes acceder al mapa del hotel click aqui";
+         }
+         else {
+           return "¡Hola! ¿En qué puedo ayudarte?"
          }
        }
        if (palabraEncontradaComida) {
-         return "Comida";
+         this.link="/step-1"
+         return "Puedes solicitar tu servicio de comida haciendo click aqui";
        }
        if (palabraEncontradaLimpieza) {
-         return "Limpieza";
+         this.link="/clean-room"
+         return "Puedes solicitar tu servicio de limpieza haciendo click aqui";
        }
        if (palabraEncontradaEmergencia) {
-         return "Emergencia";
+         this.link="/SOS"
+         return "Puedes navegar a la alarma de emergencia haciendo click aqui";
        }
        if (palabraEncontradaMapa) {
-         return "Mapa";
+         this.link="/map-hotel"
+         return "Puedes acceder al mapa del hotel click aqui";
        }else {
          if (palabraEncontradaDespedidad) {
            return "Encantado de ayudarte";
          }
+         else {
+           return "null"
+         }
        }
+    },
+    navigate(){
+      console.log("NAVEGO")
+      this.$router.push(this.link)
+      this.link=""
     }
 }
 }
