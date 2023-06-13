@@ -19,11 +19,17 @@ export class FoodServices{
     getFoodServiceByRoomId(token,id){
         return http.get("Services/FoodServicebyRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
+    getFoodServicePendingByRoomId(token,id){
+        return http.get("Services/FoodServiceUnAttendedByRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
     getFoodServiceHistoryByRoomId(token,id){
         return http.get("Services/FoodServiceAttendedByRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     attendFoodServiceById(token,id){
         return http.delete("Services/attendFoodService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
+    deleteFoodServiceById(token,id){
+        return http.delete("Services/deleteFoodService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     getAllFoodServices(token){
         return http.get("Services/GetAllFoodServices",{ headers: {"Authorization" : `Bearer ${token}`} })

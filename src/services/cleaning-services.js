@@ -13,11 +13,17 @@ export class CleaningServices{
     getCleaningByRoomId(token,id){
         return http.get("Services/CleaningServicebyRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
+    getCleaningPendingByRoomId(token,id){
+        return http.get("Services/CleaningServiceUnAttendedByRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
     getCleaningHistoryByRoomId(token,id){
         return http.get("Services/CleaningServiceAttendedByRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     attendCleaningById(token,id){
         return http.delete("Services/attendCleaningService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
+    deleteCleaningById(token,id){
+        return http.delete("Services/deleteCleaningService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     getAllCleaningServices(token){
         return http.get("Services/GetAllCleaningServices",{ headers: {"Authorization" : `Bearer ${token}`} })

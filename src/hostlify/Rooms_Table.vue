@@ -6,7 +6,7 @@
           <pv-button :disabled="!esFormularioAddNewRoomCompleto"  class="p-button-success" style="margin-right: 1rem;" @click="showAddRoomDialog"> <i class="pi pi-plus"/>{{$t("new room")}} </pv-button>
           <pv-button label="Delete" class="p-button-danger" @click="showDeleteRoomsDialog" style="margin-right: 1rem;"
                      :disabled="!selectedRooms || !selectedRooms.length"><i class="pi pi-trash"/>{{$t("delete")}} </pv-button>
-          <pv-button label="Delete" class="p-button-warning" @click="showAttendServicesDialog"><i class="pi pi-bell"/>{{$t("attend")}} </pv-button>
+          <pv-button label="Delete" class="p-button-warning" @click="showAttendServicesDialog()"><i class="pi pi-bell"/>{{$t("attend")}} </pv-button>
         </template>
         <template #end>
           <pv-button label="Exportar" class="p-button-help" @click="exportToCSV($event)"><i class="pi pi-download"/>{{$t("export")}}</pv-button>
@@ -339,13 +339,13 @@
             <div>
               <h3>Solicitudes pendientes: </h3>
               <div style="display: flex;justify-content: space-between;align-items: center" v-for="service in guestServices">
-                <div v-if="service.dish">
-                  <p>Habitacion {{service.roomName}} solicito {{ service.dish }}</p>
+                <div v-if="service.dish && service.roomName!=null">
+                  <p >Habitacion {{service.roomName}} solicito {{ service.dish }}</p>
                 </div>
-                <div v-if="!service.dish">
-                  <p>Habitacion {{service.roomName}} solicito limpieza a la habitacion</p>
+                <div v-if="!service.dish && service.roomName!=null">
+                  <p >Habitacion {{service.roomName}} solicito limpieza a la habitacion</p>
                 </div>
-                <div style="display: flex; justify-content:center">
+                <div v-if=" service.roomName!=null" style="display: flex; justify-content:center">
                   <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="showGuestServiceInfoForGeneralView(service)">Administrar</pv-button>
                 </div>
               </div>
@@ -996,14 +996,18 @@ export default {
       new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
         if(response.data.length!==0){
           for(let i=0;i<(response.data.length);i++){
-            new FoodServices().attendFoodServiceById(this.token, response.data[i].id)
+            new FoodServices().deleteFoodServiceById(this.token, response.data[i].id).then(response=>{
+              console.log("deleteFoodServiceById")
+            })
           }
         }
       })
       new CleaningServices().getCleaningByRoomId(this.token,id).then(response=>{
         if(response.data.length!==0){
           for (let i=0;i<response.data.length;i++){
-            new CleaningServices().attendCleaningById(this.token, response.data[i].id)
+            new CleaningServices().deleteCleaningById(this.token, response.data[i].id).then(response=>{
+              console.log("deleteCleaningById")
+            })
           }
         }
       })
@@ -1030,13 +1034,13 @@ export default {
       if(this.notificationsRoomsDialog===false){
         let index=this.findIndexById(id)
         this.rooms[index].quantityOfServices=0
-        new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
+        new FoodServices().getFoodServicePendingByRoomId(this.token,id).then(response=>{
           if(response.data.length!==0){
             this.rooms[index].quantityOfServices+=response.data.length
           }
 
         })
-        new CleaningServices().getCleaningByRoomId(this.token,id).then(response=>{
+        new CleaningServices().getCleaningPendingByRoomId(this.token,id).then(response=>{
           if(response.data.length!==0){
             this.rooms[index].quantityOfServices+=response.data.length
           }
@@ -1062,14 +1066,14 @@ export default {
     },
     getServicesForRoom(id){
       this.guestServices=[]
-      new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
+      new FoodServices().getFoodServicePendingByRoomId(this.token,id).then(response=>{
         if(response.data.length!==0){
           for(let i=0;i<(response.data.length);i++){
             this.guestServices.push(response.data[i])
           }
         }
       })
-      new CleaningServices().getCleaningByRoomId(this.token,id).then(response=>{
+      new CleaningServices().getCleaningPendingByRoomId(this.token,id).then(response=>{
         if(response.data.length!==0){
           for(let i=0;i<(response.data.length);i++){
             this.guestServices.push(response.data[i])
