@@ -864,10 +864,8 @@ export default {
     },
     deleteGuest(roomData) {
       this.evictGuestDialog=false
+      this.deleteServiceByRoomId(roomData.id)
         new RoomServices().evictGuest(this.token,this.room.id).then(response=>{
-            if(this.room.servicePending===true){
-                this.deleteServiceByRoomId(roomData.id)
-            }
             let id=this.findIndexById(this.room.id)
             this.rooms[id].guestId=0
             this.rooms[id].status=true
@@ -993,23 +991,9 @@ export default {
       this.guestServiceInfo={}
     },
     deleteServiceByRoomId(id){
-      new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
-        if(response.data.length!==0){
-          for(let i=0;i<(response.data.length);i++){
-            new FoodServices().deleteFoodServiceById(this.token, response.data[i].id).then(response=>{
-              console.log("deleteFoodServiceById")
-            })
-          }
-        }
+      new FoodServices().deleteAllFoodServicesByRoomId(this.token,id).then(response=>{
       })
-      new CleaningServices().getCleaningByRoomId(this.token,id).then(response=>{
-        if(response.data.length!==0){
-          for (let i=0;i<response.data.length;i++){
-            new CleaningServices().deleteCleaningById(this.token, response.data[i].id).then(response=>{
-              console.log("deleteCleaningById")
-            })
-          }
-        }
+      new CleaningServices().deleteAllCleaningServiceByRoomId(this.token,id).then(response=>{
       })
     },
     setTotalTimeForGuest(currentDate,goalDate){

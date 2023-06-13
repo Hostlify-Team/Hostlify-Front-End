@@ -28,8 +28,8 @@ export class FoodServices{
     attendFoodServiceById(token,id){
         return http.delete("Services/attendFoodService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    deleteFoodServiceById(token,id){
-        return http.delete("Services/deleteFoodService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    deleteAllFoodServicesByRoomId(token,id){
+        return http.delete("Services/deleteAllFoodServicesByRoomId/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     getAllFoodServices(token){
         return http.get("Services/GetAllFoodServices",{ headers: {"Authorization" : `Bearer ${token}`} })

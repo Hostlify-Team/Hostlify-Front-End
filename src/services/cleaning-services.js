@@ -22,8 +22,8 @@ export class CleaningServices{
     attendCleaningById(token,id){
         return http.delete("Services/attendCleaningService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    deleteCleaningById(token,id){
-        return http.delete("Services/deleteCleaningService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    deleteAllCleaningServiceByRoomId(token,id){
+        return http.delete("Services/deleteAllCleaningServiceByRoomId/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
     getAllCleaningServices(token){
         return http.get("Services/GetAllCleaningServices",{ headers: {"Authorization" : `Bearer ${token}`} })
