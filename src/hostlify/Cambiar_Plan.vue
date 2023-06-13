@@ -97,6 +97,7 @@
 
 <script>
 import {UserServices} from "../services/user-services";
+import {RoomServices} from "../services/room-services";
 export default {
   name: "Cambiar_Plan",
   components: {},
@@ -109,12 +110,14 @@ export default {
       customPlan: false,
       customPlanQuantity:1,
       plans:[],
+      actualRoomsQuantity:0,
       currentPlan:"",
     }
   },
   created() {
     this.currentPlan=sessionStorage.getItem("plan")
     this.setCustomPlanQuantity()
+    this.getRoomsActualQuantity()
 
     var planStandar={} ;
     var planPro={} ;
@@ -152,6 +155,12 @@ export default {
         this.customPlanQuantity=1
       }
     },
+    getRoomsActualQuantity(){
+      new RoomServices().getRoomsForManager(this.token,parseInt(sessionStorage.getItem("id").toString())).then(response=>{
+        this.actualRoomsQuantity=response.data.length
+        console.log(response.data.length)
+      })
+    },
     changePlan(){
       if(this.defaultPlan===true){
         this.customPlan=true
@@ -163,18 +172,36 @@ export default {
       }
     },
     planSelected(plan){
-      new UserServices().updateUserPlan(this.token,parseInt(sessionStorage.getItem("id").toString()),this.currentPlan,plan,0).then(response=>{
-        sessionStorage.setItem("plan",plan)
-        this.$toast.add({severity:'success', summary: 'Plan Actualizado', detail:'Plan cambiado exitosamente', life: 3000});
-        this.currentPlan=plan
-      })
+      let procedeChange=false
+      if(plan==="Standard"&&this.actualRoomsQuantity<=30){
+        procedeChange=true
+      }
+      if(plan==="Pro"&&this.actualRoomsQuantity<=50){
+        procedeChange=true
+      }
+      if(plan==="Premium"){
+        procedeChange=true
+      }
+      if(procedeChange){
+        new UserServices().updateUserPlan(this.token,parseInt(sessionStorage.getItem("id").toString()),this.currentPlan,plan,0).then(response=>{
+          sessionStorage.setItem("plan",plan)
+          this.$toast.add({severity:'success', summary: 'Plan Actualizado', detail:'Plan cambiado exitosamente', life: 3000});
+          this.currentPlan=plan
+        })
+      }else {
+        this.$toast.add({severity:'info', summary: 'Exceso de Habitaciones', detail:'Tienes mas habitaciones de lo que te permite este plan.', life: 6000});
+      }
     },
     customPlanSelected(plan,roomsQuantity){
-      new UserServices().updateUserPlan(this.token,parseInt(sessionStorage.getItem("id").toString()),this.currentPlan,plan,roomsQuantity).then(response=>{
-        sessionStorage.setItem("plan",plan)
-        this.$toast.add({severity:'success', summary: 'Plan Actualizado', detail:'Plan cambiado exitosamente', life: 3000});
-        this.currentPlan=plan
-      })
+      if(this.actualRoomsQuantity<=roomsQuantity){
+        new UserServices().updateUserPlan(this.token,parseInt(sessionStorage.getItem("id").toString()),this.currentPlan,plan,roomsQuantity).then(response=>{
+          sessionStorage.setItem("plan",plan)
+          this.$toast.add({severity:'success', summary: 'Plan Actualizado', detail:'Plan cambiado exitosamente', life: 3000});
+          this.currentPlan=plan
+        })
+      }else{
+        this.$toast.add({severity:'info', summary: 'Exceso de Habitaciones', detail:'Tienes mas habitaciones de lo que te permite este plan.', life: 6000});
+      }
     },
     addTemporaryPlan(plan){
       localStorage.setItem("selectedPlan",JSON.stringify(plan))

@@ -59,17 +59,17 @@
             <pv-progress-bar :value="slotProps.data.progressTime"></pv-progress-bar>
           </template>
         </pv-column>
-        <pv-column :exportable="false" style="min-width: 8rem">
+        <pv-column :exportable="false" style="min-width: 9rem">
           <template #body="slotProps">
             <i class="p-text-secondary" style="font-size: 1.5rem;margin-right: 1rem" v-badge="slotProps.data.quantityOfServices" v-if="slotProps.data.servicePending!==false">
               <pv-button  icon="pi pi-bell" class="p-button-rounded p-button-secondary" @click="showNotificationsRoomDialog(slotProps.data)">
               </pv-button>
             </i>
-            <i class="p-text-secondary" style="font-size: 1.5rem;margin-right: 1rem" v-if="slotProps.data.servicePending===false">
+            <i class="p-text-secondary" style="font-size: 1.5rem;margin-right: 1rem" v-if="slotProps.data.servicePending===false && slotProps.data.price!==0">
               <pv-button  icon="pi pi-history" class="p-button-rounded " @click="showNotificationsRoomDialog(slotProps.data)">
               </pv-button>
             </i>
-            <pv-button v-if="slotProps.data.emergency" icon="pi pi-exclamation-circle" class="p-button-rounded p-button-danger">
+            <pv-button v-if="slotProps.data.emergency" style="margin-right: 0.7rem"  icon="pi pi-exclamation-circle" class="p-button-rounded p-button-danger">
             </pv-button>
             <i v-if="slotProps.data.status===false" class="p-text-secondary" style="font-size: 1.5rem;margin-right: 1rem">
               <pv-button  icon="pi pi-money-bill" class="p-button-rounded p-button-warning" @click="showBillDialog(slotProps.data)"/>
@@ -132,7 +132,7 @@
           </div>
           <template #footer>
             <pv-button :label="'Cancelar'.toUpperCase()" icon="pi pi-times" class="p-button-text" @click="hideAnyDialog" >{{$t("cancel")}}</pv-button>
-            <pv-button :disabled="!esFormularioAddRoomCompleto" :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="addRoom" >{{$t("add")}}</pv-button>
+            <pv-button :disabled="!esFormularioAddRoomCompleto&&limitRoom-rooms.length===0" :label="'Agregar'.toUpperCase()" icon="pi pi-check" class="p-button-text" @click="addRoom" >{{$t("add")}}</pv-button>
           </template>
         </pv-dialog>
 
@@ -336,7 +336,7 @@
             <h1>Solicitudes</h1>
           </div>
           <div class="container">
-            <div>
+            <div v-if="guestServices.length!==0">
               <h3>Solicitudes pendientes: </h3>
               <div style="display: flex;justify-content: space-between;align-items: center" v-for="service in guestServices">
                 <div v-if="service.dish && service.roomName!=null">
@@ -349,6 +349,9 @@
                   <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="showGuestServiceInfoForGeneralView(service)">Administrar</pv-button>
                 </div>
               </div>
+            </div>
+            <div v-if="guestServices.length===0">
+              <h3>No hay solicitudes pendientes </h3>
             </div>
           </div>
           <template #footer>
