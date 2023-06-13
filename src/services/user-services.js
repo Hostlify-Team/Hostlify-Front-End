@@ -40,4 +40,11 @@ export class UserServices{
     getLimitRoom(token,id){
         return http.get("User/GetRoomsLimit/"+id,{headers: {"Authorization" : `Bearer ${token}`}})
     }
+    updateUserPlan(token,id,actualPlan,changedPlan,newCustomRoomLimit){
+        return http.put("User/UpdateRoomsPlan/"+id,{
+            "actualPlan": actualPlan,
+            "changedPlan": changedPlan,
+            "newCustomRoomLimit": newCustomRoomLimit
+        },{headers: {"Authorization" : `Bearer ${token}`}})
+    }
 }

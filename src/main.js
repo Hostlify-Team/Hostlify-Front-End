@@ -43,6 +43,8 @@ import ProgressBar from 'primevue/progressbar';
 import Calendar from 'primevue/calendar';
 import Badge from 'primevue/badge';
 import Image from 'primevue/image';
+import Accordion from 'primevue/accordion';
+import AccordionTab from 'primevue/accordiontab';
 
 
 const app = createApp(App)
@@ -81,6 +83,8 @@ app.component("pv-calendar",Calendar)
 app.component("pv-text-area",Textarea)
 app.component("pv-badge",Badge)
 app.component("pv-image",Image)
+app.component("pv-accordion",Accordion)
+app.component("pv-accordion-tab",AccordionTab)
 app.directive('badge', BadgeDirective);
 
 

@@ -17,6 +17,11 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
+      path: '/update-Plan',
+      name: 'update-Plan',
+      component: () => import('../hostlify/Cambiar_Plan.vue')
+    },
+    {
       path: '/services',
       name: 'services',
       component: () => import('../hostlify/services.vue')

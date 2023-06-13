@@ -65,6 +65,10 @@
               <pv-button  icon="pi pi-bell" class="p-button-rounded p-button-secondary" @click="showNotificationsRoomDialog(slotProps.data)">
               </pv-button>
             </i>
+            <i class="p-text-secondary" style="font-size: 1.5rem;margin-right: 1rem" v-if="slotProps.data.servicePending===false">
+              <pv-button  icon="pi pi-history" class="p-button-rounded " @click="showNotificationsRoomDialog(slotProps.data)">
+              </pv-button>
+            </i>
             <pv-button v-if="slotProps.data.emergency" icon="pi pi-exclamation-circle" class="p-button-rounded p-button-danger">
             </pv-button>
             <i v-if="slotProps.data.status===false" class="p-text-secondary" style="font-size: 1.5rem;margin-right: 1rem">
@@ -235,7 +239,7 @@
           </div>
           <div class="container">
             <div>
-              <h3>Pendiente: </h3>
+              <h3 v-if="guestServices.length!==0">Pendiente: </h3>
               <div style="display: flex;justify-content: space-between;align-items: center" v-for="service in guestServices">
                 <div v-if="service.dish">
                   <p>Se solicito {{ service.dish }}</p>
@@ -245,6 +249,15 @@
                 </div>
                 <div style="display: flex; justify-content:center">
                   <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold" @click="showGuestServiceInfo(service,guestServices.length)">Administrar</pv-button>
+                </div>
+              </div>
+              <h3 v-if="HistoryServices.length!==0">Historial: </h3>
+              <div style="display: flex;justify-content: space-between;align-items: center" v-for="service in HistoryServices">
+                <div v-if="service.dish">
+                  <p>Se solicito {{ service.dish }}</p>
+                </div>
+                <div v-if="!service.dish">
+                  <p>Se solicito limpieza a la habitacion</p>
                 </div>
               </div>
             </div>
@@ -312,8 +325,8 @@
             </div>
           </div>
           <template #footer>
-            <pv-button v-if="guestServiceInfo.dish" :label="'Atender'.toUpperCase()" class="p-button-text" @click="deleteFoodService(guestServiceInfo.id)" />
-            <pv-button v-if="!guestServiceInfo.dish" :label="'Atender'.toUpperCase()" class="p-button-text" @click="deleteCleanService(guestServiceInfo.id)" />
+            <pv-button v-if="guestServiceInfo.dish" :label="'Atender'.toUpperCase()" class="p-button-text" @click="attendFoodService(guestServiceInfo.id)" />
+            <pv-button v-if="!guestServiceInfo.dish" :label="'Atender'.toUpperCase()" class="p-button-text" @click="attendCleanService(guestServiceInfo.id)" />
             <pv-button :label="'Volver'.toUpperCase()" class="p-button-text" @click="cancelShowGuestServiceInfo" >{{$t("return")}}</pv-button>
           </template>
         </pv-dialog>
@@ -367,6 +380,33 @@
               <pv-input-text @input="actualizarEstadoBotonAddServiceBill" style="width: 62.5%" type="text" id="hotelName" v-model.trim="billService.concepto" required="true" :maxlength="250" placeholder="Tipo de servicio"/>
               <pv-input-text @input="actualizarEstadoBotonAddServiceBill" min="0" style="width: 22.5%" type="number" id="hotelName" v-model.trim="billService.precio" required="true" :maxlength="10" placeholder="Precio"/>
               <pv-button :disabled="!areFieldsAddServiceFilled" label="Exportar" @click="addBillService()" >{{$t("add")}}</pv-button>
+            </div>
+            <div v-if="HistoryServices.length!==0">
+              <pv-accordion style="margin-top: 2rem" class="accordion-custom" :activeIndex="1">
+                <pv-accordion-tab>
+                  <template #header>
+                    <i class="pi pi-bell"></i>
+                    <span>Servicios Solicitados</span>
+                  </template>
+                  <div v-for="service in HistoryServices">
+                    <div style="padding-left: 1rem" v-if="service.dish">
+                      <div style="display: flex;justify-content: space-between">
+                        <p>Se solicito {{ service.dish }}</p>
+                        <pv-button class="p-button-text" @click="chargeService('Servicio de comida',service.id)">{{$t("charge")}} </pv-button>
+                      </div>
+
+                    </div>
+                    <div style="padding-left: 1rem" v-if="!service.dish">
+                      <div style="display: flex;justify-content: space-between">
+                        <p>Se solicito limpieza a la habitacion</p>
+                        <pv-button class="p-button-text" @click="chargeService('Limpieza a la habitacion',service.id)" >{{$t("charge")}}</pv-button>
+                      </div>
+
+                    </div>
+                  </div>
+                </pv-accordion-tab>
+              </pv-accordion>
+              <p></p>
             </div>
             <div style="display: flex;justify-content: space-between;padding: 1rem;padding-bottom: 0rem;padding-top: 0.5rem;align-items: center" v-for="bill in billServices">
               <p>{{bill.concepto}}</p>
@@ -430,6 +470,7 @@ export default {
       bill:{},
       billService:{},
       billServices:[],
+      HistoryServices:[],
       selectedRooms:null,
       statusesRoom: [
         { value: "Disponible" },
@@ -496,9 +537,19 @@ export default {
       this.billServices.push(tempBillService)
       this.billService={}
     },
+    chargeService(serviceName,id){
+      console.log("Elimino id: " + id);
+      this.billService.concepto = serviceName;
+
+      const index = this.HistoryServices.findIndex((t) => t.id === id);
+      if (index !== -1) {
+        this.HistoryServices.splice(index, 1);
+      }
+    },
     showBillDialog(room){
       this.billServices=[]
       this.billDialog=true
+      this.getServicesHistoryNotificationForRoom(room.id)
 
       this.billService.Nro="1"
       this.billService.concepto="Habitacion"
@@ -692,6 +743,8 @@ export default {
     },
     showNotificationsRoomDialog(data){
       this.getServicesNotificationsForRoom(data.id)
+      this.getServicesHistoryNotificationForRoom(data.id)
+
       this.notificationsRoomsDialog=true
       this.room=data
       this.getServicesForRoom( data.id)
@@ -884,6 +937,7 @@ export default {
       this.billDialog=false
       this.room = {}
       this.billServices=[]
+      this.HistoryServices=[]
     },
     cancelShowGuestServiceInfo(data){
       this.serviceInformation=false
@@ -899,8 +953,9 @@ export default {
         global: {value: null, matchMode: FilterMatchMode.CONTAINS},
       }
     },
-    deleteFoodService(id){
-      new FoodServices().deleteFoodServiceById(this.token,id).then(response=>{
+    attendFoodService(id){
+      this.HistoryServices.push(this.guestServices.find((t) => t.id === id))
+      new FoodServices().attendFoodServiceById(this.token,id).then(response=>{
         this.guestServices = this.guestServices.filter(
             (t) => t.id !== id);
         let index=this.findIndexById(this.room.id)
@@ -917,8 +972,9 @@ export default {
       this.serviceInformation=false
       this.guestServiceInfo={}
     },
-    deleteCleanService(id){
-      new CleaningServices().deleteCleaningById(this.token,id).then(response=>{
+    attendCleanService(id){
+      this.HistoryServices.push(this.guestServices.find((t) => t.id === id))
+      new CleaningServices().attendCleaningById(this.token,id).then(response=>{
         console.log(response.data)
         this.guestServices = this.guestServices.filter(
             (t) => t.id !== id);
@@ -940,14 +996,14 @@ export default {
       new FoodServices().getFoodServiceByRoomId(this.token,id).then(response=>{
         if(response.data.length!==0){
           for(let i=0;i<(response.data.length);i++){
-            new FoodServices().deleteFoodServiceById(this.token, response.data[i].id)
+            new FoodServices().attendFoodServiceById(this.token, response.data[i].id)
           }
         }
       })
       new CleaningServices().getCleaningByRoomId(this.token,id).then(response=>{
         if(response.data.length!==0){
           for (let i=0;i<response.data.length;i++){
-            new CleaningServices().deleteCleaningById(this.token, response.data[i].id)
+            new CleaningServices().attendCleaningById(this.token, response.data[i].id)
           }
         }
       })
@@ -986,6 +1042,23 @@ export default {
           }
         })
       }
+    },
+    getServicesHistoryNotificationForRoom(id){
+      this.HistoryServices=[]
+      new CleaningServices().getCleaningHistoryByRoomId(this.token,id).then(response=>{
+        if(response.data.length!==0){
+          for (let i = 0; i < response.data.length; i++) {
+            this.HistoryServices.push(response.data[i])
+          }
+        }
+      })
+      new FoodServices().getFoodServiceHistoryByRoomId(this.token,id).then(response=>{
+        if(response.data.length!==0){
+          for (let i = 0; i < response.data.length; i++) {
+            this.HistoryServices.push(response.data[i])
+          }
+        }
+      })
     },
     getServicesForRoom(id){
       this.guestServices=[]
@@ -1297,5 +1370,17 @@ export default {
 }
 .inputRegister::placeholder {
     color: black;
+}
+.accordion-custom i span {
+  vertical-align: middle;
+}
+
+.accordion-custom span {
+  margin: 0 0.5rem;
+}
+
+.p-accordion p {
+  line-height: 1.5;
+  margin: 0;
 }
 </style>

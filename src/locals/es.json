@@ -1,6 +1,9 @@
 {
   "hello": "Hola",
   "hide": "Ocultar",
+  "rooms": "Habitaciones",
+  "charge": "Cargar",
+  "plans": "Planes",
   "room": "Habitacion",
   "generate": "Generar",
   "attend": "\u200E \u200E \u200E Atender servicios",

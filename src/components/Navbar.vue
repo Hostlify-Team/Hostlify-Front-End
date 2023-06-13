@@ -2,16 +2,17 @@
   <div v-show="showNavBar" class="navbar">
     <Toolbar>
       <template #start>
-        <avatar
-                image="../../src/assets/Logo.png"
-            class="mr-2"
-        />
+        <avatar image="../../src/assets/Logo.png"
+            class="mr-2"/>
         <div v-if="currentUserType==='manager'">
           <router-link class="mr-3 navbar-item" to="/rooms">
             {{$t("rooms")}}
           </router-link>
           <router-link class="mr-2 navbar-item" to="/history">
             {{$t("history")}}
+          </router-link>
+          <router-link class="mr-2 navbar-item" to="/update-Plan">
+            {{$t("plans")}}
           </router-link>
         </div>
         <div v-else>

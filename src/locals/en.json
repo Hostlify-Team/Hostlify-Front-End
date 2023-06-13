@@ -1,7 +1,9 @@
 {
   "hello": "Hello",
   "hide": "Hide",
+  "charge": "Charge",
   "rooms": "Rooms",
+  "plans": "Plans",
   "generate": "Generate",
   "attend": "\u200E \u200E \u200E Attend services",
   "room": "Room",
