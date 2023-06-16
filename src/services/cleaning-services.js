@@ -1,6 +1,6 @@
 import axios from "axios";
 const http = axios.create({
-    baseURL:"https://localhost:7217/api/",
+    baseURL:"https://webapi-hostlify.azurewebsites.net/api/",
     headers: { "Content-type": "application/json" },
 })
 export class CleaningServices{

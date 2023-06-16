@@ -72,6 +72,7 @@ export default {
         this.$router.push("/")
       }).catch(error=>{
         console.log(error.response)
+          this.$toast.add({severity:'Error', summary: 'Correo Electronico Registrado', detail:'El correo electronico que ingreso ya esta actualmente registrado.', life: 3000});
       })
     }
   },

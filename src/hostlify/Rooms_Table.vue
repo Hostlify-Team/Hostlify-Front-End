@@ -520,7 +520,7 @@ export default {
     new RoomServices().getRoomsForManager(this.token,sessionStorage.getItem("id")).then(response=>{
       this.rooms=response.data
       this.setGuestInfo()
-      console.log("Rooms",this.rooms)
+      //console.log("Rooms",this.rooms)
       this.setVisibleNotifications()
     })
 
@@ -541,7 +541,7 @@ export default {
       this.billService={}
     },
     chargeService(serviceName,id){
-      console.log("Elimino id: " + id);
+      //console.log("Elimino id: " + id);
       this.billService.concepto = serviceName;
 
       const index = this.HistoryServices.findIndex((t) => t.id === id);
@@ -564,7 +564,7 @@ export default {
       this.billService={}
     },
     generateInvoice() {
-      console.log(this.billServices)
+      //console.log(this.billServices)
       const doc = new jsPDF();
       // Agregar imagen de logo
       doc.addImage(logo, 'PNG', 10, 5, 30, 30);
@@ -630,7 +630,7 @@ export default {
 
       // Filas de la tabla
       tableData.forEach((data, rowIndex) => {
-        console.log("Mi data: "+data.concepto+" Mi index: "+rowIndex)
+        //console.log("Mi data: "+data.concepto+" Mi index: "+rowIndex)
         const rowData = Object.values(data);
 
         rowData.forEach((value, colIndex) => {
@@ -755,7 +755,7 @@ export default {
     showAttendServicesDialog(){
       this.attendAllServicesDialog=true
       this.getAllServicesToManager()
-      console.log(this.guestServices)
+      //console.log(this.guestServices)
 
     },
     showGuestServiceInfo(data,len){
@@ -905,7 +905,7 @@ export default {
                     this.esFormularioAddNewRoomCompleto=true
                 }
               contador++
-              console.log(contador)
+              //console.log(contador)
             });
           })
         }
@@ -919,7 +919,7 @@ export default {
                   this.esFormularioAddNewRoomCompleto=true
               }
             contador++
-            console.log(contador)
+            //console.log(contador)
           });
         }
 
@@ -976,7 +976,7 @@ export default {
     attendCleanService(id){
       this.HistoryServices.push(this.guestServices.find((t) => t.id === id))
       new CleaningServices().attendCleaningById(this.token,id).then(response=>{
-        console.log(response.data)
+        //console.log(response.data)
         this.guestServices = this.guestServices.filter(
             (t) => t.id !== id);
         let index=this.findIndexById(this.room.id)
@@ -1106,7 +1106,7 @@ export default {
     },
     watchServices(){
       this.interval = setInterval(() => {
-        console.log("WatchingServices")
+        //console.log("WatchingServices")
         for(let i=0;i<this.rooms.length;i++){
           if(this.rooms[i].guestStayComplete===false){
             new RoomServices().getRoomForGuest(this.token,this.rooms[i].guestId).then(response=>{
@@ -1207,6 +1207,7 @@ export default {
 
               })
           }).catch(error=>{
+              this.$toast.add({severity:'Error', summary: 'Correo Electronico Registrado', detail:'El correo electronico que ingreso ya esta actualmente registrado.', life: 3000});
               this.reset()
           })
       },

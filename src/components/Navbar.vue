@@ -2,8 +2,7 @@
   <div v-show="showNavBar" class="navbar">
     <Toolbar>
       <template #start>
-        <avatar image="../../src/assets/Logo.png"
-            class="mr-2"/>
+          <img   src="../../src/assets/Logo.png" style="height: 35px"/>
         <div v-if="currentUserType==='manager'">
           <router-link class="mr-3 navbar-item" to="/rooms">
             {{$t("rooms")}}
