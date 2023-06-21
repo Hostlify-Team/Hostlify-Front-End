@@ -38,6 +38,7 @@
 
 <script>
 import {UserServices} from "../../../services/user-services";
+import Toast from "primevue/toast";
 export default {
   data(){
     return{
@@ -62,6 +63,9 @@ export default {
               this.sendMessage("guest",response.data.name)
               this.$router.push("/services")
           }
+      }
+      ).catch(reason => {
+          this.$toast.add({severity:'error', summary: 'Credenciales invalidad', detail:'Correo o contraseña incorrecta', life: 3000});
       })
     },
     sendMessage(type,name){
