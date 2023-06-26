@@ -367,20 +367,20 @@
             <p>Datos de la empresa</p>
             <div>
               <div style="justify-content: center;display: flex">
-                <pv-input-text @input="actualizarEstadoBotonGenerateBill" style="width: 100%" type="text" id="hotelName" v-model.trim="bill.companyName" required="true" :maxlength="250" placeholder="Nombre de la empresa"/>
+                <pv-input-text @input="actualizarEstadoBotonGenerateBill" @keydown="validarInput" style="width: 100%" type="text" id="hotelName" v-model.trim="bill.companyName" required="true" :maxlength="250" placeholder="Nombre de la empresa"/>
               </div>
               <div style="display: flex;justify-content: space-evenly">
                 <pv-input-text @input="actualizarEstadoBotonGenerateBill" style="width: 80%" type="text" id="hotelName" v-model.trim="bill.address" required="true" :maxlength="250" placeholder="Direccion"/>
-                <pv-input-text @input="actualizarEstadoBotonGenerateBill" style="width: 30%" type="text" id="hotelName" v-model.trim="bill.city" required="true" :maxlength="250" placeholder="Ciudad"/>
+                <pv-input-text @input="actualizarEstadoBotonGenerateBill" style="width: 30%" type="text" id="hotelName" v-model.trim="bill.city" required="true" :maxlength="250" placeholder="Ciudad" @keydown="validarInput" />
               </div>
               <div style="display: flex;justify-content: space-evenly">
-                <pv-input-text @input="actualizarEstadoBotonGenerateBill" min="0" style="width: 95%" type="number" id="hotelName" v-model.trim="bill.postalCode" required="true" :maxlength="250" placeholder="Codigo Postal"/>
+                <pv-input-text style="width: 95%" type="number" id="hotelName" v-model.trim="bill.postalCode" required="true" :maxlength="250" placeholder="Codigo Postal" @input="actualizarEstadoBotonGenerateBill" />
                 <pv-input-text @input="actualizarEstadoBotonGenerateBill" min="0" style="width: 95%" type="number" id="hotelName" v-model.trim="bill.phone" required="true" :maxlength="250" placeholder="Telefono"/>
               </div>
             </div>
             <p>Servicios</p>
             <div style="display: flex;justify-content: space-evenly">
-              <pv-input-text @input="actualizarEstadoBotonAddServiceBill" style="width: 62.5%" type="text" id="hotelName" v-model.trim="billService.concepto" required="true" :maxlength="250" placeholder="Tipo de servicio"/>
+              <pv-input-text @input="actualizarEstadoBotonAddServiceBill" style="width: 62.5%" type="text" id="hotelName" @keydown="validarInput" v-model.trim="billService.concepto" required="true" :maxlength="250" placeholder="Tipo de servicio"/>
               <pv-input-text @input="actualizarEstadoBotonAddServiceBill" min="0" style="width: 22.5%" type="number" id="hotelName" v-model.trim="billService.precio" required="true" :maxlength="10" placeholder="Precio"/>
               <pv-button :disabled="!areFieldsAddServiceFilled" label="Exportar" @click="addBillService()" >{{$t("add")}}</pv-button>
             </div>
@@ -540,6 +540,14 @@ export default {
       this.billServices.push(tempBillService)
       this.billService={}
     },
+    validarInput(event) {
+      if (event.key.match(/[^a-zA-ZñÑáÁéÉíÍóÓúÚüÜ\s]/)) {
+        event.preventDefault();
+      }
+    },
+    validarNumeros() {
+      this.bill.postalCode = this.bill.postalCode.replace(/[^0-9]/g, "");
+    },
     chargeService(serviceName,id){
       //console.log("Elimino id: " + id);
       this.billService.concepto = serviceName;
@@ -671,6 +679,7 @@ export default {
 
       // Descargar el PDF
       doc.save('factura.pdf');
+      this.billDialog=false
     },
     showAddRoomDialog() {
       this.room = {}
