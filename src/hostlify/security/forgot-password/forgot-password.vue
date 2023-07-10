@@ -9,11 +9,13 @@
       <template #content>
         <div class="form">
           <label for="user">Correo Electronico</label>
-          <pv-input-text id="user" class="input"></pv-input-text>
+          <pv-input-text id="user" class="input" maxlength="256" @input="actualizarEstadoBoton()" v-model="email"></pv-input-text>
         </div>
         <div class="footer">
           <div class="buttons">
-            <pv-button @click="showDialog">Enviar</pv-button>
+              <pv-button  @click="goBack">Regresar</pv-button>
+            <pv-button :disabled="!esFormularioCompleto"  @click="sendEmail">Enviar</pv-button>
+
           </div>
         </div>
       </template>
@@ -33,13 +35,31 @@ export default {
   data(){
     return{
       confirmDialog: false,
-
+        esFormularioCompleto: false,
+        email:null
     }
   },
   methods:{
-    showDialog(){
-      this.confirmDialog=true;
+    sendEmail(){
+        const arrobaCount = (this.email.split("@").length - 1);
+        const dotCount = (this.email.split(".").length - 1);
+        if (this.validarEmail(this.email)&& this.email.includes('@') && this.email.toString().includes('.') && arrobaCount===1 && dotCount===1) {
+            this.confirmDialog=true;
+        } else {
+            this.$toast.add({severity:'info', summary: 'Email invalido', detail:'Se debe ingresar un correo valido', life: 3000});
+        }
+
     },
+      goBack(){
+          this.$router.push("/")
+      },
+    validarEmail(email) {
+        const extensionesValidas = /(com|net|org)$/i;
+        return extensionesValidas.test(email);
+    },
+      actualizarEstadoBoton() {
+        this.esFormularioCompleto = (this.email.length >0);
+      },
     closeDialog(){
       this.confirmDialog=false;
       this.$router.push("/")

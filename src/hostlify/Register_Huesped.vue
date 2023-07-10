@@ -6,18 +6,12 @@
         <p >Datos del Huesped</p>
         <pv-input-text class="inputRegister" type="text" placeholder="Nombre y apellido*" v-model="name"/>
         <pv-input-text class="inputRegister" type="text" placeholder="Correo Electronico*" v-model="email"/>
-        <div style="display: flex;justify-content: space-between">
-          <pv-input-text class="inputRegister" style="width: 28%" type="text" placeholder="Edad*" />
-          <pv-input-text class="inputRegister" style="width: 28%" type="text" placeholder="Pais*" />
-          <pv-input-text class="inputRegister" style="width: 28%" type="text" placeholder="DNI*" />
-        </div>
         <pv-input-text class="inputRegister" type="text" placeholder="Contraseña*" v-model="password"/>
         <div style="display: flex ;justify-content: end">
           <pv-button class="buttonRegister" style="align-items: end" @click="showDateDialog">Siguiente</pv-button>
         </div>
       </div>
       <div class="inputsContainer" v-show="visibleDateDialog">
-        <p >Estadia del Huesped</p>
         <div style="display: flex;justify-content: space-evenly">
           <h3>Precio por dia: </h3>
           <pv-input-text id="price" v-model="price" type="number" style="width: 3rem"></pv-input-text>
@@ -27,7 +21,6 @@
         <div style="display: flex ;justify-content: end">
           <pv-button class="buttonRegister"  @click="ResumeDialogData">Siguiente</pv-button>
         </div>
-
       </div>
       <div class="inputsContainer" v-show="visibleResumeDateGuest">
         <h1>Credenciales del usuario</h1>
@@ -48,41 +41,40 @@
 </template>
 
 <script>
-import {UserServices} from "../services/user-services";
 export default {
   name: "Registrar Huesped",
   components: {},
 
   data(){
     return{
-      name:"",
-      email:"",
-      password:"",
-      endDate:null,
-      price:84,
-      visibleResumeDateGuest:false,
-      visibleFormDialog:true,
-      visibleDateDialog:false,
-      resumeInitialDate:null,
-      resumeEndDate:null,
-      resumePrice:null,
-      resumeHotelDays:null
+        token: sessionStorage.getItem("jwt"),
+        name:"",
+        email:"",
+        password:"",
+        endDate:null,
+        price:84,
+        visibleResumeDateGuest:false,
+        visibleFormDialog:true,
+        visibleDateDialog:false,
+        resumeInitialDate:null,
+        resumeEndDate:null,
+        resumePrice:null,
+        resumeHotelDays:null
     }
   },
   methods:{
-    validateCalendarDate(firstDayDate,lastDayDate){
+      validateCalendarDate(firstDayDate,lastDayDate){
       let day1 = new Date(firstDayDate);
       let day2 = new Date(lastDayDate);
 
       if((day2.getMonth()+1)<(day1.getMonth()+1) && day2.getFullYear()<=day1.getFullYear() ||
           (day2.getMonth()+1)===(day1.getMonth()+1) && day2.getDate()<day1.getDate() && day2.getFullYear()<=day1.getFullYear()){
-        console.log("Elegiste una fecha antigua")
         return false
       }else{
         return true
       }
     },
-    getDiferenceDays(firstDayDate,lastDayDate){
+      getDiferenceDays(firstDayDate,lastDayDate){
       let day1 = new Date(firstDayDate);
       let day2 = new Date(lastDayDate);
 
@@ -91,35 +83,31 @@ export default {
 
       return totalDays
     },
-    register(){
-      this.resumeDateGuest=false
+      register(){
+
       const date = new Date();
+
       let actualDay= date.getDate()
       let actualMonth= date.getMonth()
 
       let firstDayDate= (actualMonth+1)+"/"+actualDay+"/"+date.getFullYear()
       let lastDayDate= (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear()
-      new UserServices().register(this.email,this.password,"guest",null,this.name).then(response=>{
-        console.log("Register Successfully")
-        this.emitter.emit("register-form", false);
-        const date = new Date();
-        let actualDay= date.getDate()
-        let actualMonth= date.getMonth()
-        let guest={
-            id: response.data.user.id,
-            initialDate: actualDay+"/"+(actualMonth+1)+"/"+date.getFullYear(),
-            lastDay:this.endDate.getDate(),
-            endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
-            progressTime: null,
-            firstDayDate: (actualMonth+1)+"/"+actualDay+"/"+date.getFullYear(),
-            lastDayDate: (this.endDate.getMonth()+1)+"/"+this.endDate.getDate()+"/"+this.endDate.getFullYear(),
-            price: this.setPrice(firstDayDate,lastDayDate),
-          }
-        this.emitter.emit("new-guest", guest);
-      })
+
+        let guestEmitter= {
+          userEmail: this.email,
+          userPassword: this.password,
+          userName: this.name,
+          endDate:this.endDate.getDate()+"/"+(this.endDate.getMonth()+1)+"/"+this.endDate.getFullYear(),
+          lastDay:this.endDate.getDate(),
+          firstDayDate: (actualMonth + 1) + "/" + actualDay + "/" + date.getFullYear(),
+          lastDayDate: (this.endDate.getMonth() + 1) + "/" + this.endDate.getDate() + "/" + this.endDate.getFullYear(),
+          price: this.setPrice(firstDayDate, lastDayDate),
+        }
+
+        this.emitter.emit("new-guest", guestEmitter);
 
     },
-    setPrice(firstDayDate,lastDayDate){
+      setPrice(firstDayDate,lastDayDate){
       let day1 = new Date(firstDayDate);
       let day2 = new Date(lastDayDate);
 
@@ -129,7 +117,7 @@ export default {
 
       return totalPrice
     },
-    ResumeDialogData(){
+      ResumeDialogData(){
       const date = new Date();
       let actualDay= date.getDate()
       let actualMonth= date.getMonth()
@@ -148,7 +136,7 @@ export default {
       }
 
     },
-    Cancel(){
+      Cancel(){
       this.visibleResumeDateGuest=false
       this.visibleFormDialog=true
       this.name=""
@@ -162,7 +150,7 @@ export default {
       this.resumePrice=null
       this.resumeHotelDays=null
     },
-    showDateDialog(){
+      showDateDialog(){
       this.visibleFormDialog=false
       this.visibleDateDialog=true
     }

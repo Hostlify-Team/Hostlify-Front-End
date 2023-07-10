@@ -2,16 +2,16 @@
   <div v-show="showNavBar" class="navbar">
     <Toolbar>
       <template #start>
-        <avatar
-            image="https://github.com/Hostlify-Team/Hostlify-Landing-Page/blob/main/src/assets/images/Logo.png?raw=true"
-            class="mr-2"
-        />
+          <img   src="../../src/assets/Logo.png" style="height: 35px"/>
         <div v-if="currentUserType==='manager'">
           <router-link class="mr-3 navbar-item" to="/rooms">
             {{$t("rooms")}}
           </router-link>
           <router-link class="mr-2 navbar-item" to="/history">
             {{$t("history")}}
+          </router-link>
+          <router-link class="mr-2 navbar-item" to="/update-Plan">
+            {{$t("plans")}}
           </router-link>
         </div>
         <div v-else>

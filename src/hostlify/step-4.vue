@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="containerA">
     <h1 style="font-weight: bolder;color: #D6A049">{{$t("request service")}}</h1>
     <div class="row" style="">
       <div class="col-xs-12 col-md-8 offset-md-2 block border">
@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <div class="container" style="display: flex; justify-content: space-around; margin-top: 3rem">
+    <div class="containerA" style="display: flex; justify-content: space-around; margin-top: 3rem">
       <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:center">
@@ -88,12 +88,13 @@ export default {
   name: "step-4",
   data(){
     return{
-      order:[]
+        token: sessionStorage.getItem("jwt"),
+        order:[]
     }
   },
   created() {
-    new RoomServices().getRoomForGuest(sessionStorage.getItem("id")).then(response=> {
-      this.order.roomId=response.data[0].id
+    new RoomServices().getRoomForGuest(this.token, sessionStorage.getItem("id")).then(response=> {
+      this.order.roomId=response.data.id
       this.order.dish=sessionStorage.getItem("dish")
       this.order.dishQuantity=sessionStorage.getItem("dishQuantity")
       this.order.drink=sessionStorage.getItem("drink")
@@ -101,7 +102,7 @@ export default {
       this.order.cream=sessionStorage.getItem("cream")
       this.order.creamQuantity=sessionStorage.getItem("creamQuantity")
       if(sessionStorage.getItem("instructions")==="null"){
-        this.order.instruction=null
+        this.order.instruction="none"
       }else {
         this.order.instruction=sessionStorage.getItem("instructions")
       }
@@ -117,13 +118,13 @@ export default {
       sessionStorage.removeItem("cream")
       sessionStorage.removeItem("creamQuantity")
       sessionStorage.removeItem("instructions")
-      new FoodServices().postFoodService(this.order).then(response=>{
+      new FoodServices().postFoodService(this.token, this.order).then(response=>{
         let temporaryServiceId=response.data.id
         this.$toast.add({severity:'success', summary: 'Enviado', detail:'Orden enviada', life: 3000});
-        new RoomServices().getRoomForGuest(parseInt(sessionStorage.getItem("id"))).then(response=>{
+        new RoomServices().getRoomForGuest(this.token, parseInt(sessionStorage.getItem("id"))).then(response=>{
           let roomForGuest=response.data
-          roomForGuest[0].servicePending=true
-          new RoomServices().updateRoom(roomForGuest[0].id,roomForGuest[0])
+          roomForGuest.servicePending=true
+          new RoomServices().updateRoom(this.token, roomForGuest.id,roomForGuest)
         })
         this.$router.push("/services")
       })
@@ -136,7 +137,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
 .wrapper-progressBar {
-  width: 100vw;
+  width: 95vw;
   height: 10vh;
 }
 
@@ -192,10 +193,10 @@ export default {
   background-color: #D6A049;
 }
 
-.container{
+.containerA{
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
-  margin: 3rem;
+  padding: 3rem;
 }
 
 </style>

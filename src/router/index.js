@@ -17,9 +17,19 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
+      path: '/update-Plan',
+      name: 'update-Plan',
+      component: () => import('../hostlify/Cambiar_Plan.vue')
+    },
+    {
       path: '/services',
       name: 'services',
       component: () => import('../hostlify/services.vue')
+    },
+    {
+      path: '/clean-room',
+      name: 'cleanRoom',
+      component: () => import('../hostlify/CleanRoomService.vue')
     },
     {
       path: '/step-1',
@@ -84,6 +94,11 @@ const router = createRouter({
       path: '/history',
       name: 'HistoryView',
       component: () => import('../hostlify/HistoryView.vue')
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: () => import('../components/ChatBox.vue')
     }
   ]
 })

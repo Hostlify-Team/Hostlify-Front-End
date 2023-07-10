@@ -70,7 +70,8 @@ import { FilterMatchMode } from "primevue/api";
 export default {
   data() {
     return {
-      rooms:[],
+        token: sessionStorage.getItem("jwt"),
+        rooms:[],
       deleteRoomDialog:false,
       deleteRoomsDialog:false,
       room:{},
@@ -80,7 +81,7 @@ export default {
     };
   },
   created() {
-    new HistoryServices().getHistoryForManager(sessionStorage.getItem("id")).then(response=>{
+    new HistoryServices().getHistoryForManager(this.token,sessionStorage.getItem("id")).then(response=>{
       this.rooms=response.data
       console.log("Rooms",this.rooms)
     })
@@ -91,7 +92,7 @@ export default {
       this.deleteRoomsDialog = true
     },
     deleteRoom() {
-      new HistoryServices().deleteRoomHistory(this.room.id).then(response => {
+      new HistoryServices().deleteRoomHistory(this.token, this.room.id).then(response => {
         this.rooms = this.rooms.filter(
             (t) => t.id !== this.room.id
         );
@@ -102,7 +103,7 @@ export default {
     },
     deleteRooms() {
       this.selectedRooms.forEach((room) => {
-        new HistoryServices().deleteRoomHistory(room.id).then((response) => {
+        new HistoryServices().deleteRoomHistory(this.token, room.id).then((response) => {
           this.rooms = this.rooms.filter(
               (t) => t.id !== room.id
           );

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="containerA">
     <h1 style="font-weight: bolder;color: #D6A049">{{$t("request service")}}</h1>
     <div class="row" style="">
       <div class="col-xs-12 col-md-8 offset-md-2 block border">
@@ -14,22 +14,22 @@
       </div>
     </div>
 
-    <div class="container" style="display: flex; justify-content: space-around; margin-top: 3rem">
+    <div class="containerA" style="display: flex; justify-content: space-around; margin-top: 3rem">
       <pv-card style="width: 50vw; border-radius: 1rem">
         <template #content>
           <div style="display: flex; justify-content:left">
             <h2>Seleccione su bebida</h2>
           </div>
           <div style="display: flex;margin-bottom:30px; justify-content:center">
-            <pv-dropdown v-model="selectedDrink" :options="drinks"  placeholder="Eliga una bebida" style="width:500px"></pv-dropdown>
+            <pv-dropdown @change="actualizarEstadoBoton" v-model="selectedDrink" :options="drinks"  placeholder="Eliga una bebida" style="width:500px"></pv-dropdown>
           </div>
           <div style="display: flex; justify-content:center">
             <br>
-            <pv-input-number v-model="drinkQuantity" showButtons buttonLayout="horizontal"
+            <pv-input-number v-model="drinkQuantity" showButtons buttonLayout="horizontal" min="1"
                              incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal" />
           </div>
           <div style="display: flex; justify-content:center;margin-bottom:10px;margin-top:30px">
-            <pv-button class="button" style="border-radius: 0.4rem; color:white;font-weight:bold;margin-top: 1.5rem" @click="next">{{$t("next")}}</pv-button>
+            <pv-button :disabled="!esFormularioCompleto" class="button" style="border-radius: 0.4rem; color:white;font-weight:bold;margin-top: 1.5rem" @click="next">{{$t("next")}}</pv-button>
           </div>
           <div style="display: flex; justify-content:center">
             <router-link style="text-decoration:none; color:#D6A049" to="/services"> <h6>{{$t("cancel")}}</h6> </router-link>
@@ -51,6 +51,7 @@ export default {
       drinks:["Chicha Morada","Inca Kola","Pisco Sour","Chicha de Jora","Agua"],
       selectedDrink:null,
       drinkQuantity:1,
+      esFormularioCompleto: false
     }
   },
   methods:{
@@ -58,7 +59,10 @@ export default {
       sessionStorage.setItem("drink",this.selectedDrink)
       sessionStorage.setItem("drinkQuantity",this.drinkQuantity)
       this.$router.push("/step-3")
-    }
+    },
+    actualizarEstadoBoton() {
+      this.esFormularioCompleto = (this.selectedDrink!=null);
+    },
   }
 }
 </script>
@@ -67,7 +71,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
 .wrapper-progressBar {
-  width: 95vw;
+  width: 97vw;
   height: 10vh;
 }
 
@@ -123,10 +127,10 @@ export default {
   background-color: #D6A049;
 }
 
-.container{
+.containerA{
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
-  margin: 3rem;
+  padding: 3rem;
 }
 
 </style>

@@ -1,40 +1,24 @@
 <template>
-  <div class="containerA">
-    <h1 style="font-weight: bolder;color: #D6A049">{{$t("request service")}}</h1>
-    <div class="row" style="">
-      <div class="">
-        <div class="wrapper-progressBar">
-          <ul class="progressBar">
-            <li class="active">{{$t("select your dish")}}</li>
-            <li >{{$t("select your drink")}}</li>
-            <li >{{$t("select your cream")}}</li>
-            <li >{{$t("confirmation")}}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  <div class="container">
+    <h1 style="font-weight: bolder;color: #D6A049;">{{$t("request service")}}</h1>
     <div style="display: flex; justify-content: space-around;margin-top: 3rem;" >
-      <pv-card style="width: 50vw; border-radius: 1rem">
+      <pv-card style="width: 50vw; border-radius: 1rem;">
         <template #content>
-          <div style="display: flex; justify-content:left">
+          <div style="display: flex; justify-content:left;margin-left: 4rem">
             <h2>{{$t("room")}}</h2>
           </div>
           <div style="display: flex; justify-content:center">
             <h1 style="text-align: center">{{ roomName }}</h1>
           </div>
-          <div style="display: flex; justify-content:left">
-            <h2>{{$t("select your dish")}}</h2>
-          </div>
-          <div style="display: flex;margin-bottom:30px; justify-content:center">
-            <pv-dropdown @change="actualizarEstadoBoton" v-model="selectedDish" :options="dishes"  placeholder="Eliga un platillo" style="width:500px"></pv-dropdown>
+          <div>
+              <h1 style="text-align: center">{{$t("instruction")}}</h1>
           </div>
           <div style="display: flex; justify-content:center">
-            <br>
-            <pv-input-number v-model="dishQuantity" showButtons buttonLayout="horizontal" min="1"
-                             incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal" />
+
+            <pv-text-area @input="actualizarEstadoBoton()" id="food" v-model="instructions" :maxlength="256" style="width: 28rem;"/>
           </div>
           <div style="display: flex; justify-content:center">
-            <pv-button :disabled="!esFormularioCompleto" class="button" style="border-radius: 0.4rem; color:white;font-weight:bold;margin-top: 1.5rem" @click="next">{{$t("next")}}</pv-button>
+            <pv-button :disabled="!esFormularioCompleto" class="button" style="border-radius: 0.4rem; color:white;font-weight:bold;margin-top: 1.5rem" @click="next">Solicitar limpieza</pv-button>
           </div>
           <div style="display: flex; justify-content:center">
             <router-link style="text-decoration:none; color:#D6A049" to="/services"> <h6>{{$t("cancel")}}</h6> </router-link>
@@ -50,33 +34,44 @@
 
 <script>
 import {RoomServices} from "../services/room-services";
+import {CleaningServices} from "../services/cleaning-services";
 export default {
-  name: "step-1",
+  name: "CleanRoomService",
   data(){
     return{
-        token: sessionStorage.getItem("jwt"),
+      token: sessionStorage.getItem("jwt"),
       roomName:null,
-      dishes:["Ceviche","Lomo saltado","Aji de gallina","Causa Limeña","Arroz con pollo","Tallarines verdes","Pollo a la brasa"],
-      selectedDish:null,
-      dishQuantity:1,
-      esFormularioCompleto: false
+      roomId:null,
+      instructions:null,
+      cleanOrder:[],
+        esFormularioCompleto:false
     }
   },
   created() {
     new RoomServices().getRoomForGuest(this.token, sessionStorage.getItem("id")).then(response=> {
       this.roomName=response.data.roomName
+      this.roomId=response.data.id
     })
 
   },
   methods:{
     next(){
-      sessionStorage.setItem("dish",this.selectedDish)
-      sessionStorage.setItem("dishQuantity",this.dishQuantity)
-      this.$router.push("/step-2")
+      this.cleanOrder.roomId=this.roomId
+      this.cleanOrder.instruction=this.instructions
+      new CleaningServices().postCleaningService(this.token,this.cleanOrder).then(response=>{
+        this.$toast.add({severity:'success', summary: 'Enviado', detail:'Orden enviada', life: 3000});
+        new RoomServices().getRoomForGuest(this.token, parseInt(sessionStorage.getItem("id"))).then(response=>{
+          let roomForGuest=response.data
+          roomForGuest.servicePending=true
+          new RoomServices().updateRoom(this.token, roomForGuest.id,roomForGuest)
+        })
+        this.$router.push("/services")
+      })
+
     },
-    actualizarEstadoBoton() {
-      this.esFormularioCompleto = (this.selectedDish!=null);
-    },
+      actualizarEstadoBoton() {
+          this.esFormularioCompleto = (this.instructions.length>0);
+      }
   }
 }
 </script>
@@ -85,7 +80,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
 .wrapper-progressBar {
-  width: 97vw;
+  width: 95vw;
   height: 10vh;
 }
 
@@ -141,10 +136,10 @@ export default {
   background-color: #D6A049;
 }
 
-.containerA{
+.container{
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
-  padding: 3rem;
+  margin: 3rem;
 }
 
 </style>

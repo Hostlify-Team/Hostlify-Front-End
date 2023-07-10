@@ -1,13 +1,12 @@
 import axios from "axios";
+const http = axios.create({
+    baseURL:"https://webapi-hostlify.azurewebsites.net/api/",
+    headers: { "Content-type": "application/json" },
+})
 export class FoodServices{
-    getFoodServices=()=>{
-        return axios.get("http://localhost:3000/foodServices")
-    }
-    postFoodService=(foodOrder)=>{
-        return axios.post("http://localhost:3000/foodServices",{
-            "id": foodOrder.id,
+    postFoodService=(token,foodOrder)=>{
+        return http.post("Services/FoodServiceByResource",{
             "roomId": foodOrder.roomId,
-            "managerId": foodOrder.managerId,
             "dish": foodOrder.dish,
             "dishQuantity": foodOrder.dishQuantity,
             "drink": foodOrder.drink,
@@ -15,15 +14,24 @@ export class FoodServices{
             "cream": foodOrder.cream,
             "creamQuantity": foodOrder.creamQuantity,
             "instruction": foodOrder.instruction
-        })
+        },{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    getFoodServiceByRoomId(id){
-        return axios.get("http://localhost:3000/room/"+id+"/foodServices")
+    getFoodServiceByRoomId(token,id){
+        return http.get("Services/FoodServicebyRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    deleteFoodServiceByRoomId(id){
-        return axios.delete("http://localhost:3000/room/"+id+"/foodServices")
+    getFoodServicePendingByRoomId(token,id){
+        return http.get("Services/FoodServiceUnAttendedByRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    deleteFoodServiceById(id){
-        return axios.delete("http://localhost:3000/foodServices/"+id)
+    getFoodServiceHistoryByRoomId(token,id){
+        return http.get("Services/FoodServiceAttendedByRoomId?roomId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
+    attendFoodServiceById(token,id){
+        return http.delete("Services/attendFoodService/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
+    deleteAllFoodServicesByRoomId(token,id){
+        return http.delete("Services/deleteAllFoodServicesByRoomId/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
+    getAllFoodServices(token){
+        return http.get("Services/GetAllFoodServices",{ headers: {"Authorization" : `Bearer ${token}`} })
     }
 }

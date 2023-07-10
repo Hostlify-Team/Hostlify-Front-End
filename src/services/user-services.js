@@ -1,27 +1,50 @@
 import axios from "axios";
+
+const http = axios.create({
+    baseURL:"https://webapi-hostlify.azurewebsites.net/api/",
+    headers: { "Content-type": "application/json" },
+})
+
 export class UserServices{
-    register = (email,password,type,plan,name) => {
-        return axios.post("http://localhost:3000/register",{
-            email,
+
+    register = (email,password,plan,name,type) => {
+        return http.post("User/Signup",{
+            name,
             password,
-            type,
+            email,
             plan,
-            name
+            type
         })
     }
 
     login= (email,password) =>{
-        return axios.post("http://localhost:3000/login",
+        return http.post("User/Login",
             {
                 email,
                 password
             })
     }
-    getUser(id){
-        return axios.get("http://localhost:3000/users/"+id)
+    getUser(token,id){
+        return http.get("User/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
 
     }
-    deleteUser(id){
-        return axios.delete("http://localhost:3000/users/"+id)
+    deleteUser(token,id){
+        return http.delete("User/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
+    }
+    postCustomPlan(email,roomsNumber){
+        return http.post("User/PostRoomsLimit",{
+            "email":email,
+            "roomsLimit":roomsNumber
+        })
+    }
+    getLimitRoom(token,id){
+        return http.get("User/GetRoomsLimit/"+id,{headers: {"Authorization" : `Bearer ${token}`}})
+    }
+    updateUserPlan(token,id,actualPlan,changedPlan,newCustomRoomLimit){
+        return http.put("User/UpdateRoomsPlan/"+id,{
+            "actualPlan": actualPlan,
+            "changedPlan": changedPlan,
+            "newCustomRoomLimit": newCustomRoomLimit
+        },{headers: {"Authorization" : `Bearer ${token}`}})
     }
 }

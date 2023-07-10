@@ -1,26 +1,13 @@
 import axios from "axios";
 const http = axios.create({
-    baseURL:"http://localhost:3000/",
+    baseURL:"https://webapi-hostlify.azurewebsites.net/api/",//
     headers: { "Content-type": "application/json" },
 })
 export class HistoryServices{
-    getHistoryForManager(id){
-        return http.get("manager/"+id+"/history")
+    getHistoryForManager(token,id){
+        return http.get("History/byManagerId?managerId="+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
-    postRoomHistory(room){
-        return http.post("history",{
-            "roomName":room.roomName,
-            "managerId": room.managerId,
-            "guestId": room.guestId,
-            "guestName": room.guestName,
-            "guestEmail": room.guestEmail,
-            "initialDate": room.initialDate,
-            "endDate": room.endDate,
-            "price": room.price,
-            "description": room.description
-        })
-    }
-    deleteRoomHistory(id){
-        return http.delete("history/"+id)
+    deleteRoomHistory(token,id){
+        return http.delete("History/"+id,{ headers: {"Authorization" : `Bearer ${token}`} })
     }
 }

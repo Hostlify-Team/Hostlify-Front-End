@@ -1,16 +1,10 @@
 <template>
-  <div style="height: 98vh ;margin: 0;display:flex; justify-content: center; align-items: center;">
-    <pv-card style=" border-radius: 1rem;justify-content: center;width: 70vw;">
+  <div style="height: 90vh ;margin: 0;display:flex; justify-content: center; align-items: center;">
+    <pv-card style=" border-radius: 0.5rem;justify-content: center;width: 70vw;">
       <template #content>
         <div class="content" >
-            <div class="steps" style="margin-top: 2rem">
-                <router-link style="margin: 2rem; text-decoration-line: none;color: white" to="/" >
-                    Regresar
-                </router-link>
-                <h4 style="margin-left: 2rem">Paso 1 de 3</h4>
-            </div>
           <div class="phrase" style="margin-bottom: 1rem; display: flex; justify-content: center; text-align: center">
-            <h1>Elige tu plan en Hostlify</h1>
+            <h1>Actualiza tu plan</h1>
           </div>
           <div class="switch" >
             <pv-select-button v-model="value1" :options="options" aria-labelledby="single" @click="changePlan"/>
@@ -31,7 +25,7 @@
                         <div class="visible">
                           <template v-if="plan.rooms!==null" >
                             <div class="usher">
-                              <p style="margin-top: 6px">Este plan te permite tener </p>
+                              <p  style="margin-top: 6px">Este plan te permite tener </p>
                               <p class="until">hasta</p>
                             </div>
                             <p style="margin-top: 6px">{{plan.rooms}} habitaciones</p>
@@ -49,9 +43,10 @@
                             <p style="margin: 0;padding: 0 0 0.45rem 0.1rem ;align-items: end ;display: table-cell;vertical-align: bottom; color: darkgrey" >mo*</p>
                           </div>
                         </div>
-                        <pv-button class="planButton" v-if="plan.name==='Standard'" style="background-color: #FFC286; color:white" @click="planSelected('Standard')">Elegir</pv-button>
-                        <pv-button class="planButton" v-if="plan.name==='Pro'" style="background-color: #EA9D51; color:white" @click="planSelected('Pro')">Elegir</pv-button>
-                        <pv-button class="planButton" v-if="plan.name==='Premium'" style="background-color: #F1C94E; color:white" @click="planSelected('Premium')">Elegir</pv-button>
+                        <p v-if="currentPlan===plan.name">Plan Actual</p>
+                        <pv-button class="planButton" :disabled="currentPlan===plan.name" v-if="plan.name==='Standard'&&currentPlan!==plan.name" style="background-color: #FFC286; color:white" @click="planSelected('Standard')">Elegir</pv-button>
+                        <pv-button class="planButton" :disabled="currentPlan===plan.name" v-if="plan.name==='Pro'&&currentPlan!==plan.name" style="background-color: #EA9D51; color:white" @click="planSelected('Pro')">Elegir</pv-button>
+                        <pv-button class="planButton" :disabled="currentPlan===plan.name" v-if="plan.name==='Premium'&&currentPlan!==plan.name" style="background-color: #F1C94E; color:white" @click="planSelected('Premium')">Elegir</pv-button>
                       </div>
                     </template>
                   </pv-card >
@@ -97,22 +92,33 @@
       </template>
     </pv-card>
   </div>
+
 </template>
+
 <script>
+import {UserServices} from "../services/user-services";
+import {RoomServices} from "../services/room-services";
 export default {
-  name: "sign-up-plans",
+  name: "Cambiar_Plan",
   components: {},
   data(){
     return{
+      token: sessionStorage.getItem("jwt"),
       value1: 'Nuestros Planes',
       options: ['Nuestros Planes', 'Plan personalizado'],
       defaultPlan: true,
       customPlan: false,
-        customPlanQuantity:1,
-      plans:[]
+      customPlanQuantity:1,
+      plans:[],
+      actualRoomsQuantity:0,
+      currentPlan:"",
     }
   },
   created() {
+    this.currentPlan=sessionStorage.getItem("plan")
+    this.setCustomPlanQuantity()
+    this.getRoomsActualQuantity()
+
     var planStandar={} ;
     var planPro={} ;
     var planPremium={} ;
@@ -138,6 +144,23 @@ export default {
 
   },
   methods:{
+    setCustomPlanQuantity(){
+      if(this.currentPlan==="Custom"){
+        console.log("ENTRE")
+        new UserServices().getLimitRoom(this.token,parseInt(sessionStorage.getItem("id").toString())).then(response=>{
+          this.customPlanQuantity=parseInt(response.data)
+        })
+      }else {
+        console.log("sali")
+        this.customPlanQuantity=1
+      }
+    },
+    getRoomsActualQuantity(){
+      new RoomServices().getRoomsForManager(this.token,parseInt(sessionStorage.getItem("id").toString())).then(response=>{
+        this.actualRoomsQuantity=response.data.length
+        console.log(response.data.length)
+      })
+    },
     changePlan(){
       if(this.defaultPlan===true){
         this.customPlan=true
@@ -149,13 +172,36 @@ export default {
       }
     },
     planSelected(plan){
-      this.addTemporaryPlan(plan)
-      this.$router.push("/sign-up-register")
+      let procedeChange=false
+      if(plan==="Standard"&&this.actualRoomsQuantity<=30){
+        procedeChange=true
+      }
+      if(plan==="Pro"&&this.actualRoomsQuantity<=50){
+        procedeChange=true
+      }
+      if(plan==="Premium"){
+        procedeChange=true
+      }
+      if(procedeChange){
+        new UserServices().updateUserPlan(this.token,parseInt(sessionStorage.getItem("id").toString()),this.currentPlan,plan,0).then(response=>{
+          sessionStorage.setItem("plan",plan)
+          this.$toast.add({severity:'success', summary: 'Plan Actualizado', detail:'Plan cambiado exitosamente', life: 3000});
+          this.currentPlan=plan
+        })
+      }else {
+        this.$toast.add({severity:'info', summary: 'Exceso de Habitaciones', detail:'Tienes mas habitaciones de lo que te permite este plan.', life: 6000});
+      }
     },
     customPlanSelected(plan,roomsQuantity){
-      this.customPlanQuantity=roomsQuantity
-      this.addTemporaryPlan(plan)
-      this.$router.push("/sign-up-register")
+      if(this.actualRoomsQuantity<=roomsQuantity){
+        new UserServices().updateUserPlan(this.token,parseInt(sessionStorage.getItem("id").toString()),this.currentPlan,plan,roomsQuantity).then(response=>{
+          sessionStorage.setItem("plan",plan)
+          this.$toast.add({severity:'success', summary: 'Plan Actualizado', detail:'Plan cambiado exitosamente', life: 3000});
+          this.currentPlan=plan
+        })
+      }else{
+        this.$toast.add({severity:'info', summary: 'Exceso de Habitaciones', detail:'Tienes mas habitaciones de lo que te permite este plan.', life: 6000});
+      }
     },
     addTemporaryPlan(plan){
       localStorage.setItem("selectedPlan",JSON.stringify(plan))
@@ -166,6 +212,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .solidColor{
   height: 2.5rem;
